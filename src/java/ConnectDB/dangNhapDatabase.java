@@ -22,7 +22,7 @@ public class dangNhapDatabase {
 
     private static final String dbURL = "jdbc:mysql://localhost:3306/cnpm";
     private static String userName = "root";
-    private static String password = "123456789";
+    private static String password = "10082004";
 
     public dangNhapDatabase() {
     }
