@@ -40,7 +40,10 @@ public class CTPP_BUS {
     public ArrayList<CTPP_DTO> searchByMaPP(int mapp) {
         return ctpp_DAO.searchByMaPP(mapp);
     }
-
+    public CTPP_DTO searchByMaPP_MaVach(int mapp,int maVach)
+    {
+        return ctpp_DAO.searchByMaPP_MaVach(mapp, maVach);
+    }
     public StringBuilder searchPP(String option, String value) {
         StringBuilder jsonResult = new StringBuilder("["); // Sử dụng StringBuilder để dễ dàng quản lý chuỗi
         boolean firstItem = true; // Biến đánh dấu phần tử đầu tiên

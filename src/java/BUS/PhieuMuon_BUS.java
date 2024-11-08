@@ -8,8 +8,26 @@ import DAO.CTPM_DAO;
 import DAO.PhieuMuon_DAO;
 import DTO.CTPM_DTO;
 import DTO.PhieuMuon_DTO;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  *
@@ -19,7 +37,7 @@ public class PhieuMuon_BUS {
 
     private ArrayList<PhieuMuon_DTO> listPM;
     private PhieuMuon_DAO pm_DAO = new PhieuMuon_DAO();
-    private CTPM_DAO ctpm_DAO = new CTPM_DAO();
+    private CTPM_BUS ctpm_BUS = new CTPM_BUS();
 
     public ArrayList<PhieuMuon_DTO> getList() {
         listPM = pm_DAO.getList();
@@ -89,8 +107,8 @@ public class PhieuMuon_BUS {
         pm += "Mã phiếu mượn: " + phieu.getMaPM() + "<br/>"
                 + "Mã nhân viên: " + phieu.getMaNV() + "  "
                 + "Tên nhân viên: " + "hii" + "<br/>" // Thêm tên nhân viên
-                + "Mã độc giả: " + phieu.getMaKhach()+ "  "
-                + "Tên độc giả: " +"tạm" + "<br/>" // Thêm tên độc giả
+                + "Mã độc giả: " + phieu.getMaKhach() + "  "
+                + "Tên độc giả: " + "tạm" + "<br/>" // Thêm tên độc giả
                 + "SĐT độc giả: " + "000" + "<br/>" // Thêm số điện thoại độc giả
                 + "Ngày mượn: " + phieu.getNgayLap() + "  "
                 + "Ngày dự đoán trả: " + phieu.getHanChot() + "<br/>"
@@ -104,12 +122,12 @@ public class PhieuMuon_BUS {
                 + "<th style='border:1px solid; padding:5px;'>Số Lượng</th>"
                 + "</tr>";
 
-        ArrayList<CTPM_DTO> listCTPM = ctpm_DAO.searchByMaPM(mapm);
+        ArrayList<CTPM_DTO> listCTPM = ctpm_BUS.searchByMaPM(mapm);
 
         // Duyệt danh sách chi tiết phiếu mượn
         if (listCTPM != null && listCTPM.size() > 0) {
             for (CTPM_DTO ct : listCTPM) {
-                //String tenSach = ctpm_DAO.getTenSach(ct.getMaSach()); // Lấy tên sách từ DAO
+                //String tenSach = ctpm_BUS.getTenSach(ct.getMaSach()); // Lấy tên sách từ DAO
                 pm += "<tr>"
                         + "<td style='border:1px solid; text-align:center;'>" + ct.getMaSach() + "</td>"
                         + "<td style='border:1px solid; text-align:center;'>" + "tam" + "</td>"
@@ -125,6 +143,156 @@ public class PhieuMuon_BUS {
         pm += "<div style='text-align:center;'>XIN CẢM ƠN!</div>";
 
         return pm;
+    }
+
+    public boolean checkInfor(String maPhieu, String maKhach, String maNV, String ngayLap, String hanChot, ArrayList<String> listMaSach, ArrayList<String> listSL, ArrayList listTrangThai) {
+        if (maPhieu.isEmpty() || maKhach.isEmpty() || maNV.isEmpty() || ngayLap.isEmpty() || hanChot.isEmpty()
+                || listMaSach.isEmpty() || listSL.isEmpty() || listTrangThai.isEmpty()) {
+            return false;
+        }
+        try {
+            Integer.parseInt(maPhieu);
+            Integer.parseInt(maKhach);
+            Integer.parseInt(maNV);
+            for (int i = 0; i < listMaSach.size(); i++) {
+                Integer.parseInt(listMaSach.get(i));
+                Integer.parseInt(listSL.get(i));
+            }
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
+    }
+    public boolean importExcel(String fileName)
+    {
+        String filePath = "C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/" + fileName;
+        try (FileInputStream file = new FileInputStream(filePath);
+         XSSFWorkbook workbook = new XSSFWorkbook(file)) {
+            XSSFSheet sheet = workbook.getSheetAt(0);
+            Iterator<Row> rowIterator = sheet.iterator();
+            // Bỏ qua dòng đầu tiên (tiêu đề)
+            if (rowIterator.hasNext()) rowIterator.next();
+            while (rowIterator.hasNext()) {
+                Row row = rowIterator.next();
+                PhieuMuon_DTO pm=new PhieuMuon_DTO();
+                pm.setMaPM(Integer.parseInt(row.getCell(0).getStringCellValue()));
+                pm.setMaKhach(Integer.parseInt(row.getCell(1).getStringCellValue()));
+                pm.setMaNV(Integer.parseInt(row.getCell(2).getStringCellValue()));
+                pm.setNgayLap(LocalDate.parse(row.getCell(3).getStringCellValue()));
+                pm.setHanChot(LocalDate.parse(row.getCell(4).getStringCellValue()));
+                String[] listMS=row.getCell(5).getStringCellValue().split(",");
+                String[] listSL=row.getCell(6).getStringCellValue().split(",");
+                String[] listTT=row.getCell(7).getStringCellValue().split(",");
+                for (int i=0;i<listMS.length;i++)
+                {
+                    CTPM_DTO ct=new CTPM_DTO();
+                    ct.setMaPM(Integer.parseInt(row.getCell(1).getStringCellValue()));
+                    ct.setMaSach(Integer.parseInt(listMS[i]));
+                    ct.setSoLuong(Integer.parseInt(listSL[i]));
+                    ct.setTrangthai(listTT[i]);
+                    ctpm_BUS.addCTPM(ct);
+                }
+                pm.setTongSL(Integer.parseInt(row.getCell(8).getStringCellValue()));
+                pm_DAO.addPM(pm);
+            }
+        }catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+        
+    }
+
+    public boolean exportExcel(String fileName) {
+        String filePath = "C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/" + fileName;
+        System.out.println("Đường dẫn đầy đủ: " + filePath);
+
+        File file = new File(filePath);
+        File parentDir = file.getParentFile();
+        if (!parentDir.exists()) {
+            parentDir.mkdirs();  // Tạo thư mục nếu chưa tồn tại
+        }
+
+        System.out.println("Bắt đầu khối try");
+        XSSFWorkbook excelWorkbook = new XSSFWorkbook();
+        System.out.println("tạo 0");
+        XSSFSheet excelSheet = (XSSFSheet) excelWorkbook.createSheet("Danh sách phiếu mượn của thư viện");
+        System.out.println("tạo 1");
+        XSSFRow row = null;
+        Cell cell = null;
+        // Merge các cột thành một và căn giữa tiêu đề
+        excelSheet.addMergedRegion(new CellRangeAddress(2, 2, 0, 8));
+        row = excelSheet.createRow(2);
+        row.setHeight((short) 500);
+        cell = row.createCell(0, CellType.STRING);
+        cell.setCellValue("DANH SÁCH PHIẾU MƯỢN CỦA THƯ VIỆN TRƯỜNG ABC");
+        CellStyle centerStyle = excelWorkbook.createCellStyle();
+        centerStyle.setAlignment(HorizontalAlignment.CENTER);
+        cell.setCellStyle(centerStyle);
+        System.out.println("tạo 2");
+        // Ghi tiêu đề cột
+        row = excelSheet.createRow(3);
+        String[] headers = {"Mã phiếu mượn", "Mã khách", "Mã nhân viên", "Ngày lập", "Hạn chót",
+            "Danh sách mã sách", "Danh sách số lượng", "Danh sách trạng thái", "Tổng số lượng"};
+        for (int i = 0; i < headers.length; i++) {
+            row.createCell(i).setCellValue(headers[i]);
+            excelSheet.autoSizeColumn(i);
+        }
+        CellStyle cellStyle = excelWorkbook.createCellStyle();
+        cellStyle.setWrapText(true);
+        System.out.println("tạo 3");
+        for (int i = 0; i < listPM.size(); i++) {
+            PhieuMuon_DTO phieuMuon = listPM.get(i);
+            row = excelSheet.createRow(4 + i);
+            row.createCell(0).setCellValue(phieuMuon.getMaPM());
+            row.createCell(1).setCellValue(phieuMuon.getMaKhach());
+            row.createCell(2).setCellValue(phieuMuon.getMaNV());
+            row.createCell(3).setCellValue(phieuMuon.getNgayLap().toString());
+            row.createCell(4).setCellValue(phieuMuon.getHanChot().toString());
+
+            String listMS = "";
+            String listSL = "";
+            String listTT = "";
+
+            for (CTPM_DTO ctpm : ctpm_BUS.searchByMaPM(phieuMuon.getMaPM())) {
+                listMS += ctpm.getMaSach() + "\n";
+                listSL += ctpm.getSoLuong() + "\n";
+                listTT += ctpm.getTrangthai() + "\n";
+            }
+
+            if (!listMS.isEmpty()) {
+                listMS = listMS.substring(0, listMS.length() - 1);
+                listSL = listSL.substring(0, listSL.length() - 1);
+                listTT = listTT.substring(0, listTT.length() - 1);
+            }
+
+            Cell cellMS = row.createCell(5);
+            cellMS.setCellValue(listMS);
+            cellMS.setCellStyle(cellStyle); 
+
+            Cell cellSL = row.createCell(6);
+            cellSL.setCellValue(listSL);
+            cellSL.setCellStyle(cellStyle);
+
+            Cell cellTT = row.createCell(7);
+            cellTT.setCellValue(listTT);
+            cellTT.setCellStyle(cellStyle);
+ 
+            row.createCell(8).setCellValue(phieuMuon.getTongSL());
+            excelSheet.autoSizeColumn(i);
+
+        }
+        System.out.println("Ghi lên workbook thành công");
+        try (FileOutputStream fileOutputStream = new FileOutputStream(filePath)) {
+            System.out.println("Mở file thành công");
+            excelWorkbook.write(fileOutputStream);
+            System.out.println("Đã ghi tệp thành công");
+            excelWorkbook.close();
+        } catch (IOException e) {
+            System.err.println("Lỗi khi ghi file: " + e.getMessage());
+            return false;
+        }
+        return true;
     }
 
 }

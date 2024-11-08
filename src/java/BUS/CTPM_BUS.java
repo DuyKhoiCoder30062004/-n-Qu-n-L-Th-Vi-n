@@ -41,7 +41,10 @@ public class CTPM_BUS {
     public ArrayList<CTPM_DTO> searchByMaPM(int mapm) {
         return ctpm_DAO.searchByMaPM(mapm);
     }
-
+    public CTPM_DTO searchByMaPM_MaSach(int mapm,int masach)
+    {
+        return ctpm_DAO.searchByMaPM_MaSach(mapm, masach);
+    }
     public StringBuilder searchCTPM(String option, String value) {
         StringBuilder jsonResult = new StringBuilder("["); // Sử dụng StringBuilder để dễ dàng quản lý chuỗi
         boolean firstItem = true; // Biến đánh dấu phần tử đầu tiên
@@ -56,10 +59,10 @@ public class CTPM_BUS {
                     jsonResult.append(","); // Thêm dấu phẩy trước mỗi phần tử sau phần tử đầu tiên
                 }
                 jsonResult.append("{"
-                        + "\"maPhieu\": \"" + pq.getMaPM() + "\","
+                        + "\"maPM\": \"" + pq.getMaPM() + "\","
                         + "\"maSach\": \"" + pq.getMaSach() + "\","
                         + "\"soLuong\": \"" + pq.getSoLuong() + "\","
-                        + "\"tacVu\": \"" + pq.getTrangthai() + "\""
+                        + "\"trangThai\": \"" + pq.getTrangthai() + "\""
                         + "}");
                 firstItem = false; // Đánh dấu rằng phần tử đầu tiên đã được thêm
             }

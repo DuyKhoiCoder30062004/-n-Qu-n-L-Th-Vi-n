@@ -48,6 +48,7 @@ public class CTPP_DAO {
                 listPQ.add(pq);
             }
         } catch (Exception e) {
+            System.err.println("Lỗi getList: " + e.getMessage());
             return null;
         } finally {
             try {
@@ -187,7 +188,7 @@ public class CTPP_DAO {
     public ArrayList<CTPP_DTO> searchByMaPP(int mapp) {
         ArrayList<CTPP_DTO> listPQ = new ArrayList<>();;
         try {
-            String qry = "select mapp,masach,mavachloi,ngaylap,lido,tien from ctpp where pp = ?";
+            String qry = "select mapp,masach,mavachloi,ngaylap,lido,tien from ctpp where mapp = ?";
             dnDB = new dangNhapDatabase();
             conn = dnDB.openConnection();
             ps = conn.prepareStatement(qry);
@@ -224,5 +225,46 @@ public class CTPP_DAO {
             }
         }
         return listPQ;
+    }
+    public CTPP_DTO searchByMaPP_MaVach(int mapp,int maVach) {
+        CTPP_DTO ctpp=null;
+        try {
+            String qry = "select mapp,masach,mavachloi,ngaylap,lido,tien from ctpp where mapp = ? and mavach = ?";
+            dnDB = new dangNhapDatabase();
+            conn = dnDB.openConnection();
+            ps = conn.prepareStatement(qry);
+            ps.setInt(1, mapp);
+            ps.setInt(2, maVach);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                ctpp = new CTPP_DTO();
+                ctpp.setMaPP(Integer.parseInt(rs.getString(1)));
+                ctpp.setMaSach(Integer.parseInt(rs.getString(2)));
+                ctpp.setMaVach(rs.getString(3));
+                ctpp.setNgayLap(rs.getDate(4).toLocalDate());
+                String tam = rs.getString(5);
+
+                String[] arrTam = tam.split(",");
+                ArrayList<String> listTam = new ArrayList<>(Arrays.asList(arrTam));
+                ctpp.setLiDo(listTam);
+                ctpp.setTien(rs.getFloat(6));
+            }
+        } catch (Exception e) {
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    dnDB.closeConnection(conn);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return ctpp;
     }
 }

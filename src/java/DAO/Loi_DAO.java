@@ -33,7 +33,7 @@ public class Loi_DAO {
             while (rs.next()) {
                 Loi_DTO loi = new Loi_DTO();
                 loi.setTenLoi(rs.getString(1));
-                loi.setPhamTramtien(rs.getFloat(2));
+                loi.setPhamTramTien(rs.getFloat(2));
                 listLoi.add(loi);
             }
         } catch (Exception e) {
@@ -60,7 +60,7 @@ public class Loi_DAO {
             dnDB = new dangNhapDatabase();
             connection = dnDB.openConnection();
             String qry = "INSERT INTO loi VALUES (";
-            qry += "'" + loi.getTenLoi() + "'," + loi.getPhamTramtien() + ")";
+            qry += "'" + loi.getTenLoi() + "'," + loi.getPhamTramTien() + ")";
             st = connection.createStatement();
             st.executeUpdate(qry);
         } catch (Exception e) {
@@ -84,7 +84,9 @@ public class Loi_DAO {
             connection = dnDB.openConnection();
             st = connection.createStatement();
             String qry = "Update loi Set ";
-            qry += "phantramtien=" + loi.getPhamTramtien() + " WHERE tenloi='" + loi.getTenLoi() + "'";
+            qry += "phantramtien=" + loi.getPhamTramTien() + " WHERE tenloi='" + loi.getTenLoi() + "'";
+            st = connection.createStatement();
+            st.executeUpdate(qry);
         } catch (Exception e) {
             result = false;
         } finally {
@@ -134,7 +136,7 @@ public class Loi_DAO {
             if(rs.next()){
                 loi=new Loi_DTO();
                 loi.setTenLoi(rs.getString(1));
-                loi.setPhamTramtien(rs.getFloat(2));
+                loi.setPhamTramTien(rs.getFloat(2));
             }
         }catch (Exception e) {
         } finally {

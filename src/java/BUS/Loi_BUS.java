@@ -43,13 +43,13 @@ public class Loi_BUS {
         for (Loi_DTO loi : loi_DAO.getListLoi()) {
             // Kiểm tra điều kiện để thêm vào JSON
             if (option.equals("Tên lỗi") && loi.getTenLoi().contains(value)
-                    || option.equals("% tiền") && loi.getPhamTramtien()==Float.parseFloat(value)){
+                    || option.equals("% tiền") && loi.getPhamTramTien()==Float.parseFloat(value)){
                 if (!firstItem) {
                     jsonResult.append(","); // Thêm dấu phẩy trước mỗi phần tử sau phần tử đầu tiên
                 }
                 jsonResult.append("{"
                         + "\"tenLoi\": \"" + loi.getTenLoi() + "\","
-                        + "\"phanTramTien\": \"" + loi.getPhamTramtien() + "\""
+                        + "\"phanTramTien\": \"" + loi.getPhamTramTien() + "\""
                         + "}");
                 firstItem = false; // Đánh dấu rằng phần tử đầu tiên đã được thêm
             }

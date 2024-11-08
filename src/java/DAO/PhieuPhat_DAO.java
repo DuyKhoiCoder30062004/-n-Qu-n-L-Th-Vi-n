@@ -40,6 +40,7 @@ public class PhieuPhat_DAO {
                 listPP.add(pq);
             }
         } catch (Exception e) {
+            System.err.println("Lỗi getList: " + e.getMessage());
             return null;
         } finally {
             try {
@@ -64,10 +65,11 @@ public class PhieuPhat_DAO {
             dnDB = new dangNhapDatabase();
             conn = dnDB.openConnection();
             String qry = "Insert into phieuphat values (";
-            qry += pp.getMaPP() + "," + pp.getMaNV() + "," +pp.getMaPT() +","+pp.getTongTien()+ "')";
+            qry += pp.getMaPP() + "," + pp.getMaNV() + "," +pp.getMaPT() +","+pp.getTongTien()+ ")";
             st = conn.createStatement();
             st.executeUpdate(qry);
         } catch (Exception e) {
+            System.err.println("Lỗi thêm: " + e.getMessage());
             result = false;
             e.printStackTrace();
         } finally {
@@ -93,11 +95,12 @@ public class PhieuPhat_DAO {
             dnDB = new dangNhapDatabase();
             conn = dnDB.openConnection();
            
-            String qry = "update phanquyen set ";
-            qry += "manv="+pp.getMaNV()+",mapt="+pp.getMaPT()+",tongtien="+pp.getTongTien()+" where mapp="+pp.getMaPP();
+            String qry = "update phieuphat set ";
+            qry += "manv="+pp.getMaNV()+",mapt="+pp.getMaPT()+",tongtien="+pp.getTongTien()+" Where mapp="+pp.getMaPP();
             st = conn.createStatement();
             st.executeUpdate(qry);
         } catch (Exception e) {
+            System.err.println("Lỗi sửa: " + e.getMessage());
             result = false;
         } finally {
             try {
@@ -116,11 +119,12 @@ public class PhieuPhat_DAO {
             dnDB = new dangNhapDatabase();
             conn = dnDB.openConnection();
            
-            String qry = "update phanquyen set ";
+            String qry = "update phieuphat set ";
             qry += "tongtien="+ttnew+" where mapp="+mapp;
             st = conn.createStatement();
             st.executeUpdate(qry);
         } catch (Exception e) {
+             System.err.println("Lỗi sửa: " + e.getMessage());
             result = false;
         } finally {
             try {
@@ -142,6 +146,7 @@ public class PhieuPhat_DAO {
             String qry = "Delete from phieuphat where mapp=" + mapp;
             st.executeUpdate(qry);
         } catch (Exception e) {
+            System.err.println("Lỗi xóa: " + e.getMessage());
             result = false;
         } finally {
             try {
@@ -157,7 +162,7 @@ public class PhieuPhat_DAO {
     public PhieuPhat_DTO searchByMaPP(int mapp) {
         PhieuPhat_DTO pq = null;
         try {
-            String qry = "select mapp,manv,mapt,tongtien from phieuphat where matk = ?";
+            String qry = "select mapp,manv,mapt,tongtien from phieuphat where mapp = ?";
             dnDB = new dangNhapDatabase();
             conn = dnDB.openConnection();
             ps = conn.prepareStatement(qry);
@@ -171,6 +176,7 @@ public class PhieuPhat_DAO {
                 pq.setTongTien(rs.getFloat(4));
             }
         } catch (Exception e) {
+            System.err.println("Lỗi search: " + e.getMessage());
         } finally {
             try {
                 if (rs != null) rs.close();
