@@ -138,18 +138,18 @@
         }
 
         .iconChucNang {
-            width: 20px;
+            width: 22px;
             height: auto;
             margin-right: 10px;
             vertical-align: middle;
+            cursor: pointer;
         }
 
         input {
             width: 100px;
         }
 
-        .input-group,
-        .iconChucNang {
+        .input-group{
             margin-top: 2%;
         }
 
@@ -254,7 +254,7 @@
             border: 2px solid darkgray;
             border-collapse: collapse;
             width: 95%;
-            height: 75%;
+            height: 70%;
             margin-left: 20px;
         }
 
@@ -264,6 +264,15 @@
         }
         img{
             cursor: pointer;
+        }
+        #txtLiDoCTPP:hover {
+            width: auto; /* Tự động mở rộng theo nội dung */
+            max-width: 1000px; /* Giới hạn chiều rộng tối đa khi mở rộng */
+            position: absolute; /* Để thẻ input nổi lên trên các phần tử khác */
+            z-index: 1000; /* Đưa input lên trên các thành phần khác */
+            white-space: nowrap;
+            background-color: #f1f1f1; /* Màu nền khi hover */
+            padding: 5px; /* Thêm khoảng đệm cho thẻ input khi mở rộng */
         }
     </style>
 
@@ -283,13 +292,13 @@
                 <button class="conponentMenu">
                     <img src="img/stafff.svg" alt="icon">Nhân viên</button>
                 <button class="conponentMenu">
-                    <img src="img/customerr.svg" alt="icon">Khách hàng</button>
+                    <img src="img/customerr.svg" alt="icon">Độc giả</button>
                 <button class="conponentMenu">
                     <img src="img/nhaxuatban.jpg" alt="icon">Nhà xuất bản</button>
                 <button class="conponentMenu">
                     <img src="img/nhacc.jpg" alt="icon">Nhà cung cấp</button>
                 <button class="conponentMenu">
-                    <img src="img/danhmuc.jpg" alt="icon">Danh mục</button>
+                    <img src="img/khuvuc.jpg" alt="icon">Khu vực</button>
                 <button class="conponentMenu" >
                     <img src="img/export.svg" alt="icon">Phiếu mượn</button>
                 <button class="conponentMenu">
@@ -308,7 +317,7 @@
             <div id="detail">
                 <!-- title -->
                 <p id="titleDetail">
-                    <img id="imgDetail" src="img/phieutra.jpg" alt="icon"> Quản lí phiếu phạt
+                    <img id="imgDetail" src="img/phieuphat.jpg" alt="icon"> Quản lí phiếu phạt
                 </p>
                 <p id="titleLoi" style="display: inline; margin-left: 12%;">Quản lí lỗi</p>
                 <p id="titleCTPP" style="display: inline; margin-left: 40%;">Chi tiết phiếu phạt</p>
@@ -327,13 +336,13 @@
                                 <input type="text" id="txtPhanTramTien" placeholder="Nhập % tiền phạt">
                             </div>
                             <div class="input-group">
-                                <img class="iconChucNang" id="iconThemLoi" style="margin-left: 8%;" src="img/add.svg"
+                                <img class="iconChucNang" id="iconThemLoi" style="margin-top:6px;"  src="img/add.svg"
                                      title="Thêm Lỗi" onclick="sendDataLoi('addLoi')">
-                                <img class="iconChucNang" id="iconXoaLoi" src="img/delete.svg" title="Xóa Lỗi" onclick="sendDataLoi('deleteLoi')">
-                                <img class="iconChucNang" id="iconSuaLoi" src="img/edit.svg" title="Sửa lỗi" onclick="sendDataLoi('updateLoi')">
-                                <img class="iconChucNang" id="iconClearLoi" style="margin-left: 40%;"
+                                <img class="iconChucNang" id="iconXoaLoi" style="margin-top:6px;" src="img/delete.svg" title="Xóa Lỗi" onclick="sendDataLoi('deleteLoi')">
+                                <img class="iconChucNang" id="iconSuaLoi" style="margin-top:6px;" src="img/edit.svg" title="Sửa lỗi" onclick="sendDataLoi('updateLoi')">
+                                <img class="iconChucNang" id="iconClearLoi" style="margin-left: 33%;margin-top:6px;"
                                      onclick="clearInputLoi()" src="img/clear.png" title="Clear input Lỗi">
-                                <img class="iconChucNang" id="iconFinishLoi" src="img/refresh.svg" title="Tải lại table" onclick="sendDataLoi('finishLoi')">
+                                <img class="iconChucNang" id="iconFinishLoi" style="margin-top:6px;" src="img/refresh.svg" title="Tải lại table" onclick="sendDataLoi('finishLoi')">
                             </div>
                         </div>
                         <div id="divtableLoi">
@@ -386,13 +395,13 @@
                                 <label class="nameFeature" style="margin-right: 8px;">Mã sách</label>
                                 <input type="text" id="txtMaSachCTPP" placeholder="Nhập mã sách">
                                 <img src="img/add.svg" title="mở table Sách" onclick="hienThiSach()"
-                                     style="cursor: pointer;width: 10px;height:auto;" />
+                                     style="cursor: pointer;width: 15px;height:auto;" />
                             </div>
                             <div class="input-group">
                                 <label class="nameFeature" style="margin-right: 7px;">Mã vạch</label>
                                 <input type="text" id="txtMaVachCTPP" placeholder="Nhập mã vạch">
                                 <img src="img/add.svg" title="mở table CT Sách" onclick="hienThiCTSach()"
-                                     style="cursor: pointer;width: 10px;height:auto;" />
+                                     style="cursor: pointer;width: 15px;height:auto;" />
                             </div>
                             <div class="input-group">
                                 <label class="nameFeature" style="margin-right: 5px;">Ngày lập</label>
@@ -401,12 +410,12 @@
                             <div class="input-group">
                                 <label class="nameFeature" style="margin-right: 29px;">Lí do</label>
                                 <input type="text" id="txtLiDoCTPP" placeholder="Chọn lí do" readonly>
-                                <img style="width: 12px; height: auto; " id="iconThemLoi" onclick="thongBaoLayLoi()"
+                                <img style="width: 15px; height: auto; " id="iconThemLoi" onclick="thongBaoLayLoi()"
                                      src="img/add.svg" title="Lỗi">
                             </div>
                             <div class="input-group">
                                 <label class="nameFeature" style="margin-right: 34px;">Tiền</label>
-                                <input type="text" id="txtTienCTPP" value="0" readonly>
+                                <input type="text" id="txtTienCTPP" value="0" readonly style="margin-bottom:6px;">
                             </div>
                             <div class="input-group">
                                 <img class="iconChucNang" style="margin-left: 25.2%;" id="iconThemCTPP"
@@ -486,13 +495,11 @@
                             <label class="nameFeature">Mã Phiếu Trả</label>
                             <input type="text" id="txtMaPTPP" placeholder="Nhập mã ptra">
                             <img src="img/add.svg" title="mở table phiếu trả" onclick="hienThiPT()"
-                                 style="cursor: pointer;width: 10px;height:auto;" />
+                                 style="cursor: pointer;width: 15px;height:auto;" />
                         </div>
                         <div class="input-groupPP">
                             <label class="nameFeature">Mã NV</label>
-                            <input type="text" id="txtMaNVPP" placeholder="Nhập mã nhân viên">
-                            <img src="img/add.svg" title="mở table phiếu trả" onclick="hienThiNV()"
-                                 style="cursor: pointer;width: 10px;height:auto;" />
+                            <input type="text" id="txtMaNVPP" >
                         </div>
                         <div class="input-groupPP" style="margin-right: 1%;">
                             <label class="nameFeature">Tổng tiền</label>
@@ -567,7 +574,7 @@
                 </div>
                 <div class="divTT" id="divtableSach">
                     <img src="img/cancel.svg" alt="Đóng table nhân viên" onclick="dongTBTT()"
-                         style="cursor: pointer;width: 15px;height:auto;margin-left: 98%;" />
+                         style="cursor: pointer;width: 20px;height:auto;margin-left: 97%;" />
                     <h3 style="text-align: center;"> Ban chọn mã Sách ở đây!</h3>
                     <div style="margin-left: 20px;">
                         <select id="comBoBoxSearch" name="options">
@@ -600,7 +607,7 @@
                 </div>
                 <div class="divTT" id="divtableCTSach">
                     <img src="img/cancel.svg" alt="Đóng table nhân viên" onclick="dongTBTT()"
-                         style="cursor: pointer;width: 15px;height:auto;margin-left: 98%;" />
+                         style="cursor: pointer;width: 20px;height:auto;margin-left: 97%;" />
                     <h3 style="text-align: center;"> Ban chọn mã vạch ở đây!</h3>
                     <div style="margin-left: 20px;">
                         <select id="comBoBoxSearch" name="options">
@@ -627,8 +634,8 @@
                     </table>
                 </div>
                 <div class="divTT" id="divtablePT">
-                    <img src="img/cancel.svg" alt="Đóng table nhân viên" onclick="dongTBTT()"
-                         style="cursor: pointer;width: 15px;height:auto;margin-left: 98%;" />
+                    <img src="img/cancel.svg" alt="Đóng table" onclick="dongTBTT()"
+                         style="cursor: pointer;width: 20px;height:auto;margin-left: 97%;" />
                     <h3 style="text-align: center;"> Ban chọn mã phiếu phạt ở đây!</h3>
                     <div style="margin-left: 20px;">
                         <select id="comBoBoxSearch" name="options">
@@ -658,441 +665,384 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="divTT" id="divtableNV">
-                    <img src="img/cancel.svg" alt="Đóng table nhân viên" onclick="dongTBTT()"
-                         style="cursor: pointer;width: 15px;height:auto;margin-left: 98%;" />
-                    <h3 style="text-align: center;"> Ban có thể chọn mã nhân viên ở đây</h3>
-                    <div style="margin-left: 20px;">
-                        <select id="comBoBoxSearch" name="options">
-                            <option value="Mã NV">Mã NV</option>
-                            <option value="Tên">Mật khẩu</option>
-                        </select>
-                        <input type="text" id="txtSearch" placeholder="Nhập thông tin">
-                        <img class="iconChucNang" id="iconSearchNV" onclick="searchOfNV" src="img/search1.png" alt="icon">
-                    </div>
-                    <table class="table" id="tableNV">
-                        <thead>
-                            <tr>
-                                <th>Mã nhân viên</th>
-                                <th>Họ</th>
-                                <th>Tên</th>
-                                <th> số điện thoại</th>
-                                <th> Ngày sinh</th>
-                                <th> chức vụ</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1234</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </form>
-        <script>
-            //biến giữ đường link file excel
-            let namePath = "";
-            /*click table*/
-            function clickLoi(row) {
-                const cells = row.getElementsByTagName('td');
-                document.getElementById('txtLoi').value = cells[0].innerText;
-                document.getElementById('txtPhanTramTien').value = cells[1].innerText;
-                let currentValue = document.getElementById('txtLiDoCTPP').value;
-                if (currentValue.includes(cells[0].innerText)) {
-                    alert("Lỗi này bạn đã có!");
-                } else
-                    document.getElementById('txtLiDoCTPP').value = currentValue ? currentValue + "," + cells[0].innerText : cells[0].innerText;
-            }
-
-            const rowsLoi = document.querySelectorAll('#tableLoi tbody tr');
-            rowsLoi.forEach(row => {
-                row.addEventListener('click', () => clickLoi(row));
-            });
-
-            function clickCTPP(row) {
-                const cells = row.getElementsByTagName('td');
-                document.getElementById('txtMaPhieuCTPP').value = cells[0].innerText;
-                document.getElementById('txtMaSachCTPP').value = cells[1].innerText;
-                document.getElementById('txtMaVachCTPP').value = cells[2].innerText;
-                document.getElementById('txtNgayLapCTPP').value = cells[3].innerText;
-                document.getElementById('txtLiDoCTPP').value = cells[4].innerText;
-                document.getElementById('txtTienCTPP').value = cells[5].innerText;
-            }
-            const rowsCTPP = document.querySelectorAll('#tableCTPP tbody tr');
-            rowsCTPP.forEach(row => {
-                row.addEventListener('click', () => clickCTPP(row));
-            });
-
-            function clickPP(row) {
-                const cells = row.getElementsByTagName('td');
-                document.getElementById('txtMaPhieuPP').value = cells[0].innerText;
-                document.getElementById('txtMaPTPP').value = cells[1].innerText;
-                document.getElementById('txtMaNVPP').value = cells[2].innerText;
-                document.getElementById('txtTongTienPP').value = cells[3].innerText;
-
-
-            }
-            const rowsPP = document.querySelectorAll('#tablePP tbody tr');
-            rowsPP.forEach(row => {
-                row.addEventListener('click', () => clickPP(row));
-            });
-            function formatDate(date) {
-                const year = date.getFullYear();
-                const month = String(date.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
-                const day = String(date.getDate()).padStart(2, '0');
-                return `${year}-${month}-${day}`;
-            }
-
-            // Lấy ngày hiện tại và gán vào input
-            document.getElementById('txtNgayLapCTPP').value = formatDate(new Date());
-
-            /*clear dữ liệu*/
-            function clearInputLoi() {
-                document.getElementById('txtLoi').value = "";
-                document.getElementById('txtPhanTramTien').value = "";
-            }
-
-            function clearInputCTPP() {
-                document.getElementById('txtMaPhieuCTPP').value = "";
-                document.getElementById('txtMaSachCTPP').value = "";
-                document.getElementById('txtMaVachCTPP').value = "";
-                document.getElementById('txtNgayLapCTPP').value = formatDate(new Date());
-                document.getElementById('txtLiDoCTPP').value = "";
-                document.getElementById('txtTienCTPP').value = "0";
-            }
-            function clearInputPP() {
-                document.getElementById('txtMaPhieuPP').value = "";
-                document.getElementById('txtMaPTPP').value = "";
-                document.getElementById('txtMaNVPP').value = "";
-                document.getElementById('txtTongTienPP').value = "0";
-            }
-            function sendDataLoi(action){
-                const formData=new URLSearchParams({
-                    action: action,
-                    tenLoi: document.getElementById('txtLoi').value,
-                    phanTramTien: document.getElementById('txtPhanTramTien').value,
-                    optionSearch: document.getElementById('comBoBoxSearchLoi').value,
-                    valueSearch: document.getElementById('txtSearchLoi').value,
-                });
-                fetch('http://localhost:9999/cnpm/loi', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                    body: formData.toString()
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Đã xảy ra lỗi trong quá trình gửi dữ liệu');
-                        }
-                        return response.json(); // Chuyển đổi phản hồi thành JSON
-                    })
-                    .then(data => {
-                        if (data.thongbao)
-                            alert(data.thongbao); // Hiển thị thông báo từ servlet
-                        if (data.results && data.results.length > 0) {
-                            kQTimKiemLoi(data.results);
-                        }
-
-                        // Nếu dữ liệu hợp lệ, tải lại trang
-                        if (data.hopLe) {
-                            window.location.reload();
-                        }
-                    })
-                    .catch(error => alert('Đã xảy ra lỗi: ' + error));
-            }
-            function kQTimKiemLoi(results)
-            {
-                const tableBody = document.getElementById('tbodyLoi');
-                tableBody.innerHTML = '';
-                if (!Array.isArray(results)) {
-                    results = Object.values(results); 
-                }
-                results.forEach(item => {
-                    const row = document.createElement('tr');
-                    const cell1 = document.createElement('td');
-                    cell1.textContent = item.tenLoi || '';
-                    row.appendChild(cell1);
-                    const cell2 = document.createElement('td');
-                    cell2.textContent = item.phanTramTien || '';
-                    row.appendChild(cell2);
-                    tableBody.appendChild(row);
-                });
-            }
-            function selectFile(action) {
-                // Lắng nghe sự kiện thay đổi của input file
-                alert("Vui lòng chọn hoặc tạo file excel để "+action+" ở trong thư mục C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/");
-                const fileInput = document.getElementById("fileExcel");
-                fileInput.onchange = function() {
-                    if (fileInput.files.length > 0) {
-                        // Gán đường dẫn file vào biến toàn cục
-                        namePath = fileInput.files[0].name;
-                        sendDataPP(action);
+                <script>
+                    //biến giữ đường link file excel
+                    let namePath = "";
+                    /*click table*/
+                    function clickLoi(row) {
+                        const cells = row.getElementsByTagName('td');
+                        document.getElementById('txtLoi').value = cells[0].innerText;
+                        document.getElementById('txtPhanTramTien').value = cells[1].innerText;
+                        let currentValue = document.getElementById('txtLiDoCTPP').value;
+                        if (currentValue.includes(cells[0].innerText)) {
+                            alert("Lỗi này bạn đã có!");
+                        } else
+                            document.getElementById('txtLiDoCTPP').value = currentValue ? currentValue + "," + cells[0].innerText : cells[0].innerText;
                     }
-                };
-                // Hiển thị cửa sổ chọn file
-                fileInput.click();
-            }
-            function sendDataPP(action) {
-                alert("Đã click"); // Kiểm tra xem hàm có được gọi
-                const formData = new URLSearchParams({
-                    action: action,
-                    maPP: document.getElementById('txtMaPhieuPP').value,
-                    maPT: document.getElementById('txtMaPTPP').value,
-                    maNV: document.getElementById('txtMaNVPP').value,
-                    tongTien: document.getElementById('txtTongTienPP').value,
-                    optionSearch: document.getElementById('comBoBoxSearchPP').value,
-                    valueSearch: document.getElementById('txtSearchPP').value,
-                    nameFileExcel:namePath,
-                });
 
-                fetch('http://localhost:9999/cnpm/phieuphat', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                    body: formData.toString()
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Đã xảy ra lỗi trong quá trình gửi dữ liệu');
+                    const rowsLoi = document.querySelectorAll('#tableLoi tbody tr');
+                    rowsLoi.forEach(row => {
+                        row.addEventListener('click', () => clickLoi(row));
+                    });
+
+                    function clickCTPP(row) {
+                        const cells = row.getElementsByTagName('td');
+                        document.getElementById('txtMaPhieuCTPP').value = cells[0].innerText;
+                        document.getElementById('txtMaSachCTPP').value = cells[1].innerText;
+                        document.getElementById('txtMaVachCTPP').value = cells[2].innerText;
+                        document.getElementById('txtNgayLapCTPP').value = cells[3].innerText;
+                        document.getElementById('txtLiDoCTPP').value = cells[4].innerText;
+                        document.getElementById('txtTienCTPP').value = cells[5].innerText;
                     }
-                    return response.text(); // Chuyển đổi phản hồi thành văn bản
-                })
-                .then(content => {
-                    try {
-                        const data = JSON.parse(content); // Cố gắng phân tích cú pháp JSON
-                        if (data.thongbao) {
-                            alert(data.thongbao); // Hiển thị thông báo từ server
-                        }
-                        if (data.results && data.results.length > 0) {
-                            kQTimKiemPP(data.results); // Xử lý kết quả tìm kiếm
-                        }
-                        if (data.hopLe) {
-                            window.location.reload(); // Tải lại trang nếu hợp lệ
-                        }
-                    } catch (e) {
-                        if (content.startsWith('<')) {
-                            if (action === 'print') {
-                                // Hiển thị nội dung HTML và in ra
-                                const printWindow = window.open('', '_blank');
-                                printWindow.document.write('<html><head><title>In Phiếu Mượn</title></head><body>');
-                                printWindow.document.write(content); // Thêm nội dung HTML
-                                printWindow.document.write('</body></html>');
-                                printWindow.document.close();
-                                printWindow.print(); // In nội dung
+                    const rowsCTPP = document.querySelectorAll('#tableCTPP tbody tr');
+                    rowsCTPP.forEach(row => {
+                        row.addEventListener('click', () => clickCTPP(row));
+                    });
+
+                    function clickPP(row) {
+                        const cells = row.getElementsByTagName('td');
+                        document.getElementById('txtMaPhieuPP').value = cells[0].innerText;
+                        document.getElementById('txtMaPTPP').value = cells[1].innerText;
+                        document.getElementById('txtMaNVPP').value = cells[2].innerText;
+                        document.getElementById('txtTongTienPP').value = cells[3].innerText;
+
+
+                    }
+                    const rowsPP = document.querySelectorAll('#tablePP tbody tr');
+                    rowsPP.forEach(row => {
+                        row.addEventListener('click', () => clickPP(row));
+                    });
+                    function formatDate(date) {
+                        const year = date.getFullYear();
+                        const month = String(date.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
+                        const day = String(date.getDate()).padStart(2, '0');
+                        return `${year}-${month}-${day}`;
                             }
-                        } else {
-                            alert('Đã xảy ra lỗi trong quá trình xử lý dữ liệu.');
-                        }
-                    }
-                })
-                .catch(error => alert('Đã xảy ra lỗi: ' + error));
-            }
-            function kQTimKiemPP(results)
-            {
-                const tableBody = document.getElementById('tbodyPP');
-                tableBody.innerHTML = '';
-                if (!Array.isArray(results)) {
-                    results = Object.values(results); // Chuyển đổi đối tượng thành mảng các giá trị
-                }
-                results.forEach(item => {
-                    const row = document.createElement('tr');
-                    const cell1 = document.createElement('td');
-                    cell1.textContent = item.maPhieu || '';
-                    row.appendChild(cell1);
-                    const cell2 = document.createElement('td');
-                    cell2.textContent = item.maPT || '';
-                    row.appendChild(cell2);
-                    const cell3 = document.createElement('td');
-                    cell3.textContent = item.maNV || '';
-                    row.appendChild(cell3);
-                    const cell4 = document.createElement('td');
-                    cell4.textContent = item.tongTien || '';
-                    row.appendChild(cell4);
-                    tableBody.appendChild(row);
-                });
-            }
-            function sendDataCTPP(action){
-                const formData=new URLSearchParams({
-                    action: action,
-                    maPP: document.getElementById('txtMaPhieuCTPP').value,
-                    maSach: document.getElementById('txtMaSachCTPP').value,
-                    maVach: document.getElementById('txtMaVachCTPP').value,
-                    ngayLap: document.getElementById('txtNgayLapCTPP').value,
-                    liDo: document.getElementById('txtLiDoCTPP').value,
-                    tien: document.getElementById('txtTienCTPP').value,
-                    optionSearch: document.getElementById('comBoBoxSearchCTPP').value,
-                    valueSearch: document.getElementById('txtSearchCTPP').value,
-                });
-                fetch('http://localhost:9999/cnpm/ctpp', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                    body: formData.toString()
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Đã xảy ra lỗi trong quá trình gửi dữ liệu');
-                        }
-                        return response.json(); // Chuyển đổi phản hồi thành JSON
-                    })
-                    .then(data => {
-                        if (data.thongbao)
-                            alert(data.thongbao); // Hiển thị thông báo từ servlet
-                        if (data.results && data.results.length > 0) {
-                            kQTimKiemCTPP(data.results);
-                        }
 
-                        // Nếu dữ liệu hợp lệ, tải lại trang
-                        if (data.hopLe) {
-                            window.location.reload();
-                        }
-                    })
-                    .catch(error => alert('Đã xảy ra lỗi: ' + error));
-            }
-            function kQTimKiemCTPP(results)
-            {
-                const tableBody = document.getElementById('tbodyCTPP');
-                tableBody.innerHTML = '';
-                if (!Array.isArray(results)) {
-                    results = Object.values(results); 
-                }
-                results.forEach(item => {
-                    const row = document.createElement('tr');
-                    const cell1 = document.createElement('td');
-                    cell1.textContent = item.maPhieu || '';
-                    row.appendChild(cell1);
-                    const cell2 = document.createElement('td');
-                    cell2.textContent = item.maSach || '';
-                    row.appendChild(cell2);
-                    
-                    const cell3 = document.createElement('td');
-                    cell3.textContent = item.maVach || '';
-                    row.appendChild(cell3);
-                    
-                    const cell4 = document.createElement('td');
-                    cell4.textContent = item.ngayLap || '';
-                    row.appendChild(cell4);
-                   
-                    const cell5 = document.createElement('td');
-                    cell5.textContent = item.liDo || '';
-                    row.appendChild(cell5);
-                    
-                    const cell6 = document.createElement('td');
-                    cell6.textContent = item.tien || '';
-                    row.appendChild(cell6);
-              
-                    tableBody.appendChild(row);
-                });
-            }
-            function thongBaoLayLoi() {
-                alert("Bạn thêm lỗi bằng cách click vào table Lỗi!")
-            }
-            //Đóng các table
-            function dongTBTT() {
-                const divs = document.querySelectorAll('.divTT'); // Chọn tất cả div có class 'popupDiv'
-                divs.forEach(div => div.style.display = 'none'); // Ẩn từng div
-            }
-            //Hiện thị table Sách
-            function hienThiSach() {
-                const table = document.getElementById('divtableSach');
-                if (table.style.display === 'none') {
-                    table.style.display = 'block';
-                } else {
-                    table.style.display = 'none';
-                }
-            }
-            function clickSach(row) {
-                const cells = row.getElementsByTagName('td');
-                document.getElementById('txtMaSachCTPP').value = cells[0].innerText;
-                //document.getElementById('txtMaNV').disabled=true;
-                const tableNV = document.getElementById('divtableSach');
-                tableNV.style.display = "none";
+                            // Lấy ngày hiện tại và gán vào input
+                            document.getElementById('txtNgayLapCTPP').value = formatDate(new Date());
 
-            }
-            const rows = document.querySelectorAll('#tableSach tbody tr');
-            rows.forEach(row => {
-                row.addEventListener('click', () => clickSach(row));
-            });
-            //hiện thị chi tiết sách
-            function hienThiCTSach() {
-                const table = document.getElementById('divtableCTSach');
-                if (table.style.display === 'none') {
-                    table.style.display = 'block';
-                } else {
-                    table.style.display = 'none';
-                }
-            }
-            function clickCTSach(row) {
-                const cells = row.getElementsByTagName('td');
-                document.getElementById('txtMaVachCTPP').value = cells[0].innerText;
-                const tableNV = document.getElementById('divtableCTSach');
-                tableNV.style.display = "none";
+                            /*clear dữ liệu*/
+                            function clearInputLoi() {
+                                document.getElementById('txtLoi').value = "";
+                                document.getElementById('txtPhanTramTien').value = "";
+                            }
 
-            }
-            const rowsCTSah = document.querySelectorAll('#tableCTSach tbody tr');
-            rowsCTSah.forEach(row => {
-                row.addEventListener('click', () => clickCTSach(row));
-            });
-            //hiện thị Phiếu trả
-            function hienThiPT() {
-                const table = document.getElementById('divtablePT');
-                if (table.style.display === 'none') {
-                    table.style.display = 'block';
-                } else {
-                    table.style.display = 'none';
-                }
-            }
-            function clickPT(row) {
-                const cells = row.getElementsByTagName('td');
-                document.getElementById('txtMaPTPP').value = cells[0].innerText;
-                const tableNV = document.getElementById('divtablePT');
-                tableNV.style.display = "none";
+                            function clearInputCTPP() {
+                                document.getElementById('txtMaPhieuCTPP').value = "";
+                                document.getElementById('txtMaSachCTPP').value = "";
+                                document.getElementById('txtMaVachCTPP').value = "";
+                                document.getElementById('txtNgayLapCTPP').value = formatDate(new Date());
+                                document.getElementById('txtLiDoCTPP').value = "";
+                                document.getElementById('txtTienCTPP').value = "0";
+                            }
+                            function clearInputPP() {
+                                document.getElementById('txtMaPhieuPP').value = "";
+                                document.getElementById('txtMaPTPP').value = "";
+                                document.getElementById('txtMaNVPP').value = "";
+                                document.getElementById('txtTongTienPP').value = "0";
+                            }
+                            function sendDataLoi(action) {
+                                const formData = new URLSearchParams({
+                                    action: action,
+                                    tenLoi: document.getElementById('txtLoi').value,
+                                    phanTramTien: document.getElementById('txtPhanTramTien').value,
+                                    optionSearch: document.getElementById('comBoBoxSearchLoi').value,
+                                    valueSearch: document.getElementById('txtSearchLoi').value,
+                                });
+                                fetch('http://localhost:9999/cnpm/loi', {
+                                    method: 'POST',
+                                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                                    body: formData.toString()
+                                })
+                                        .then(response => {
+                                            if (!response.ok) {
+                                                throw new Error('Đã xảy ra lỗi trong quá trình gửi dữ liệu');
+                                            }
+                                            return response.json(); // Chuyển đổi phản hồi thành JSON
+                                        })
+                                        .then(data => {
+                                            if (data.thongbao)
+                                                alert(data.thongbao); // Hiển thị thông báo từ servlet
+                                            if (data.results && data.results.length > 0) {
+                                                kQTimKiemLoi(data.results);
+                                            }
 
-            }
-            const rowsPT = document.querySelectorAll('#tablePT tbody tr');
-            rowsPT.forEach(row => {
-                row.addEventListener('click', () => clickPT(row));
-            });
-            //hiện thị Nhân viên
-            function hienThiNV() {
-                const table = document.getElementById('divtableNV');
-                if (table.style.display === 'none') {
-                    table.style.display = 'block';
-                } else {
-                    table.style.display = 'none';
-                }
-            }
-            function clickNV(row) {
-                const cells = row.getElementsByTagName('td');
-                document.getElementById('txtMaNVPP').value = cells[0].innerText;
-                const tableNV = document.getElementById('divtableNV');
-                tableNV.style.display = "none";
+                                            // Nếu dữ liệu hợp lệ, tải lại trang
+                                            if (data.hopLe) {
+                                                window.location.reload();
+                                            }
+                                        })
+                                        .catch(error => alert('Đã xảy ra lỗi: ' + error));
+                            }
+                            function kQTimKiemLoi(results)
+                            {
+                                const tableBody = document.getElementById('tbodyLoi');
+                                tableBody.innerHTML = '';
+                                if (!Array.isArray(results)) {
+                                    results = Object.values(results);
+                                }
+                                results.forEach(item => {
+                                    const row = document.createElement('tr');
+                                    const cell1 = document.createElement('td');
+                                    cell1.textContent = item.tenLoi || '';
+                                    row.appendChild(cell1);
+                                    const cell2 = document.createElement('td');
+                                    cell2.textContent = item.phanTramTien || '';
+                                    row.appendChild(cell2);
+                                    tableBody.appendChild(row);
+                                });
+                            }
+                            function selectFile(action) {
+                                // Lắng nghe sự kiện thay đổi của input file
+                                alert("Vui lòng chọn hoặc tạo file excel để " + action + " ở trong thư mục C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/");
+                                const fileInput = document.getElementById("fileExcel");
+                                fileInput.onchange = function () {
+                                    if (fileInput.files.length > 0) {
+                                        // Gán đường dẫn file vào biến toàn cục
+                                        namePath = fileInput.files[0].name;
+                                        sendDataPP(action);
+                                    }
+                                };
+                                // Hiển thị cửa sổ chọn file
+                                fileInput.click();
+                            }
+                            function sendDataPP(action) {
+                                alert("Đã click"); // Kiểm tra xem hàm có được gọi
+                                const formData = new URLSearchParams({
+                                    action: action,
+                                    maPP: document.getElementById('txtMaPhieuPP').value,
+                                    maPT: document.getElementById('txtMaPTPP').value,
+                                    maNV: document.getElementById('txtMaNVPP').value,
+                                    tongTien: document.getElementById('txtTongTienPP').value,
+                                    optionSearch: document.getElementById('comBoBoxSearchPP').value,
+                                    valueSearch: document.getElementById('txtSearchPP').value,
+                                    nameFileExcel: namePath,
+                                });
 
-            }
-            const rowsNV = document.querySelectorAll('#tableNV tbody tr');
-            rowsNV.forEach(row => {
-                row.addEventListener('click', () => clickNV(row));
-            });
+                                fetch('http://localhost:9999/cnpm/phieuphat', {
+                                    method: 'POST',
+                                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                                    body: formData.toString()
+                                })
+                                        .then(response => {
+                                            if (!response.ok) {
+                                                throw new Error('Đã xảy ra lỗi trong quá trình gửi dữ liệu');
+                                            }
+                                            return response.text(); // Chuyển đổi phản hồi thành văn bản
+                                        })
+                                        .then(content => {
+                                            try {
+                                                const data = JSON.parse(content); // Cố gắng phân tích cú pháp JSON
+                                                if (data.thongbao) {
+                                                    alert(data.thongbao); // Hiển thị thông báo từ server
+                                                }
+                                                if (data.results && data.results.length > 0) {
+                                                    kQTimKiemPP(data.results); // Xử lý kết quả tìm kiếm
+                                                }
+                                                if (data.hopLe) {
+                                                    window.location.reload(); // Tải lại trang nếu hợp lệ
+                                                }
+                                            } catch (e) {
+                                                if (content.startsWith('<')) {
+                                                    if (action === 'print') {
+                                                        // Hiển thị nội dung HTML và in ra
+                                                        const printWindow = window.open('', '_blank');
+                                                        printWindow.document.write('<html><head><title>In Phiếu Mượn</title></head><body>');
+                                                        printWindow.document.write(content); // Thêm nội dung HTML
+                                                        printWindow.document.write('</body></html>');
+                                                        printWindow.document.close();
+                                                        printWindow.print(); // In nội dung
+                                                    }
+                                                } else {
+                                                    alert('Đã xảy ra lỗi trong quá trình xử lý dữ liệu.');
+                                                }
+                                            }
+                                        })
+                                        .catch(error => alert('Đã xảy ra lỗi: ' + error));
+                            }
+                            function kQTimKiemPP(results)
+                            {
+                                const tableBody = document.getElementById('tbodyPP');
+                                tableBody.innerHTML = '';
+                                if (!Array.isArray(results)) {
+                                    results = Object.values(results); // Chuyển đổi đối tượng thành mảng các giá trị
+                                }
+                                results.forEach(item => {
+                                    const row = document.createElement('tr');
+                                    const cell1 = document.createElement('td');
+                                    cell1.textContent = item.maPhieu || '';
+                                    row.appendChild(cell1);
+                                    const cell2 = document.createElement('td');
+                                    cell2.textContent = item.maPT || '';
+                                    row.appendChild(cell2);
+                                    const cell3 = document.createElement('td');
+                                    cell3.textContent = item.maNV || '';
+                                    row.appendChild(cell3);
+                                    const cell4 = document.createElement('td');
+                                    cell4.textContent = item.tongTien || '';
+                                    row.appendChild(cell4);
+                                    tableBody.appendChild(row);
+                                });
+                            }
+                            function sendDataCTPP(action) {
+                                const formData = new URLSearchParams({
+                                    action: action,
+                                    maPP: document.getElementById('txtMaPhieuCTPP').value,
+                                    maSach: document.getElementById('txtMaSachCTPP').value,
+                                    maVach: document.getElementById('txtMaVachCTPP').value,
+                                    ngayLap: document.getElementById('txtNgayLapCTPP').value,
+                                    liDo: document.getElementById('txtLiDoCTPP').value,
+                                    tien: document.getElementById('txtTienCTPP').value,
+                                    optionSearch: document.getElementById('comBoBoxSearchCTPP').value,
+                                    valueSearch: document.getElementById('txtSearchCTPP').value,
+                                });
+                                fetch('http://localhost:9999/cnpm/ctpp', {
+                                    method: 'POST',
+                                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                                    body: formData.toString()
+                                })
+                                        .then(response => {
+                                            if (!response.ok) {
+                                                throw new Error('Đã xảy ra lỗi trong quá trình gửi dữ liệu');
+                                            }
+                                            return response.json(); // Chuyển đổi phản hồi thành JSON
+                                        })
+                                        .then(data => {
+                                            if (data.thongbao)
+                                                alert(data.thongbao); // Hiển thị thông báo từ servlet
+                                            if (data.results && data.results.length > 0) {
+                                                kQTimKiemCTPP(data.results);
+                                            }
 
-            // Chặn việc sử dụng tổ hợp phím tắt để phóng to/thu nhỏ
-            document.addEventListener('keydown', function (event) {
-                if (event.ctrlKey && (event.key === '+' || event.key === '-' || event.key === '=')) {
-                    event.preventDefault();
-                }
-            });
+                                            // Nếu dữ liệu hợp lệ, tải lại trang
+                                            if (data.hopLe) {
+                                                window.location.reload();
+                                            }
+                                        })
+                                        .catch(error => alert('Đã xảy ra lỗi: ' + error));
+                            }
+                            function kQTimKiemCTPP(results)
+                            {
+                                const tableBody = document.getElementById('tbodyCTPP');
+                                tableBody.innerHTML = '';
+                                if (!Array.isArray(results)) {
+                                    results = Object.values(results);
+                                }
+                                results.forEach(item => {
+                                    const row = document.createElement('tr');
+                                    const cell1 = document.createElement('td');
+                                    cell1.textContent = item.maPhieu || '';
+                                    row.appendChild(cell1);
+                                    const cell2 = document.createElement('td');
+                                    cell2.textContent = item.maSach || '';
+                                    row.appendChild(cell2);
+
+                                    const cell3 = document.createElement('td');
+                                    cell3.textContent = item.maVach || '';
+                                    row.appendChild(cell3);
+
+                                    const cell4 = document.createElement('td');
+                                    cell4.textContent = item.ngayLap || '';
+                                    row.appendChild(cell4);
+
+                                    const cell5 = document.createElement('td');
+                                    cell5.textContent = item.liDo || '';
+                                    row.appendChild(cell5);
+
+                                    const cell6 = document.createElement('td');
+                                    cell6.textContent = item.tien || '';
+                                    row.appendChild(cell6);
+
+                                    tableBody.appendChild(row);
+                                });
+                            }
+                            function thongBaoLayLoi() {
+                                alert("Bạn thêm lỗi bằng cách click vào table Lỗi!")
+                            }
+                            //Đóng các table
+                            function dongTBTT() {
+                                const divs = document.querySelectorAll('.divTT'); // Chọn tất cả div có class 'popupDiv'
+                                divs.forEach(div => div.style.display = 'none'); // Ẩn từng div
+                            }
+                            //Hiện thị table Sách
+                            function hienThiSach() {
+                                const table = document.getElementById('divtableSach');
+                                if (table.style.display === 'none') {
+                                    table.style.display = 'block';
+                                } else {
+                                    table.style.display = 'none';
+                                }
+                            }
+                            function clickSach(row) {
+                                const cells = row.getElementsByTagName('td');
+                                document.getElementById('txtMaSachCTPP').value = cells[0].innerText;
+                                //document.getElementById('txtMaNV').disabled=true;
+                                const tableNV = document.getElementById('divtableSach');
+                                tableNV.style.display = "none";
+
+                            }
+                            const rows = document.querySelectorAll('#tableSach tbody tr');
+                            rows.forEach(row => {
+                                row.addEventListener('click', () => clickSach(row));
+                            });
+                            //hiện thị chi tiết sách
+                            function hienThiCTSach() {
+                                const table = document.getElementById('divtableCTSach');
+                                if (table.style.display === 'none') {
+                                    table.style.display = 'block';
+                                } else {
+                                    table.style.display = 'none';
+                                }
+                            }
+                            function clickCTSach(row) {
+                                const cells = row.getElementsByTagName('td');
+                                document.getElementById('txtMaVachCTPP').value = cells[0].innerText;
+                                const tableNV = document.getElementById('divtableCTSach');
+                                tableNV.style.display = "none";
+
+                            }
+                            const rowsCTSah = document.querySelectorAll('#tableCTSach tbody tr');
+                            rowsCTSah.forEach(row => {
+                                row.addEventListener('click', () => clickCTSach(row));
+                            });
+                            //hiện thị Phiếu trả
+                            function hienThiPT() {
+                                const table = document.getElementById('divtablePT');
+                                if (table.style.display === 'none') {
+                                    table.style.display = 'block';
+                                } else {
+                                    table.style.display = 'none';
+                                }
+                            }
+                            function clickPT(row) {
+                                const cells = row.getElementsByTagName('td');
+                                document.getElementById('txtMaPTPP').value = cells[0].innerText;
+                                const tableNV = document.getElementById('divtablePT');
+                                tableNV.style.display = "none";
+
+                            }
+                            const rowsPT = document.querySelectorAll('#tablePT tbody tr');
+                            rowsPT.forEach(row => {
+                                row.addEventListener('click', () => clickPT(row));
+                            });
+
+                            // Chặn việc sử dụng tổ hợp phím tắt để phóng to/thu nhỏ
+                            document.addEventListener('keydown', function (event) {
+                                if (event.ctrlKey && (event.key === '+' || event.key === '-' || event.key === '=')) {
+                                    event.preventDefault();
+                                }
+                            });
 
 
-            // Chặn thao tác phóng to bằng con lăn chuột
-            document.addEventListener('wheel', function (event) {
-                if (event.ctrlKey) {
-                    event.preventDefault();
-                }
-            }, {passive: false});
+                            // Chặn thao tác phóng to bằng con lăn chuột
+                            document.addEventListener('wheel', function (event) {
+                                if (event.ctrlKey) {
+                                    event.preventDefault();
+                                }
+                            }, {passive: false});
 
-        </script>
-    </body>
+                </script>
+                </body>
 
-</html>
+                </html>

@@ -131,7 +131,7 @@
         }
         .iconChucNang
         {
-            width: 20px;
+            width: 22px;
             height: auto;
             margin-right: 10px;
             vertical-align: middle;
@@ -208,7 +208,7 @@
         }
         #tableNV{
             width: 95%;
-            height: 70%;
+            height: 68%;
         }
         input:focus{
             outline: none;
@@ -233,13 +233,13 @@
                 <button class="conponentMenu">
                     <img src="img/stafff.svg" alt="icon">Nhân viên</button>
                 <button class="conponentMenu">
-                    <img src="img/customerr.svg" alt="icon">Khách hàng</button>
+                    <img src="img/customerr.svg" alt="icon">Độc giả</button>
                 <button class="conponentMenu">
                     <img src="img/nhaxuatban.jpg" alt="icon">Nhà xuất bản</button>
                 <button class="conponentMenu">
                     <img src="img/nhacc.jpg" alt="icon">Nhà cung cấp</button>
                 <button class="conponentMenu">
-                    <img src="img/danhmuc.jpg" alt="icon">Danh mục</button>
+                    <img src="img/khuvuc.jpg" alt="icon">Khu vực</button>
                 <button class="conponentMenu" >
                     <img src="img/export.svg" alt="icon">Phiếu mượn</button>
                 <button class="conponentMenu">
@@ -264,7 +264,7 @@
                         <div class="input-group">
                             <label class="nameFeature">Mã nhân viên</label><br>
                             <input type="text" name="txtMaNV" id="txtMaNV" placeholder="Nhập mã nv" readonly>
-                            <img src="img/add.svg" alt="mở table nhân viên" onclick="hienThiTBNV()"  style="cursor: pointer;width: 10px;height:auto;" />
+                            <img src="img/add.svg" alt="mở table nhân viên" onclick="hienThiTBNV()"  style="cursor: pointer;width: 15px;height:auto;" />
                         </div>
                         <div class="input-group">
                             <label class="nameFeature">Mật khẩu</label><br>
@@ -335,7 +335,7 @@
                     </div>
                     <div id="divtableNV">
                         <img src="img/cancel.svg" alt="Đóng table nhân viên" onclick="dongTBNV()"
-                             style="cursor: pointer;width: 15px;height:auto;margin-left: 98%;" />
+                             style="cursor: pointer;width: 20px;height:auto;margin-left: 97%;" />
                         <h3 style="text-align: center;"> Ban  chọn mã nhân viên ở đây!</h3>
                         <div style="margin-left: 20px;">
                             <select id="comBoBoxSearch" name="options">
