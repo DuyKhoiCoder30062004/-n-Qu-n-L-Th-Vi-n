@@ -691,7 +691,6 @@
                         fileInput.click();
                     }
                     function sendData(action) {
-                        alert("namePath "+namePath);
                         const formData = new URLSearchParams({
                             action: action,
                             maPhieu: document.getElementById('txtMaPhieu').value,
@@ -722,8 +721,11 @@
                                         if (data.thongbao) {
                                             alert(data.thongbao); // Hiển thị thông báo từ server
                                         }
-                                        if (data.results && data.results.length > 0) {
-                                            kQTimKiemPM(data.results); // Xử lý kết quả tìm kiếm
+                                        if (data.resultsPM && data.resultsPM.length > 0) {
+                                            alert("PM"+data.resultsPM );
+                                            alert("CTPM"+data.resultsCTPM);
+                                            kQTimKiemPM(data.resultsPM); // Xử lý kết quả tìm kiếm
+                                            kQTimKiemCTPM(data.resultsCTPM);
                                         }
                                         if (data.hopLe) {
                                             window.location.reload(); // Tải lại trang nếu hợp lệ
@@ -817,7 +819,7 @@
                     }
                     function  kQTimKiemCTPM(results)
                     {
-                        const tableBody = document.getElementById('tbodyCTPM');
+                        const tableBody = document.getElementById('tbodyCT');
                         tableBody.innerHTML = '';
                         if (!Array.isArray(results)) {
                             results = Object.values(results); // Chuyển đổi đối tượng thành mảng các giá trị

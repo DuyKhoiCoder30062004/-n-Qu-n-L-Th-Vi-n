@@ -5,8 +5,11 @@
 package Controller;
 
 import BUS.CTPP_BUS;
+import BUS.CTSach_BUS;
 import BUS.Loi_BUS;
 import BUS.PhieuPhat_BUS;
+import BUS.PhieuTra_BUS;
+import BUS.Sach_BUS;
 import DTO.CTPP_DTO;
 import DTO.Loi_DTO;
 import DTO.PhieuPhat_DTO;
@@ -31,6 +34,8 @@ public class CTPP_Servlet extends HttpServlet {
     private PhieuPhat_BUS pp_BUS = new PhieuPhat_BUS();
     private Loi_BUS loi_BUS = new Loi_BUS();
     private CTPP_BUS ctpp_BUS = new CTPP_BUS();
+    private CTSach_BUS cts_BUS=new CTSach_BUS();
+    private PhieuTra_BUS pt_BUS=new PhieuTra_BUS();
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -73,6 +78,7 @@ public class CTPP_Servlet extends HttpServlet {
             response.getWriter().write("{\"thongbao\": \"Vui lòng chọn mã sách\", \"hopLe\": false}");
             return false; // Dừng hàm nếu lỗi
         }
+    
         if (maVach == null || maVach.trim().isEmpty()) {
             response.getWriter().write("{\"thongbao\": \"Vui lòng chọn mã vạch\", \"hopLe\": false}");
             return false; // Dừng hàm nếu lỗi

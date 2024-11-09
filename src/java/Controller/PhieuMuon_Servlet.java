@@ -150,10 +150,15 @@ public class PhieuMuon_Servlet extends HttpServlet {
                     response.getWriter().write("{\"thongbao\": \"Vui lòng nhập thông tin bạn muốn tìm kiếm\", \"hopLe\": false}");
                     return;
                 }
-                StringBuilder result = pm_BUS.searchPM(optionSearch, valueSearch);
-                if (result.length() > 2) {
+                StringBuilder[] result = pm_BUS.searchPM(optionSearch, valueSearch);
+                if (result[0].length() > 2) {
                     // Có dữ liệu
-                    response.getWriter().write("{\"thongbao\": \"tìm kiếm thành công\", \"hopLe\": false, \"results\": " + result.toString() + "}");
+                    response.getWriter().write("{"
+                        + "\"thongbao\": \"Tìm kiếm thành công\", "
+                        + "\"hopLe\": false, "
+                        + "\"resultsPM\": " + result[0].toString() + ", "
+                        + "\"resultsCTPM\": " + result[1].toString()
+                        + "}");
                 } else {
                     // Không có dữ liệu
                     response.getWriter().write("{\"thongbao\": \"Không có phiếu mượn bạn cần tìm\", \"hopLe\": false}");

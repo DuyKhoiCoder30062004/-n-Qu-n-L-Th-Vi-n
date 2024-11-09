@@ -64,16 +64,19 @@ public class PhieuMuon_BUS {
         return pm_DAO.searchByMaPM(mapm);
     }
 
-    public StringBuilder searchPM(String option, String value) {
+    public StringBuilder[] searchPM(String option, String value) {
+        StringBuilder[] arrayrs = new StringBuilder[2];
         StringBuilder jsonResult = new StringBuilder("["); // Sử dụng StringBuilder để dễ dàng quản lý chuỗi
+        StringBuilder jsonRsCTPM = new StringBuilder("[");
         boolean firstItem = true;
+        boolean fItemCTPM=true;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         for (PhieuMuon_DTO pm : pm_DAO.getList()) {
             // Kiểm tra điều kiện để thêm vào JSON
             if (option.equals("Mã phiếu") && String.valueOf(pm.getMaPM()).contains(value)
-                    || option.equals("Mã độc giả") & String.valueOf(pm.getMaKhach()).contains(value)
-                    || option.equals("Mã NV") & String.valueOf(pm.getMaNV()).contains(value)
-                    || option.equals("Ngày lập") & pm.getNgayLap().format(formatter).contains(value)) {
+                    || option.equals("Mã độc giả") && String.valueOf(pm.getMaKhach()).contains(value)
+                    || option.equals("Mã NV") && String.valueOf(pm.getMaNV()).contains(value)
+                    || option.equals("Ngày lập") && pm.getNgayLap().format(formatter).contains(value)) {
                 if (!firstItem) {
                     jsonResult.append(","); // Thêm dấu phẩy trước mỗi phần tử sau phần tử đầu tiên
                 }
@@ -86,10 +89,27 @@ public class PhieuMuon_BUS {
                         + "\"tongSL\": \"" + pm.getTongSL() + "\""
                         + "}");
                 firstItem = false; // Đánh dấu rằng phần tử đầu tiên đã được thêm
+                ArrayList<CTPM_DTO> listCTPM=ctpm_BUS.searchByMaPM(pm.getMaPM());
+                for (CTPM_DTO ctpm: listCTPM)
+                {
+                    if(!fItemCTPM){
+                        jsonRsCTPM.append(",");
+                    }
+                    jsonRsCTPM.append("{"
+                        + "\"maPM\": \"" + ctpm.getMaPM() + "\","
+                        + "\"maSach\": \"" + ctpm.getMaSach() + "\","
+                        + "\"soLuong\": \"" + ctpm.getSoLuong() + "\","
+                        + "\"trangThai\": \"" + ctpm.getTrangthai() + "\""
+                        + "}");
+                    fItemCTPM = false; 
+                }
             }
         }
-        jsonResult.append("]"); // Kết thúc mảng JSON
-        return jsonResult; // Trả về StringBuilder
+        jsonResult.append("]"); 
+        jsonRsCTPM.append("]");
+        arrayrs[0]=jsonResult;
+        arrayrs[1]=jsonRsCTPM;
+        return arrayrs; // Trả về StringBuilder
     }
 
     public String printPM(int mapm) {

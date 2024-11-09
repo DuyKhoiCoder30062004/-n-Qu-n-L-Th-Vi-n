@@ -66,7 +66,7 @@ public class PhanQuyen_Servlet extends HttpServlet {
             return false;
         }
 
-        return true; // Không có lỗi
+        return true; 
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -83,6 +83,11 @@ public class PhanQuyen_Servlet extends HttpServlet {
         switch (action) {
             case "add":
                 if (!checkInfor(request, response, maNV, matKhau, tasks)) {
+                    return;
+                }
+                if(pq_BUS.searchByMaNV(Integer.parseInt(maNV))!=null)
+                {
+                    response.getWriter().write("{\"thongbao\": \"Mã nhân viên này đã có tài khoản\", \"hopLe\": false}");
                     return;
                 }
                 // Tiếp tục xử lý sau khi kiểm tra thành công
