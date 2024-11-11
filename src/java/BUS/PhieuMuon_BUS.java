@@ -109,7 +109,7 @@ public class PhieuMuon_BUS {
         jsonRsCTPM.append("]");
         arrayrs[0]=jsonResult;
         arrayrs[1]=jsonRsCTPM;
-        return arrayrs; // Trả về StringBuilder
+        return arrayrs; 
     }
 
     public String printPM(int mapm) {

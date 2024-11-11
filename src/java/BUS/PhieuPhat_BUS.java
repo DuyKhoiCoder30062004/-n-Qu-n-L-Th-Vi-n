@@ -60,9 +60,12 @@ public class PhieuPhat_BUS {
         return pp_DAO.searchByMaPP(mapp);
     }
 
-    public StringBuilder searchPP(String option, String value) {
-        StringBuilder jsonResult = new StringBuilder("["); // Sử dụng StringBuilder để dễ dàng quản lý chuỗi
-        boolean firstItem = true; // Biến đánh dấu phần tử đầu tiên
+    public StringBuilder[] searchPP(String option, String value) {
+        StringBuilder[] arrayrs = new StringBuilder[2];
+        StringBuilder jsonResult = new StringBuilder("["); 
+        StringBuilder jsonRsCTPP = new StringBuilder("[");
+        boolean firstItem = true;
+        boolean fItemCTPP=true;
 
         for (PhieuPhat_DTO pq : pp_DAO.getList()) {
             // Kiểm tra điều kiện để thêm vào JSON
@@ -79,11 +82,30 @@ public class PhieuPhat_BUS {
                         + "\"maNV\": \"" + pq.getMaNV() + "\","
                         + "\"tongTien\": \"" + pq.getTongTien() + "\""
                         + "}");
-                firstItem = false; // Đánh dấu rằng phần tử đầu tiên đã được thêm
+                firstItem = false; 
+                ArrayList<CTPP_DTO> listCTPP=ctpp_BUS.searchByMaPP(pq.getMaPP());
+                for (CTPP_DTO ctpp:listCTPP)
+                {
+                    if(!fItemCTPP){
+                        jsonRsCTPP.append(",");
+                    }
+                    jsonRsCTPP.append("{"
+                        + "\"maPhieu\": \"" + ctpp.getMaPP() + "\","
+                        + "\"maSach\": \"" + ctpp.getMaSach()+ "\","
+                        + "\"maVach\": \"" + ctpp.getMaVach()+ "\","
+                        + "\"ngayLap\": \"" + ctpp.getNgayLap()+ "\","
+                        + "\"liDo\": \"" + ctpp.getLiDo()+ "\","
+                        + "\"tien\": \"" + ctpp.getTien()+ "\""
+                        + "}");
+                    fItemCTPP = false;
+                }
             }
         }
-        jsonResult.append("]"); // Kết thúc mảng JSON
-        return jsonResult; // Trả về StringBuilder
+        jsonResult.append("]"); 
+        jsonRsCTPP.append("]");
+        arrayrs[0]=jsonResult;
+        arrayrs[1]=jsonRsCTPP;
+        return arrayrs; 
     }
     public String printPP(int maPP)
     {

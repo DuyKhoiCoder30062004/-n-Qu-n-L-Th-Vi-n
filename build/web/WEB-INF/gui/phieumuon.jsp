@@ -264,7 +264,7 @@
             overflow-y: auto;
             overflow-x: hidden;
         }
-        #divtableNV,#divtableKhach,#divtableSach {
+        #divtableKhach,#divtableSach {
             width: 50%;
             height: 50%;
             background-color: azure;
@@ -276,10 +276,10 @@
             z-index: 1000;
         }
 
-        #tableNV,#tableSach,#tableKhach {
+        #tableSach,#tableKhach {
             border-collapse: collapse;
             width: 95%;
-            height: 70%;
+            height: 67%;
             border: 2px solid black;
             margin-left: 20px;
         }
@@ -305,13 +305,13 @@
                 <button class="conponentMenu">
                     <img src="img/stafff.svg" alt="icon">Nhân viên</button>
                 <button class="conponentMenu">
-                    <img src="img/customerr.svg" alt="icon">Khách hàng</button>
+                    <img src="img/customerr.svg" alt="icon">Độc giả</button>
                 <button class="conponentMenu">
                     <img src="img/nhaxuatban.jpg" alt="icon">Nhà xuất bản</button>
                 <button class="conponentMenu">
                     <img src="img/nhacc.jpg" alt="icon">Nhà cung cấp</button>
                 <button class="conponentMenu">
-                    <img src="img/danhmuc.jpg" alt="icon">Danh mục</button>
+                    <img src="img/khuvuc.jpg" alt="icon">Khu vực</button>
                 <button id="tacVuThucThi" class="conponentMenu" >
                     <img src="img/export.svg" alt="icon">Phiếu mượn</button>
                 <button class="conponentMenu">
@@ -339,13 +339,12 @@
                     <div class="input-group">
                         <label class="nameFeature">Mã khách </label>
                         <input type="text" id="txtMaKhach" placeholder="Nhập mã khách">
-                        <img src="img/add.svg"  onclick="hienThiKhach()" style="cursor: pointer;width: 10px;height:auto;" />
+                        <img src="img/add.svg"  onclick="hienThiKhach()" style="cursor: pointer;width: 15px;height:auto;" />
                     </div>
 
                     <div class="input-group">
                         <label class="nameFeature">Mã NV </label>
                         <input type="text" id="txtMaNV" placeholder="Nhập mã NV">
-                        <img src="img/add.svg"  onclick="hienThiTBNV()" style="cursor: pointer;width: 10px;height:auto;" />
                         <img class="iconChucNang" id="iconThem" src="img/add.svg" title="Thêm PM" onclick="sendData('add')">
                         <img class="iconChucNang" id="iconXoa" src="img/delete.svg" title="Xóa PM" onclick="sendData('delete')">
                     </div><br>
@@ -361,7 +360,7 @@
 
                     <div class="input-group">
                         <label class="nameFeature" style="margin-right: 0px">Tổng SL </label>
-                        <input type="text" id="txtTongSL" value="0" style="margin-right: 13px" readonly>
+                        <input type="text" id="txtTongSL" value="0"  readonly>
                         <img class="iconChucNang" id="iconSua" src="img/edit.svg" title="Sửa PM" onclick="sendData('edit')">
                         <img class="iconChucNang" id="iconClear" title="Clear input"  onclick="clearInputPM()" src="img/clear.png" alt="icon">
                     </div><br>
@@ -438,7 +437,7 @@
                                 <label class="nameFeatureCTPM" style="margin-right: 18px;">Mã sách</label>
                                 <input type="text" id="txtSachCTPM" placeholder="Nhập mã sách" style="margin-right: 2px">
                                 <img src="img/add.svg" onclick="hienThiSach()"
-                                     style="cursor: pointer;width: 10px;height:auto;" />
+                                     style="cursor: pointer;width: 12px;height:auto;" />
                             </div>
                             <div class="input-groupCTPM">
                                 <label class="nameFeatureCTPM" style="margin-right: 15px;">Số lượng</label>
@@ -507,50 +506,16 @@
                         </div>
                     </div>
                 </section>
-                <div class="divTT" id="divtableNV">
-                    <img src="img/cancel.svg"  onclick="dongTBTT()"  style="cursor: pointer;width: 15px;height:auto;margin-left: 98%;" />
-                    <h3 style="text-align: center;"> Ban chọn mã nhân viên ở đây!</h3>
-                    <div style="margin-left: 20px;">
-                        <select id="comBoBoxSearch" name="options">
-                            <option value="Mã NV">Mã NV</option>
-                            <option value="Tên">Mật khẩu</option>
-                        </select>
-                        <input type="text" id="txtSearch" placeholder="Nhập thông tin">
-                        <img class="iconChucNang" id="iconSearchNV" onclick="searchOfNV" src="img/search1.png" alt="icon">
-                    </div>
-                    <table class="table" id="tableNV">
-                        <thead>
-                            <tr>
-                                <th>Mã nhân viên</th>
-                                <th>Họ</th>
-                                <th>Tên</th>
-                                <th> số điện thoại</th>
-                                <th> Ngày sinh</th>
-                                <th> chức vụ</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1234</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="divTT" id="divtableKhach">
-                    <img src="img/cancel.svg"  onclick="dongTBTT()"  style="cursor: pointer;width: 15px;height:auto;margin-left: 98%;" />
+                    <div class="divTT" id="divtableKhach" onclick="showListAllKhach()">
+                    <img src="img/cancel.svg"  onclick="dongTBTT()"  style="cursor: pointer;width: 20px;height:auto;margin-left: 97%;" />
                     <h3 style="text-align: center;"> Ban chọn mã độc giả ở đây!</h3>
                     <div style="margin-left: 20px;">
-                        <select id="comBoBoxSearch" name="options">
+                        <select id="comBoBoxSearchKhach" name="options">
                             <option value="Mã khách">Mã khách</option>
                             <option value="Tên">Tên </option>
                         </select>
-                        <input type="text" id="txtSearch" placeholder="Nhập thông tin">
-                        <img class="iconChucNang" id="iconSearchKhach" onclick="searchOfNV" src="img/search1.png" alt="icon">
+                        <input type="text" id="txtSearchKhach" placeholder="Nhập thông tin">
+                        <img class="iconChucNang" id="iconSearchKhach" src="img/search1.png" alt="icon">
                     </div>
                     <table class="table" id="tableKhach">
                         <thead>
@@ -567,7 +532,15 @@
                             <tr>
                                 <td>1234</td>
                                 <td></td>
+                                <td>Huyền</td>
                                 <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>1235</td>
+                                <td></td>
+                                <td>kuen</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -575,16 +548,16 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="divTT" id="divtableSach">
-                    <img src="img/cancel.svg"  onclick="dongTBTT()"  style="cursor: pointer;width: 15px;height:auto;margin-left: 98%;" />
+                <div class="divTT" id="divtableSach" onclick="showListAllSach()">
+                    <img src="img/cancel.svg"  onclick="dongTBTT()"  style="cursor: pointer;width: 20px;height:auto;margin-left: 97%;" />
                     <h3 style="text-align: center;"> Ban chọn mã Sách ở đây!</h3>
                     <div style="margin-left: 20px;">
-                        <select id="comBoBoxSearch" name="options">
+                        <select id="comBoBoxSearchSach" name="options">
                             <option value="Mã Sách">Mã Sách</option>
                             <option value="Tên sách">Tên sách </option>
                         </select>
-                        <input type="text" id="txtSearch" placeholder="Nhập thông tin">
-                        <img class="iconChucNang" id="iconSearchKhach" onclick="searchOfNV" src="img/search1.png" alt="icon">
+                        <input type="text" id="txtSearchSach" placeholder="Nhập thông tin">
+                        <img class="iconChucNang" id="iconSearchSach"  src="img/search1.png" alt="icon">
                     </div>
                     <table class="table" id="tableSach">
                         <thead>
@@ -599,7 +572,14 @@
                         <tbody>
                             <tr>
                                 <td>1234</td>
+                                <td>Vật lí</td>
                                 <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                             <tr>
+                                <td>1235</td>
+                                <td>Lí hóa</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -846,27 +826,6 @@
                         const divs = document.querySelectorAll('.divTT'); // Chọn tất cả div có class 'popupDiv'
                         divs.forEach(div => div.style.display = 'none'); // Ẩn từng div
                     }
-                    //Hiện thị table nhân viên
-                    function hienThiTBNV() {
-                        const tableNV = document.getElementById('divtableNV');
-                        if (tableNV.style.display === 'none') {
-                            tableNV.style.display = 'block';
-                        } else {
-                            tableNV.style.display = 'none';
-                        }
-                    }
-                    function clickNV(row) {
-                        const cells = row.getElementsByTagName('td');
-                        document.getElementById('txtMaNV').value = cells[0].innerText;
-                        //document.getElementById('txtMaNV').disabled=true;
-                        const tableNV = document.getElementById('divtableNV');
-                        tableNV.style.display = "none";
-                    }
-
-                    const rowsNV = document.querySelectorAll('#tableNV tbody tr');
-                    rowsNV.forEach(row => {
-                        row.addEventListener('click', () => clickNV(row));
-                    });
                     //Hiện thị table sách
                     function hienThiSach() {
                         const tableSach = document.getElementById('divtableSach');
@@ -882,6 +841,7 @@
                         //document.getElementById('txtMaNV').disabled=true;
                         const tableSach = document.getElementById('divtableSach');
                         tableSach.style.display = "none";
+                        document.getElementById('txtSLCTPM').focus();
                     }
 
                     const rowsSach = document.querySelectorAll('#tableSach tbody tr');
@@ -903,12 +863,103 @@
                         //document.getElementById('txtMaNV').disabled=true;
                         const tableKhach = document.getElementById('divtableKhach');
                         tableKhach.style.display = "none";
+                        document.getElementById('txtNgayLap').focus();
                     }
 
                     const rowsKhach = document.querySelectorAll('#tableKhach tbody tr');
                     rowsKhach.forEach(row => {
                         row.addEventListener('click', () => clickKhach(row));
                     });
+                    //Tìm kiếm khách trong table khách
+                    function searchKhach()
+                    {
+                        var value=document.getElementById('txtSearchKhach').value.toLowerCase();
+                        var option=document.getElementById('comBoBoxSearchKhach').value;
+                         var rows = document.querySelectorAll('#tableKhach tbody tr');
+                        if (!value) {
+                            alert("Vui lòng nhập thông tin để tìm kiếm khách!");
+                            return; 
+                        }
+                        var columnIndex=0;
+                        if(option ==="Tên")
+                            columnIndex=2;
+                        rows.forEach(row =>{
+                            var cell=row.getElementsByTagName('td')[columnIndex];
+                            if(cell && cell.textContent.toLowerCase().includes(value)){
+                                row.style.display="";
+                            }
+                            else row.style.display="none";
+                        });
+                    }
+                    document.getElementById('iconSearchKhach').addEventListener('click', function(event) {
+                        event.stopPropagation(); // Ngăn chặn sự kiện click lan ra divTableNV
+                        searchKhach(); 
+                    });
+                    //hiện thị hết dữ liệu của table khách
+                    function showListAllKhach() {
+                        var rows = document.querySelectorAll('#tableKhach tbody tr');
+                        rows.forEach(row => {
+                            row.style.display = "";
+                        });
+                        document.getElementById('txtSearchKhach').value="";
+                    }
+                    //Tìm kiếm với table sách
+                    function searchSach()
+                    {
+                        var value=document.getElementById('txtSearchSach').value.toLowerCase();
+                        var option=document.getElementById('comBoBoxSearchSach').value;
+                         var rows = document.querySelectorAll('#tableSach tbody tr');
+                        if (!value) {
+                            alert("Vui lòng nhập thông tin để tìm kiếm Sách!");
+                            return; 
+                        }
+                        var columnIndex=0;
+                        if(option ==="Tên sách")
+                            columnIndex=1;
+                        rows.forEach(row =>{
+                            var cell=row.getElementsByTagName('td')[columnIndex];
+                            if(cell && cell.textContent.toLowerCase().includes(value)){
+                                row.style.display="";
+                            }
+                            else row.style.display="none";
+                        });
+                    }
+                    document.getElementById('iconSearchSach').addEventListener('click', function(event) {
+                        event.stopPropagation(); // Ngăn chặn sự kiện click lan ra divTableNV
+                        searchSach(); 
+                    });
+                    //hiện thị hết dữ liệu của table sách
+                    function showListAllSach() {
+                        var rows = document.querySelectorAll('#tableSach tbody tr');
+                        rows.forEach(row => {
+                            row.style.display = "";
+                        });
+                        document.getElementById('txtSearchSach').value="";
+                    }
+                    
+                    //sự kiện enter phiếu mượn
+                    document.getElementById('txtMaPhieu').addEventListener('keydown', function(event) {
+                        if (event.key === "Enter") {
+                            event.preventDefault();
+                            hienThiKhach();
+                        }
+                    });
+
+                    document.getElementById('txtNgayLap').addEventListener('keydown', function(event) {
+                        if (event.key === "Enter") {
+                            event.preventDefault();
+                            document.getElementById('txtHanChot').focus();
+                        }
+                    });
+                    
+                    //sự kiện enter cho ctphieu mượn
+                    document.getElementById('txtMaPhieuCTPM').addEventListener('keydown', function(event) {
+                        if (event.key === "Enter") {
+                            event.preventDefault();
+                             hienThiSach();
+                        }
+                    });
+
                     // Chặn việc sử dụng tổ hợp phím tắt để phóng to/thu nhỏ
                     document.addEventListener('keydown', function (event) {
                         if (event.ctrlKey && (event.key === '+' || event.key === '-' || event.key === '=')) {

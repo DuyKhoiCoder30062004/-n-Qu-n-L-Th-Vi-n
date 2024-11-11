@@ -131,7 +131,7 @@
         }
         .iconChucNang
         {
-            width: 20px;
+            width: 22px;
             height: auto;
             margin-right: 10px;
             vertical-align: middle;
@@ -208,7 +208,7 @@
         }
         #tableNV{
             width: 95%;
-            height: 70%;
+            height: 68%;
         }
         input:focus{
             outline: none;
@@ -264,7 +264,7 @@
                         <div class="input-group">
                             <label class="nameFeature">Mã nhân viên</label><br>
                             <input type="text" name="txtMaNV" id="txtMaNV" placeholder="Nhập mã nv" readonly>
-                            <img src="img/add.svg" alt="mở table nhân viên" onclick="hienThiTBNV()"  style="cursor: pointer;width: 10px;height:auto;" />
+                            <img src="img/add.svg" alt="mở table nhân viên" onclick="hienThiTBNV()"  style="cursor: pointer;width: 15px;height:auto;" />
                         </div>
                         <div class="input-group">
                             <label class="nameFeature">Mật khẩu</label><br>
@@ -333,17 +333,18 @@
                             </tbody>
                         </table>
                     </div>
-                    <div id="divtableNV">
+                    <div id="divtableNV" onclick="showAllRows()">
                         <img src="img/cancel.svg" alt="Đóng table nhân viên" onclick="dongTBNV()"
-                             style="cursor: pointer;width: 15px;height:auto;margin-left: 98%;" />
+                             style="cursor: pointer;width: 20px;height:auto;margin-left: 97%;" />
                         <h3 style="text-align: center;"> Ban  chọn mã nhân viên ở đây!</h3>
                         <div style="margin-left: 20px;">
-                            <select id="comBoBoxSearch" name="options">
+                            <select id="comBoBoxSearchNV" name="options">
                                 <option value="Mã NV">Mã NV</option>
-                                <option value="Tên">Mật khẩu</option>
+                                <option value="Tên">Tên nhân viên</option>
+                                <option value="Chức vụ">Chức vụ</option>
                             </select> 
-                            <input type="text" id="txtSearch" placeholder="Nhập thông tin">
-                            <img class="iconChucNang" id="iconSearchNV" onclick="searchOfNV"  src="img/search1.png" alt="icon">
+                            <input type="text" id="txtSearchNV" placeholder="Nhập thông tin">
+                            <img class="iconChucNang" id="iconSearchNV" src="img/search1.png" alt="icon">
                         </div>
                         <table class="table" id="tableNV">
                             <thead>
@@ -356,14 +357,30 @@
                                     <th> chức vụ</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="tbodyNV">
                                 <tr>
                                     <td>1234</td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
+                                    <td>admin</td>
+                                </tr>
+                                <tr>
+                                    <td>1235</td>
                                     <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>quản lí</td>
+                                </tr>
+                                <tr>
+                                    <td>1236</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>nhân viên</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -454,7 +471,7 @@
                     tableBody.appendChild(row);
                 });
             }
-
+            
             /*clear dữ liệu*/
             function clearInputPQ() {
                 document.getElementById('txtMaNV').value = "";
@@ -482,16 +499,69 @@
             function clickNV(row) {
                 const cells = row.getElementsByTagName('td');
                 document.getElementById('txtMaNV').value = cells[0].innerText;
-                //document.getElementById('txtMaNV').disabled=true;
+                document.querySelectorAll('input[type="checkbox"][name="task"]').forEach(checkbox => {
+                        checkbox.checked = false;
+                        checkbox.disabled = false;
+                 });
+                if (cells[5].innerText === "admin") {
+                    document.querySelectorAll('input[type="checkbox"][name="task"]').forEach(checkbox => {
+                        checkbox.disabled = true;
+                    });
+                    document.querySelector('input[type="checkbox"][name="task"][value="phân quyền"]').checked = true;
+                } else {
+                    document.querySelector('input[type="checkbox"][name="task"][value="phân quyền"]').disabled = true;
+
+                    if (cells[5].innerText === "quản lí") {
+                        document.querySelector('input[type="checkbox"][name="task"][value="thống kê"]').checked = true;
+                    } else {
+                        document.querySelector('input[type="checkbox"][name="task"][value="thống kê"]').disabled = true;
+                    }
+                }
                 const tableNV = document.getElementById('divtableNV');
                 tableNV.style.display = "none";
-
+                document.getElementById('txtMatKhau').focus();
             }
+
 
             const rowsNV = document.querySelectorAll('#tableNV tbody tr');
             rowsNV.forEach(row => {
                 row.addEventListener('click', () => clickNV(row));
             });
+            //Tìm kiếm trong bảng nhân viên
+            function searchOfNV()
+            {
+                var value=document.getElementById('txtSearchNV').value.toLowerCase();
+                var option=document.getElementById('comBoBoxSearchNV').value;
+                 var rows = document.querySelectorAll('#tbodyNV tr');
+                if (!value) {
+                    alert("Vui lòng nhập thông tin để tìm kiếm nhân viên!");
+                    return; 
+                }
+                var columnIndex=0;
+                if(option ==="Tên")
+                    columnIndex=2;
+                else if(option=="Chức vụ")
+                    columnIndex=4;
+                rows.forEach(row =>{
+                    var cell=row.getElementsByTagName('td')[columnIndex];
+                    if(cell && cell.textContent.toLowerCase().includes(value)){
+                        row.style.display="";
+                    }
+                    else row.style.display="none";
+                });
+            }
+            document.getElementById('iconSearchNV').addEventListener('click', function(event) {
+                event.stopPropagation(); // Ngăn chặn sự kiện click lan ra divTableNV
+                searchOfNV(); 
+            });
+            //hiện thị hết dữ liệu của table nhân viên
+            function showAllRows() {
+                var rows = document.querySelectorAll('#tbodyNV tr');
+                rows.forEach(row => {
+                    row.style.display = ""; // Hiển thị tất cả các hàng
+                });
+                document.getElementById('txtSearchNV').value="";
+            }
             // Chặn việc sử dụng tổ hợp phím tắt để phóng to/thu nhỏ
             document.addEventListener('keydown', function (event) {
                 if (event.ctrlKey && (event.key === '+' || event.key === '-' || event.key === '=')) {
