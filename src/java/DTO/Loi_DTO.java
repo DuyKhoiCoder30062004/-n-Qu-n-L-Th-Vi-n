@@ -10,14 +10,14 @@ package DTO;
  */
 public class Loi_DTO {
     private String tenLoi;
-    private float phamTramtien;
+    private float phamTramTien;
 
     public Loi_DTO() {
     }
 
     public Loi_DTO(String tenLoi, float phamTramtien) {
         this.tenLoi = tenLoi;
-        this.phamTramtien = phamTramtien;
+        this.phamTramTien = phamTramtien;
     }
 
     public String getTenLoi() {
@@ -28,12 +28,12 @@ public class Loi_DTO {
         this.tenLoi = tenLoi;
     }
 
-    public float getPhamTramtien() {
-        return phamTramtien;
+    public float getPhamTramTien() {
+        return phamTramTien;
     }
 
-    public void setPhamTramtien(float phamTramtien) {
-        this.phamTramtien = phamTramtien;
+    public void setPhamTramTien(float phamTramtien) {
+        this.phamTramTien = phamTramtien;
     }
     
     

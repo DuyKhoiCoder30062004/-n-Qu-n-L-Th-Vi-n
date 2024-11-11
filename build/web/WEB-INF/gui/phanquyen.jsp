@@ -131,7 +131,7 @@
         }
         .iconChucNang
         {
-            width: 20px;
+            width: 22px;
             height: auto;
             margin-right: 10px;
             vertical-align: middle;
@@ -208,7 +208,7 @@
         }
         #tableNV{
             width: 95%;
-            height: 70%;
+            height: 68%;
         }
         input:focus{
             outline: none;
@@ -224,47 +224,47 @@
 
             <div id="menu">
                 <div class="conponentMenu" id="iconAndName" style="background-color:#99B3A1 ;">
-                    <img src="./anh/ionCV.png" alt="icon">
+                    <img src="img/account.svg" alt="icon">
                     Nguyễn Trung
                     Quản lí
                 </div>
                 <button class="conponentMenu">
-                    <img src="./anh/ionCV.png" alt="icon"> Sách</button>
+                    <img src="img/sach.jpg" alt="icon"> Sách</button>
                 <button class="conponentMenu">
-                    <img src="./anh/ionCV.png" alt="icon">Nhân viên</button>
+                    <img src="img/stafff.svg" alt="icon">Nhân viên</button>
                 <button class="conponentMenu">
-                    <img src="./anh/ionCV.png" alt="icon">Khách hàng</button>
+                    <img src="img/customerr.svg" alt="icon">Độc giả</button>
                 <button class="conponentMenu">
-                    <img src="./anh/ionCV.png" alt="icon">Nhà xuất bản</button>
+                    <img src="img/nhaxuatban.jpg" alt="icon">Nhà xuất bản</button>
                 <button class="conponentMenu">
-                    <img src="./anh/ionCV.png" alt="icon">Nhà cung cấp</button>
+                    <img src="img/nhacc.jpg" alt="icon">Nhà cung cấp</button>
                 <button class="conponentMenu">
-                    <img src="./anh/ionCV.png" alt="icon">Danh mục</button>
+                    <img src="img/khuvuc.jpg" alt="icon">Khu vực</button>
                 <button class="conponentMenu" >
-                    <img src="./anh/ionCV.png" alt="icon">Phiếu mượn</button>
+                    <img src="img/export.svg" alt="icon">Phiếu mượn</button>
                 <button class="conponentMenu">
-                    <img src="./anh/ionCV.png" alt="icon">Phiếu trả</button>
+                    <img src="img/phieutra.jpg" alt="icon">Phiếu trả</button>
                 <button class="conponentMenu">
-                    <img src="./anh/ionCV.png" alt="icon">Phiếu phạt</button>
+                    <img src="img/phieuphat.jpg" alt="icon">Phiếu phạt</button>
                 <button class="conponentMenu">
-                    <img src="./anh/ionCV.png" alt="icon">Phiếu nhập</button>
+                    <img src="img/phieunhap.jpg" alt="icon">Phiếu nhập</button>
                 <button id="tacVuThucThi" class="conponentMenu">
-                    <img src="./anh/ionCV.png"  alt="icon">Phân quyền</button>
+                    <img src="img/permission.svg" alt="icon">Phân quyền</button>
                 <button class="conponentMenu">
-                    <img src="./anh/ionCV.png" alt="icon">Thống kê</button>
+                    <img src="img/tinhhieuqua_128px.svg" alt="icon">Thống kê</button>
                 <button class="conponentMenu" >
-                    <img src="./anh/ionCV.png" alt="icon">Đăng xuất</button>
+                    <img src="img/logout.jpg" alt="icon">Đăng xuất</button>
             </div>
             <div id="detail">
                 <p id="titleDetail">
-                    <img id="imgDetail" src="./img/ionCV.png" alt="icon"> Quản lí Tài khoản và Phân quyền
+                    <img id="imgDetail" src="img/permission.svg" alt="icon"> Quản lí Tài khoản và Phân quyền
                 </p>
                 <div style="display: flex; justify-content: space-between; height:90%" >
                     <div id="input">
                         <div class="input-group">
                             <label class="nameFeature">Mã nhân viên</label><br>
                             <input type="text" name="txtMaNV" id="txtMaNV" placeholder="Nhập mã nv" readonly>
-                            <img src="./anh/ionCV.png" alt="mở table nhân viên" onclick="hienThiTBNV()"  style="cursor: pointer;width: 10px;height:auto;" />
+                            <img src="img/add.svg" alt="mở table nhân viên" onclick="hienThiTBNV()"  style="cursor: pointer;width: 15px;height:auto;" />
                         </div>
                         <div class="input-group">
                             <label class="nameFeature">Mật khẩu</label><br>
@@ -285,10 +285,10 @@
                             <label class="checkbox"><input type="checkbox" name="task" value="thống kê">Thống kê</label><br>
                         </div>
                         <div class="input-group">
-                            <img class="iconChucNang"  src="./img/ionCV.png" title="Thêm" onclick="sendData('add')">
-                            <img class="iconChucNang" src="./img/ionCV.png" title="Sửa" onclick="sendData('edit')">
-                            <img class="iconChucNang" src="./img/ionCV.png" title="Xóa" onclick="sendData('delete')">
-                            <img class="iconChucNang" id="iconClear" src="./img/ionCV.png" title="Clear Input" onclick="clearInputPQ()">
+                            <img class="iconChucNang"  src="img/add.svg" title="Thêm" onclick="sendData('add')">
+                            <img class="iconChucNang" src="img/edit.svg" title="Sửa" onclick="sendData('edit')">
+                            <img class="iconChucNang" src="img/delete.svg" title="Xóa" onclick="sendData('delete')">
+                            <img class="iconChucNang" id="iconClear" src="img/clear.png" title="Clear Input" onclick="clearInputPQ()">
                         </div>
                     </div>
 
@@ -300,8 +300,8 @@
                                 <option value="tác vụ">Tác vụ</option>
                             </select> 
                             <input type="text" id="txtSearch" placeholder="Nhập thông tin">
-                            <img class="iconChucNang" id="iconSearch" style="margin-right: 58%;" src="./anh/ionCV.png" title="Tìm kiếm" onclick="sendData('search')">
-                            <img class="iconChucNang" id="iconFinish" src="./anh/ionCV.png" title="Tải lại table" onclick="sendData('finish')">
+                            <img class="iconChucNang" id="iconSearch" style="margin-right: 58%;" src="img/search1.png" title="Tìm kiếm" onclick="sendData('search')">
+                            <img class="iconChucNang" id="iconFinish" src="img/refresh.svg" title="Tải lại table" onclick="sendData('finish')">
                         </div>
                         <table class="table" id="tablePQ">
                             <thead>
@@ -333,17 +333,18 @@
                             </tbody>
                         </table>
                     </div>
-                    <div id="divtableNV">
-                        <img src="./anh/ionCV.png" alt="Đóng table nhân viên" onclick="dongTBNV()"
-                             style="cursor: pointer;width: 15px;height:auto;margin-left: 98%;" />
+                    <div id="divtableNV" onclick="showAllRows()">
+                        <img src="img/cancel.svg" alt="Đóng table nhân viên" onclick="dongTBNV()"
+                             style="cursor: pointer;width: 20px;height:auto;margin-left: 97%;" />
                         <h3 style="text-align: center;"> Ban  chọn mã nhân viên ở đây!</h3>
                         <div style="margin-left: 20px;">
-                            <select id="comBoBoxSearch" name="options">
+                            <select id="comBoBoxSearchNV" name="options">
                                 <option value="Mã NV">Mã NV</option>
-                                <option value="Tên">Mật khẩu</option>
+                                <option value="Tên">Tên nhân viên</option>
+                                <option value="Chức vụ">Chức vụ</option>
                             </select> 
-                            <input type="text" id="txtSearch" placeholder="Nhập thông tin">
-                            <img class="iconChucNang" id="iconSearchNV" onclick="searchOfNV"  src="./anh/ionCV.png" alt="icon">
+                            <input type="text" id="txtSearchNV" placeholder="Nhập thông tin">
+                            <img class="iconChucNang" id="iconSearchNV" src="img/search1.png" alt="icon">
                         </div>
                         <table class="table" id="tableNV">
                             <thead>
@@ -356,14 +357,30 @@
                                     <th> chức vụ</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="tbodyNV">
                                 <tr>
                                     <td>1234</td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
+                                    <td>admin</td>
+                                </tr>
+                                <tr>
+                                    <td>1235</td>
                                     <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>quản lí</td>
+                                </tr>
+                                <tr>
+                                    <td>1236</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>nhân viên</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -454,7 +471,7 @@
                     tableBody.appendChild(row);
                 });
             }
-
+            
             /*clear dữ liệu*/
             function clearInputPQ() {
                 document.getElementById('txtMaNV').value = "";
@@ -482,16 +499,69 @@
             function clickNV(row) {
                 const cells = row.getElementsByTagName('td');
                 document.getElementById('txtMaNV').value = cells[0].innerText;
-                //document.getElementById('txtMaNV').disabled=true;
+                document.querySelectorAll('input[type="checkbox"][name="task"]').forEach(checkbox => {
+                        checkbox.checked = false;
+                        checkbox.disabled = false;
+                 });
+                if (cells[5].innerText === "admin") {
+                    document.querySelectorAll('input[type="checkbox"][name="task"]').forEach(checkbox => {
+                        checkbox.disabled = true;
+                    });
+                    document.querySelector('input[type="checkbox"][name="task"][value="phân quyền"]').checked = true;
+                } else {
+                    document.querySelector('input[type="checkbox"][name="task"][value="phân quyền"]').disabled = true;
+
+                    if (cells[5].innerText === "quản lí") {
+                        document.querySelector('input[type="checkbox"][name="task"][value="thống kê"]').checked = true;
+                    } else {
+                        document.querySelector('input[type="checkbox"][name="task"][value="thống kê"]').disabled = true;
+                    }
+                }
                 const tableNV = document.getElementById('divtableNV');
                 tableNV.style.display = "none";
-
+                document.getElementById('txtMatKhau').focus();
             }
+
 
             const rowsNV = document.querySelectorAll('#tableNV tbody tr');
             rowsNV.forEach(row => {
                 row.addEventListener('click', () => clickNV(row));
             });
+            //Tìm kiếm trong bảng nhân viên
+            function searchOfNV()
+            {
+                var value=document.getElementById('txtSearchNV').value.toLowerCase();
+                var option=document.getElementById('comBoBoxSearchNV').value;
+                 var rows = document.querySelectorAll('#tbodyNV tr');
+                if (!value) {
+                    alert("Vui lòng nhập thông tin để tìm kiếm nhân viên!");
+                    return; 
+                }
+                var columnIndex=0;
+                if(option ==="Tên")
+                    columnIndex=2;
+                else if(option=="Chức vụ")
+                    columnIndex=4;
+                rows.forEach(row =>{
+                    var cell=row.getElementsByTagName('td')[columnIndex];
+                    if(cell && cell.textContent.toLowerCase().includes(value)){
+                        row.style.display="";
+                    }
+                    else row.style.display="none";
+                });
+            }
+            document.getElementById('iconSearchNV').addEventListener('click', function(event) {
+                event.stopPropagation(); // Ngăn chặn sự kiện click lan ra divTableNV
+                searchOfNV(); 
+            });
+            //hiện thị hết dữ liệu của table nhân viên
+            function showAllRows() {
+                var rows = document.querySelectorAll('#tbodyNV tr');
+                rows.forEach(row => {
+                    row.style.display = ""; // Hiển thị tất cả các hàng
+                });
+                document.getElementById('txtSearchNV').value="";
+            }
             // Chặn việc sử dụng tổ hợp phím tắt để phóng to/thu nhỏ
             document.addEventListener('keydown', function (event) {
                 if (event.ctrlKey && (event.key === '+' || event.key === '-' || event.key === '=')) {

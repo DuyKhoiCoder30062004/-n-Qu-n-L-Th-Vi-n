@@ -37,16 +37,6 @@ public class PhieuMuon_Servlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
 
     }
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -57,7 +47,7 @@ public class PhieuMuon_Servlet extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/gui/phieumuon.jsp").forward(request, response);
     }
 
-    private boolean checkImformationPM(HttpServletRequest request, HttpServletResponse response,
+    private boolean checkInfor(HttpServletRequest request, HttpServletResponse response,
             String maPhieu, String ngayLap, String hanChot)
             throws IOException {
         // Kiểm tra mã phiếu
@@ -98,9 +88,15 @@ public class PhieuMuon_Servlet extends HttpServlet {
         String tongSL = request.getParameter("tongSL");
         String optionSearch = request.getParameter("optionSearch");
         String valueSearch = request.getParameter("valueSearch");
+        String namePath=request.getParameter("nameFileExcel");
+        System.out.println("path: "+namePath);
         switch (action) {
             case "add":
-                if (!checkImformationPM(request, response, maPhieu, ngayLap, hanChot)) {
+                if (!checkInfor(request, response, maPhieu, ngayLap, hanChot)) {
+                    return;
+                }
+                if (pm_BUS.searchByMaPM(Integer.parseInt(maPhieu)) != null) {
+                    response.getWriter().write("{\"thongbao\": \"Mã phiếu mượn đã tồn tại vui lòng nhập lại mã phiếu mượn\", \"hopLe\": false}");
                     return;
                 }
                 if (addPM(maPhieu, maKhach, maNV, ngayLap, hanChot)) {
@@ -110,11 +106,11 @@ public class PhieuMuon_Servlet extends HttpServlet {
                 }
                 break;
             case "edit":
-                if (maPhieu == null || maPhieu.trim().isEmpty()) {
-                    response.getWriter().write("{\"thongbao\": \"Vui lòng chọn 1 phiếu mượn để sửa trên table\", \"hopLe\": false}");
+                if (!checkInfor(request, response, maPhieu, ngayLap, hanChot)) {
                     return;
                 }
-                if (!checkImformationPM(request, response, maPhieu, ngayLap, hanChot)) {
+                if (pm_BUS.searchByMaPM(Integer.parseInt(maPhieu)) == null) {
+                    response.getWriter().write("{\"thongbao\": \"Vui lòng chọn 1 phiếu mượn để sửa trên table\", \"hopLe\": false}");
                     return;
                 }
                 if (updatePM(maPhieu, maKhach, maNV, ngayLap, hanChot, tongSL)) {
@@ -125,10 +121,15 @@ public class PhieuMuon_Servlet extends HttpServlet {
                 break;
             case "delete":
                 if (maPhieu == null || maPhieu.trim().isEmpty()) {
-                    response.getWriter().write("{\"thongbao\": \"Vui lòng chọn 1 phiếu mượn để xóa trên table\", \"hopLe\": false}");
+                    response.getWriter().write("{\"thongbao\": \"Vui lòng nhập phiếu mượn hoặc trên phiếu mượn trên table để xóa\", \"hopLe\": false}");
+                    return ;
+                }
+                if (pm_BUS.searchByMaPM(Integer.parseInt(maPhieu)) == null) {
+                    response.getWriter().write("{\"thongbao\": \"Mã phiếu không tồn tại vui lòng chọn trên table để xóa\", \"hopLe\": false}");
                     return;
                 }
                 if (pm_BUS.deletePM(Integer.parseInt(maPhieu))) {
+                    ctpm_BUS.deleteByMaPM(Integer.parseInt(maPhieu));
                     response.getWriter().write("{\"thongbao\": \"Xóa thành công\", \"hopLe\": true}");
                 } else {
                     response.getWriter().write("{\"thongbao\": \"Xóa thất bại\", \"hopLe\": false}");
@@ -139,10 +140,15 @@ public class PhieuMuon_Servlet extends HttpServlet {
                     response.getWriter().write("{\"thongbao\": \"Vui lòng nhập thông tin bạn muốn tìm kiếm\", \"hopLe\": false}");
                     return;
                 }
-                StringBuilder result = pm_BUS.searchPM(optionSearch, valueSearch);
-                if (result.length() > 2) {
+                StringBuilder[] result = pm_BUS.searchPM(optionSearch, valueSearch);
+                if (result[0].length() > 2) {
                     // Có dữ liệu
-                    response.getWriter().write("{\"thongbao\": \"tìm kiếm thành công\", \"hopLe\": false, \"results\": " + result.toString() + "}");
+                    response.getWriter().write("{"
+                        + "\"thongbao\": \"Tìm kiếm thành công\", "
+                        + "\"hopLe\": false, "
+                        + "\"resultsPM\": " + result[0].toString() + ", "
+                        + "\"resultsCTPM\": " + result[1].toString()
+                        + "}");
                 } else {
                     // Không có dữ liệu
                     response.getWriter().write("{\"thongbao\": \"Không có phiếu mượn bạn cần tìm\", \"hopLe\": false}");
@@ -172,6 +178,38 @@ public class PhieuMuon_Servlet extends HttpServlet {
                 } catch (Exception e) {
                     response.getWriter().write("{\"thongbao\": \"In thất bại vui lòng làm lại\", \"hopLe\": false}");
                     e.printStackTrace();
+                }
+                break;
+            case "import":
+//                System.out.print("đã vô import");
+//                if(pathExcel.isEmpty())
+//                {
+//                    response.getWriter().write("{\"thongbao\": \"Vui lòng chọn file excel bạn muốn import vô hệ thống\", \"hopLe\": false}");
+//                    return;
+//                }
+//             
+//                if(pm_BUS.importExcel(pathExcel))
+//                {
+//                    response.getWriter().write("{\"thongbao\": \"Import excel thành công\", \"hopLe\": true}");
+//                }
+//                else
+//                {
+//                    response.getWriter().write("{\"thongbao\": \"Import thất bại vui lòng kiểm tra lại\", \"hopLe\": false}");
+//                }
+                break;
+            case "export":
+                if(namePath.isEmpty())
+                {
+                    response.getWriter().write("{\"thongbao\": \"Vui lòng nhập tên file excel để export\", \"hopLe\": false}");
+                    return;
+                }
+                if(pm_BUS.exportExcel(namePath))
+                {
+                    response.getWriter().write("{\"thongbao\": \"Export excel thành công\", \"hopLe\": true}");
+                }
+                else
+                {
+                    response.getWriter().write("{\"thongbao\": \"Export thất bại vui lòng kiểm tra lại\", \"hopLe\": false}");
                 }
                 break;
             case "finish":

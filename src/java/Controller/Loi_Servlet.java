@@ -4,6 +4,12 @@
  */
 package Controller;
 
+import BUS.CTPP_BUS;
+import BUS.Loi_BUS;
+import BUS.PhieuPhat_BUS;
+import DTO.CTPP_DTO;
+import DTO.Loi_DTO;
+import DTO.PhieuPhat_DTO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -11,6 +17,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 
 /**
  *
@@ -19,102 +26,45 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet(name = "LoiServlet", urlPatterns = {"/loi"})
 public class Loi_Servlet extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    private PhieuPhat_BUS pp_BUS = new PhieuPhat_BUS();
+    private Loi_BUS loi_BUS = new Loi_BUS();
+    private CTPP_BUS ctpp_BUS = new CTPP_BUS();
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet LoiServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet LoiServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        ArrayList<PhieuPhat_DTO> listPP = pp_BUS.getList();
+        ArrayList<CTPP_DTO> listCTPP = ctpp_BUS.getList();
+        ArrayList<Loi_DTO> listLoi = loi_BUS.getList();
+        request.setAttribute("listLoi", listLoi);
+        request.setAttribute("listCTPP", listCTPP);
+        request.setAttribute("listPP", listPP);
+        request.getRequestDispatcher("/WEB-INF/gui/phieuphat.jsp").forward(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-private void forwardWithError(HttpServletResponse response, String errorMessage)
+    private boolean checkInfor(HttpServletRequest request, HttpServletResponse response,
+            String tenLoi, String phanTramTien)
             throws IOException {
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-
-        try (PrintWriter out = response.getWriter()) {
-            out.print("{\"success\": false, \"message\": \"" + errorMessage + "\"}");
-            out.flush();
-        }
-    }
-
-    private boolean checkImformation(HttpServletResponse response, String maNV, String matKhau, String[] tasks)
-            throws IOException {
-        if (maNV.trim().isEmpty()) {
-            forwardWithError(response, "Mã nhân viên không được để trống!");
+        // Kiểm tra mã phiếu
+        if (tenLoi == null || tenLoi.trim().isEmpty()) {
+            response.getWriter().write("{\"thongbao\": \"Vui lòng nhập tên lỗi\", \"hopLe\": false}");
             return false;
         }
 
+        float ptt;
         try {
-            Integer.parseInt(maNV);
+            ptt = Float.parseFloat(phanTramTien);
         } catch (NumberFormatException e) {
-            forwardWithError(response, "Mã nhân viên phải là số!");
+            response.getWriter().write("{\"thongbao\": \"Phần trăm tiền không phải số thực\", \"hopLe\": false}");
             return false;
         }
-
-        if (matKhau.trim().isEmpty()) {
-            forwardWithError(response, "Mật khẩu không được để trống!");
-            return false;
-        }
-
-        if (tasks == null || tasks.length == 0) {
-            forwardWithError(response, "Bạn phải chọn ít nhất 1 tác vụ!");
+        if (ptt > 1 || ptt < 0) {
+            response.getWriter().write("{\"thongbao\": \"Phần trăm tiền trong khoảng từ 0 đến 1\", \"hopLe\": false}");
             return false;
         }
         return true;
@@ -123,53 +73,86 @@ private void forwardWithError(HttpServletResponse response, String errorMessage)
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        System.out.println("Đa vào post");
+        response.setCharacterEncoding("UTF-8");
+        // Lấy dữ liệu từ form
         String action = request.getParameter("action");
-        String maNV = request.getParameter("txtMaNV");
-        String matKhau = request.getParameter("txtMatKhau");
-        String[] tasks = request.getParameterValues("task");
-        System.out.println("Mã nhân viên: " + maNV);
-        System.out.println("Mật khẩu: " + matKhau);
-        System.out.println("Hành động: " + action);
-
-        if (!checkImformation(response, maNV, matKhau, tasks)) {
-            return;
-        }
-        String thongBao = "";
-        String redirectUrl = ""; // Biến chứa đường dẫn chuyển hướng
-        boolean success = false;
-        PhanQuyen_DTO pq = new PhanQuyen_DTO();
-        pq.setMaNV(Integer.parseInt(maNV));
-        pq.setMatKhau(matKhau);
-        pq.setTacVu(new ArrayList<>(Arrays.asList(tasks)));
+        String tenLoi = request.getParameter("tenLoi");
+        String phanTramTien = request.getParameter("phanTramTien");
+        String optionSearch = request.getParameter("optionSearch");
+        String valueSearch = request.getParameter("valueSearch");
         switch (action) {
-            case "add":
-                System.out.println("đã click add");
-                if (pq_BUS.addPQ(pq)) {
-                    thongBao = "Thêm thành công!";
-                    success = true;
-                    redirectUrl = "/web_inf/gui/phanquyen.jsp"; // Đường dẫn chuyển hướng
+            case "addLoi":
+                if (!checkInfor(request, response, tenLoi, phanTramTien)) {
+                    return;
+                }
+                if (loi_BUS.searchByTenLoi(tenLoi) != null) {
+                    response.getWriter().write("{\"thongbao\": \"Lỗi này đã có trong hệ thống vui lòng kiểm tra lại tên lỗi\", \"hopLe\": false}");
+                    return;
+                }
+                Loi_DTO loi = new Loi_DTO();
+                loi.setTenLoi(tenLoi);
+                loi.setPhamTramTien(Float.parseFloat(phanTramTien));
+                if (loi_BUS.addLoi(loi)) {
+                    response.getWriter().write("{\"thongbao\": \"Thêm lỗi thành công\", \"hopLe\": true}");
                 } else {
-                    thongBao = "Thêm không thành công!";
+                    response.getWriter().write("{\"thongbao\": \"Thêm lỗi thất bại\", \"hopLe\": false}");
                 }
                 break;
-            case "edit":
-                // Xử lý sửa dữ liệu
+            case "updateLoi":
+                if (!checkInfor(request, response, tenLoi, phanTramTien)) {
+                    return;
+                }
+                Loi_DTO loiup = new Loi_DTO();
+                loiup.setTenLoi(tenLoi);
+                loiup.setPhamTramTien(Float.parseFloat(phanTramTien));
+                System.out.println("phần trăm tiền"+ loiup.getPhamTramTien());
+                if (loi_BUS.updateLoi(loiup)) {
+                    response.getWriter().write("{\"thongbao\": \"Sửa lỗi thành công\", \"hopLe\": true}");
+                } else {
+                    response.getWriter().write("{\"thongbao\": \"Sửa lỗi thất bại\", \"hopLe\": false}");
+                }
                 break;
-            case "delete":
-                // Xử lý xóa dữ liệu
+            case "deleteLoi":
+                if (tenLoi == null || tenLoi.trim().isEmpty()) {
+                    response.getWriter().write("{\"thongbao\": \"Vui lòng nhập tên lỗi muỗn xóa\", \"hopLe\": false}");
+                    return;
+                }
+                if (loi_BUS.searchByTenLoi(tenLoi) == null) {
+                    response.getWriter().write("{\"thongbao\": \"Lỗi này chưa có trong hệ thống vui lòng kiểm tra lại tên lỗi muốn xóa\", \"hopLe\": false}");
+                    return;
+                }
+                if(loi_BUS.deleteLoi(tenLoi))
+                {
+                    response.getWriter().write("{\"thongbao\": \"Xóa lỗi thành công\", \"hopLe\": true}");
+                } else {
+                    response.getWriter().write("{\"thongbao\": \"Xóa lỗi thất bại\", \"hopLe\": false}");
+                }
+                break;
+            case "searchLoi":
+                if (valueSearch == null || valueSearch.trim().isEmpty()) {
+                    response.getWriter().write("{\"thongbao\": \"Vui lòng nhập thông tin bạn muốn tìm kiếm\", \"hopLe\": false}");
+                    return;
+                }
+                StringBuilder result = loi_BUS.searchLoi(optionSearch, valueSearch);
+                if (result.length() > 2) {
+                    // Có dữ liệu
+                    response.getWriter().write("{\"thongbao\": \"tìm kiếm thành công\", \"hopLe\": false, \"results\": " + result.toString() + "}");
+                } else {
+                    // Không có dữ liệu
+                    response.getWriter().write("{\"thongbao\": \"Không có phiếu mượn bạn cần tìm\", \"hopLe\": false}");
+                }
+                break;
+            case "finishLoi":
+                response.getWriter().write("{\"thongbao\": \"\", \"hopLe\": true}");
                 break;
             default:
-                response.getWriter().write("Không tìm thấy hành động phù hợp.");
+                response.getWriter().write("{\"thongbao\": \"Không thấy hoạt động\", \"hopLe\": false}");
                 return;
         }
-
-        /// Gửi phản hồi JSON
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            out.print("{\"success\": " + success + ", \"message\": \"" + thongBao + "\", \"redirectUrl\": \"" + redirectUrl + "\"}");
-            out.flush();
-        }
     }
+
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
 }

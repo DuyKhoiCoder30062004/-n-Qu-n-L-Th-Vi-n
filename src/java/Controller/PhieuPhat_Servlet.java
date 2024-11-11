@@ -4,6 +4,12 @@
  */
 package Controller;
 
+import BUS.CTPP_BUS;
+import BUS.Loi_BUS;
+import BUS.PhieuPhat_BUS;
+import DTO.CTPP_DTO;
+import DTO.Loi_DTO;
+import DTO.PhieuPhat_DTO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -11,74 +17,196 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 
 /**
  *
  * @author ADMIN
  */
+
 @WebServlet(name = "PhieuPhat_Servlet", urlPatterns = {"/phieuphat"})
 public class PhieuPhat_Servlet extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    private PhieuPhat_BUS pp_BUS = new PhieuPhat_BUS();
+    private Loi_BUS loi_BUS = new Loi_BUS();
+    private CTPP_BUS ctpp_BUS = new CTPP_BUS();
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet PhieuPhat_Servlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet PhieuPhat_Servlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        ArrayList<PhieuPhat_DTO> listPP = pp_BUS.getList();
+        ArrayList<CTPP_DTO> listCTPP = ctpp_BUS.getList();
+        ArrayList<Loi_DTO> listLoi = loi_BUS.getList();
+        System.out.println("list ctpp:" +listCTPP);
+        request.setAttribute("listLoi", listLoi);
+        request.setAttribute("listCTPP", listCTPP);
+        request.setAttribute("listPP", listPP);
+        request.getRequestDispatcher("/WEB-INF/gui/phieuphat.jsp").forward(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    private boolean checkInfor(HttpServletRequest request, HttpServletResponse response,
+            String maPP, String maPT, String maNV)
+            throws IOException {
+        if (maPP == null || maPP.isEmpty()) {
+            response.getWriter().write("{\"thongbao\": \"Vui lòng nhập mã phiếu phạt\", \"hopLe\": false}");
+            return false;
+        }
+        try {
+            Integer.parseInt(maPP);
+        } catch (NumberFormatException e) {
+            response.getWriter().write("{\"thongbao\": \"Mã phiếu phạt phải là số nguyên\", \"hopLe\": false}");
+            return false;
+        }
+        if (maPT == null || maPT.isEmpty()) {
+            response.getWriter().write("{\"thongbao\": \"Vui lòng chọn mã phiếu trả\", \"hopLe\": false}");
+            return false;
+        }
+        if (maNV == null || maNV.isEmpty()) {
+            response.getWriter().write("{\"thongbao\": \"Vui lòng chọn mã nhân viên\", \"hopLe\": false}");
+            return false;
+        }
+        return true;
+    }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String action = request.getParameter("action");
+        String maPP = request.getParameter("maPP");
+        String maPT = request.getParameter("maPT");
+        String maNV = request.getParameter("maNV");
+        String tongTien = request.getParameter("tongTien");
+        String optionSearch = request.getParameter("optionSearch");
+        String valueSearch = request.getParameter("valueSearch");
+        String namePath=request.getParameter("nameFileExcel");
+        System.out.println("path: "+namePath);
+        switch (action) {
+            case "addPP":
+                if (!checkInfor(request, response, maPP, maPT, maNV)) {
+                    return;
+                }
+                if (pp_BUS.searchByMaPP(Integer.parseInt(maPP)) != null) {
+                    response.getWriter().write("{\"thongbao\": \"Mã phiếu phạt đã tồn tại vui lòng nhập lại mã phiếu phạt\", \"hopLe\": false}");
+                    return;
+                }
+                if (pp_BUS.addPP(createPP(maPP, maPT, maNV, tongTien))) {
+                    response.getWriter().write("{\"thongbao\": \"Thêm phiếu phạt thành công\", \"hopLe\": true}");
+                } else {
+                    response.getWriter().write("{\"thongbao\": \"Thêm phiếu phạt thất bại\", \"hopLe\": false}");
+                }
+                break;
+            case "updatePP":
+                if (!checkInfor(request, response, maPP, maPT, maNV)) {
+                    return;
+                }
+                if (pp_BUS.searchByMaPP(Integer.parseInt(maPP)) == null) {
+                    response.getWriter().write("{\"thongbao\": \"Mã phiếu phạt không tồn tại vui lòng chọn lại phiếu phạt trên table\", \"hopLe\": false}");
+                    return;
+                }
+                if (pp_BUS.updatePP(createPP(maPP, maPT, maNV, tongTien))) {
+                    response.getWriter().write("{\"thongbao\": \"Sửa phiếu phạt thành công\", \"hopLe\": true}");
+                } else {
+                    response.getWriter().write("{\"thongbao\": \"Sửa phiếu phạt thất bại\", \"hopLe\": false}");
+                }
+                break;
+            case "deletePP":
+                if (maPP == null || maPP.trim().isEmpty()) {
+                    response.getWriter().write("{\"thongbao\": \"Vui lòng nhập phiếu phạt hoặc trên phiếu phạt trên table để xóa\", \"hopLe\": false}");
+                    return;
+                }
+                if (pp_BUS.searchByMaPP(Integer.parseInt(maPP)) == null) {
+                    response.getWriter().write("{\"thongbao\": \"Mã phiếu phạt không tồn tại vui lòng chọn lại phiếu phạt trên table\", \"hopLe\": false}");
+                    return;
+                }
+                if (pp_BUS.deletePP(Integer.parseInt(maPP))) {
+                    ctpp_BUS.deleteByMaPP(Integer.parseInt(maPP));
+                    response.getWriter().write("{\"thongbao\": \"Xóa phiếu phạt thành công\", \"hopLe\": true}");
+                } else {
+                    response.getWriter().write("{\"thongbao\": \"Xóa phiếu phạt thất bại\", \"hopLe\": false}");
+                }
+                break;
+            case "searchPP":
+                if (valueSearch == null || valueSearch.trim().isEmpty()) {
+                    response.getWriter().write("{\"thongbao\": \"Vui lòng nhập thông tin bạn muốn tìm kiếm\", \"hopLe\": false}");
+                    return;
+                }
+                StringBuilder[] result = pp_BUS.searchPP(optionSearch, valueSearch);
+                if (result[0].length() > 2) {
+                    // Có dữ liệu
+                    response.getWriter().write("{\"thongbao\": \"tìm kiếm thành công\", \"hopLe\": false, "
+                            + "\"resultPP\": " + result[0].toString() + ", "
+                            + "\"resultsCTPP\": " + result[1].toString()
+                            + "}");
+                } else {
+                    // Không có dữ liệu
+                    response.getWriter().write("{\"thongbao\": \"Không có phiếu mượn bạn cần tìm\", \"hopLe\": false}");
+                }
+                break;
+            case "export":
+                if(namePath.isEmpty())
+                {
+                    response.getWriter().write("{\"thongbao\": \"Vui lòng nhập tên file excel để export\", \"hopLe\": false}");
+                    return;
+                }
+                if(pp_BUS.exportExcel(namePath))
+                {
+                    response.getWriter().write("{\"thongbao\": \"Export excel thành công\", \"hopLe\": true}");
+                }
+                else
+                {
+                    response.getWriter().write("{\"thongbao\": \"Export thất bại vui lòng kiểm tra lại\", \"hopLe\": false}");
+                }
+                break;
+            case "print":
+                if(maPP==null || maPP.isEmpty())
+                {
+                    response.getWriter().write("{\"thongbao\": \"Vui lòng chọn 1 phiếu phạt trên table hoặc nhập mã phiếu trên thanh input mã phiếu để in\", \"hopLe\": false}");
+                    return;
+                }
+                try {
+                    Integer.parseInt(maPP);
+                } catch (NumberFormatException e) {
+                    response.getWriter().write("{\"thongbao\": \"Mã phiếu phải là số nguyên vui lòng kiểm tra lại để in\", \"hopLe\": false}");
+                    return;
+                }
+                if (pp_BUS.searchByMaPP(Integer.parseInt(maPP)) == null) {
+                    response.getWriter().write("{\"thongbao\": \"Không tìm thấy phiếu bạn cần in vui lòng chọn lại phiếu hoặc nhập lại mã phiếu trên thanh input mã phiếu\", \"hopLe\": false}");
+                    return;
+                }
+                try {
+                    String htmlContent = pp_BUS.printPP(Integer.parseInt(maPP));
+                    response.setContentType("text/html; charset=UTF-8");
+                    PrintWriter out = response.getWriter();
+                    out.println(htmlContent);
+                    out.close();
+                } catch (Exception e) {
+                    response.getWriter().write("{\"thongbao\": \"In thất bại vui lòng làm lại\", \"hopLe\": false}");
+                    e.printStackTrace();
+                }
+                break;
+            case "finishPP":
+                response.getWriter().write("{\"thongbao\": \"\", \"hopLe\": true}");
+                break;
+            default:
+                response.getWriter().write("{\"thongbao\": \"Không thấy hoạt động\", \"hopLe\": false}");
+                return;
+        }
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
+    private PhieuPhat_DTO createPP(String maPP, String maPT, String maNV, String tongTien) {
+        PhieuPhat_DTO pp = new PhieuPhat_DTO();
+        pp.setMaPP(Integer.parseInt(maPP));
+        pp.setMaPT(Integer.parseInt(maPT));
+        pp.setMaNV(Integer.parseInt(maNV));
+        pp.setTongTien(Double.parseDouble(tongTien));
+        return pp;
+    }
     @Override
     public String getServletInfo() {
         return "Short description";

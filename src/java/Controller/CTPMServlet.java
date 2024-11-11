@@ -4,6 +4,10 @@
  */
 package Controller;
 
+import BUS.CTPM_BUS;
+import BUS.PhieuMuon_BUS;
+import DTO.CTPM_DTO;
+import DTO.PhieuMuon_DTO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -11,6 +15,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 
 /**
  *
@@ -19,66 +24,156 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet(name = "CTPMServlet", urlPatterns = {"/ctpm"})
 public class CTPMServlet extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    private PhieuMuon_BUS pm_BUS = new PhieuMuon_BUS();
+    private CTPM_BUS ctpm_BUS = new CTPM_BUS();
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet CTPMServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet CTPMServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        ArrayList<PhieuMuon_DTO> listPM = pm_BUS.getList();
+        ArrayList<CTPM_DTO> listCTPM = ctpm_BUS.getList();
+        request.setAttribute("listCTPM", listCTPM);
+        request.setAttribute("listPM", listPM);
+        request.getRequestDispatcher("/WEB-INF/gui/phieumuon.jsp").forward(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    private boolean checkInfor(HttpServletRequest request, HttpServletResponse response,
+            String maPM, String maSach, String soLuong) throws IOException {
+        if (maPM.isEmpty() || maPM == null) {
+            response.getWriter().write("{\"thongbao\": \"Mã phiếu mượn không được để trống vui lòng nhập\", \"hopLe\": false}");
+            return false;
+        }
+        if (pm_BUS.searchByMaPM(Integer.parseInt(maPM)) == null) {
+            response.getWriter().write("{\"thongbao\": \"Mã phiếu mượn không tồn tại vui lòng chọn lại\", \"hopLe\": false}");
+            return false;
+        }
+        try {
+            Integer.parseInt(soLuong);
+        } catch (NumberFormatException e) {
+            response.getWriter().write("{\"thongbao\": \"Số lượng không phải số nguyên vui lòng nhập lại\", \"hopLe\": false}");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean checkDelete(HttpServletRequest request, HttpServletResponse response,
+            String maPM, String maSach) throws IOException {
+        if (maPM.isEmpty() || maPM == null) {
+            response.getWriter().write("{\"thongbao\": \"Mã phiếu mượn không được để trống vui lòng nhập để xóa\", \"hopLe\": false}");
+            return false;
+        }
+        if (pm_BUS.searchByMaPM(Integer.parseInt(maPM)) == null) {
+            response.getWriter().write("{\"thongbao\": \"Mã phiếu mượn không tồn tại vui lòng chọn lại để xóa\", \"hopLe\": false}");
+            return false;
+        }
+        if (ctpm_BUS.searchByMaPM_MaSach(Integer.parseInt(maPM), Integer.parseInt(maSach)) == null) {
+            response.getWriter().write("{\"thongbao\": \"ctpm không tồn tại vui lòng chọn ctpm trên table để sửa\", \"hopLe\": false}");
+            return false;
+        }
+        return true;
+    }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
+        String action = request.getParameter("action");
+        String maPM = request.getParameter("maPM");
+        String maSach = request.getParameter("maSach");
+        String soLuong = request.getParameter("soLuong");
+        String trangThai = request.getParameter("trangThai");
+        String optionSearch = request.getParameter("optionSearch");
+        String valueSearch = request.getParameter("valueSearch");
+        switch (action) {
+            case "addCTPM":
+                if (!checkInfor(request, response, maPM, maSach, soLuong)) {
+                    return; // Nếu không hợp lệ, dừng xử lý tại đây
+                }
+
+                if (addCTPM(maPM, maSach, soLuong, trangThai)) {
+                    pm_BUS.updateTongSL(Integer.parseInt(maPM), pm_BUS.searchByMaPM(Integer.parseInt(maPM)).getTongSL() + Integer.parseInt(soLuong));
+                    response.getWriter().write("{\"thongbao\": \"Thêm CTPM thành công\", \"hopLe\": true}");
+                } else {
+                    response.getWriter().write("{\"thongbao\": \"Thêm CTPM thất bại\", \"hopLe\": false}");
+                }
+                break;
+            case "updateCTPM":
+                if (!checkInfor(request, response, maPM, maSach, soLuong)) {
+                    return;
+                }
+                if (ctpm_BUS.searchByMaPM_MaSach(Integer.parseInt(maPM), Integer.parseInt(maSach)) == null) {
+                    response.getWriter().write("{\"thongbao\": \"ctpm không tồn tại vui lòng chọn ctpm trên table để sửa\", \"hopLe\": false}");
+                }
+                int slcu = ctpm_BUS.searchByMaPM_MaSach(Integer.parseInt(maPM), Integer.parseInt(maSach)).getSoLuong();
+                if (updateCTPM(maPM, maSach, soLuong, trangThai)) {
+                    pm_BUS.updateTongSL(Integer.parseInt(maPM), pm_BUS.searchByMaPM(Integer.parseInt(maPM)).getTongSL() + Integer.parseInt(soLuong) - slcu);
+                    response.getWriter().write("{\"thongbao\": \"Update CTPM thành công\", \"hopLe\": true}");
+                } else {
+                    response.getWriter().write("{\"thongbao\": \"Update CTPM thất bại\", \"hopLe\": false}");
+                }
+                break;
+            case "deleteCTPM":
+                if (!checkDelete(request, response, maPM, maSach)) {
+                    return;
+                }
+                int sl = ctpm_BUS.searchByMaPM_MaSach(Integer.parseInt(maPM), Integer.parseInt(maSach)).getSoLuong();
+                if (ctpm_BUS.deleteCTPM(Integer.parseInt(maPM), Integer.parseInt(maSach))) {
+                    pm_BUS.updateTongSL(Integer.parseInt(maPM), pm_BUS.searchByMaPM(Integer.parseInt(maPM)).getTongSL() - sl);
+                    response.getWriter().write("{\"thongbao\": \"Xóa thành công\", \"hopLe\": true}");
+                } else {
+                    response.getWriter().write("{\"thongbao\": \"Xóa thất bại\", \"hopLe\": false}");
+                }
+                break;
+            case "searchCTPM":
+                if (valueSearch == null || valueSearch.trim().isEmpty()) {
+                    response.getWriter().write("{\"thongbao\": \"Vui lòng nhập thông tin bạn muốn tìm kiếm\", \"hopLe\": false}");
+                    return;
+                }
+                StringBuilder result = ctpm_BUS.searchCTPM(optionSearch, valueSearch);
+                if (result.length() > 2) {
+                    // Có dữ liệu
+                    response.getWriter().write("{\"thongbao\": \"tìm kiếm thành công\", \"hopLe\": false, \"results\": " + result.toString() + "}");
+                } else {
+                    // Không có dữ liệu
+                    response.getWriter().write("{\"thongbao\": \"Không có phiếu mượn bạn cần tìm\", \"hopLe\": false}");
+                }
+                break;
+            case "finishCTPM":
+                response.getWriter().write("{\"thongbao\": \"\", \"hopLe\": true}");
+                break;
+            default:
+                response.getWriter().write("{\"thongbao\": \"Không thấy hoạt động\", \"hopLe\": false}");
+                return;
+        }
+
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
+    private boolean addCTPM(String maPM, String maSach, String soLuong, String trangThai) {
+        CTPM_DTO ctpm = new CTPM_DTO();
+        ctpm.setMaPM(Integer.parseInt(maPM));
+        ctpm.setMaSach(Integer.parseInt(maSach));
+        ctpm.setSoLuong(Integer.parseInt(soLuong));
+        ctpm.setTrangthai(trangThai);
+        return ctpm_BUS.addCTPM(ctpm);
+    }
+
+    private boolean updateCTPM(String maPM, String maSach, String soLuong, String trangThai) {
+        CTPM_DTO ctpm = new CTPM_DTO();
+        int slcu = ctpm_BUS.searchByMaPM_MaSach(Integer.parseInt(maPM), Integer.parseInt(maSach)).getSoLuong();
+        ctpm.setMaPM(Integer.parseInt(maPM));
+        ctpm.setMaSach(Integer.parseInt(maSach));
+        ctpm.setSoLuong(Integer.parseInt(soLuong));
+        ctpm.setTrangthai(trangThai);
+        int slmoi = slcu - ctpm.getSoLuong();
+        return ctpm_BUS.updateCTPM(ctpm);
+    }
+
     @Override
     public String getServletInfo() {
         return "Short description";

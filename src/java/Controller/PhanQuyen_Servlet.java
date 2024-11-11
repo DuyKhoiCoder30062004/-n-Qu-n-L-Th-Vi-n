@@ -39,7 +39,7 @@ public class PhanQuyen_Servlet extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/gui/phanquyen.jsp").forward(request, response);
     }
 
-    private boolean checkImformation(HttpServletRequest request, HttpServletResponse response,
+    private boolean checkInfor(HttpServletRequest request, HttpServletResponse response,
             String maNV, String matKhau, String[] tasks)
             throws IOException {
         // Kiểm tra mã nhân viên
@@ -66,7 +66,7 @@ public class PhanQuyen_Servlet extends HttpServlet {
             return false;
         }
 
-        return true; // Không có lỗi
+        return true; 
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -82,7 +82,12 @@ public class PhanQuyen_Servlet extends HttpServlet {
 
         switch (action) {
             case "add":
-                if (!checkImformation(request, response, maNV, matKhau, tasks)) {
+                if (!checkInfor(request, response, maNV, matKhau, tasks)) {
+                    return;
+                }
+                if(pq_BUS.searchByMaNV(Integer.parseInt(maNV))!=null)
+                {
+                    response.getWriter().write("{\"thongbao\": \"Mã nhân viên này đã có tài khoản\", \"hopLe\": false}");
                     return;
                 }
                 // Tiếp tục xử lý sau khi kiểm tra thành công
@@ -101,7 +106,7 @@ public class PhanQuyen_Servlet extends HttpServlet {
                     response.getWriter().write("{\"thongbao\": \"Vui lòng chọn 1 tài khoản để sửa trên table\", \"hopLe\": false}");
                     return;
                 }
-                if (!checkImformation(request, response, maNV, matKhau, tasks)) {
+                if (!checkInfor(request, response, maNV, matKhau, tasks)) {
                     return;
                 }
                 PhanQuyen_DTO pqs = new PhanQuyen_DTO();
