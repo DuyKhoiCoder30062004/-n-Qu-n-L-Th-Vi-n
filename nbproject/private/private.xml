@@ -3,8 +3,20 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/src/java/ConnectDB/dangNhapDatabase.java</file>
             <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/src/java/Controller/CTPP_Servlet.java</file>
+=======
+            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/src/java/Controller/PhanQuyen_Servlet.java</file>
+            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/src/java/DTO/DocGiaDTO.java</file>
+            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/src/java/DTO/CTPM_DTO.java</file>
+            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/src/java/DAO/DocGiaDAO.java</file>
+            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/src/java/Controller/PhieuPhat_Servlet.java</file>
+            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/web/WEB-INF/gui/login.jsp</file>
+            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/src/java/Controller/loginServlet.java</file>
+            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/src/java/BUS/DocGiaBUS.java</file>
+            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/src/java/Controller/PhieuMuon_Servlet.java</file>
+>>>>>>> my-branch
         </group>
     </open-files>
 </project-private>

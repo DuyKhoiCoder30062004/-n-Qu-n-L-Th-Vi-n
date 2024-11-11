@@ -37,16 +37,6 @@ public class PhieuMuon_Servlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
 
     }
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -150,10 +140,15 @@ public class PhieuMuon_Servlet extends HttpServlet {
                     response.getWriter().write("{\"thongbao\": \"Vui lòng nhập thông tin bạn muốn tìm kiếm\", \"hopLe\": false}");
                     return;
                 }
-                StringBuilder result = pm_BUS.searchPM(optionSearch, valueSearch);
-                if (result.length() > 2) {
+                StringBuilder[] result = pm_BUS.searchPM(optionSearch, valueSearch);
+                if (result[0].length() > 2) {
                     // Có dữ liệu
-                    response.getWriter().write("{\"thongbao\": \"tìm kiếm thành công\", \"hopLe\": false, \"results\": " + result.toString() + "}");
+                    response.getWriter().write("{"
+                        + "\"thongbao\": \"Tìm kiếm thành công\", "
+                        + "\"hopLe\": false, "
+                        + "\"resultsPM\": " + result[0].toString() + ", "
+                        + "\"resultsCTPM\": " + result[1].toString()
+                        + "}");
                 } else {
                     // Không có dữ liệu
                     response.getWriter().write("{\"thongbao\": \"Không có phiếu mượn bạn cần tìm\", \"hopLe\": false}");

@@ -1,3 +1,4 @@
+
 <%-- 
     Document   : phieuphat
     Created on : Oct 28, 2024, 1:14:00 PM
@@ -572,17 +573,19 @@
                         </table>
                     </div>
                 </div>
-                <div class="divTT" id="divtableSach">
-                    <img src="img/cancel.svg" alt="Đóng table nhân viên" onclick="dongTBTT()"
+
+                <div class="divTT" id="divtableSach" onclick="showListAllSach()">
+                    <img src="img/cancel.svg" alt="Đóng table" onclick="dongTBTT()"
+
                          style="cursor: pointer;width: 20px;height:auto;margin-left: 97%;" />
                     <h3 style="text-align: center;"> Ban chọn mã Sách ở đây!</h3>
                     <div style="margin-left: 20px;">
-                        <select id="comBoBoxSearch" name="options">
+                        <select id="comBoBoxSearchSach" name="options">
                             <option value="Mã Sách">Mã Sách</option>
                             <option value="Tên sách">Tên sách </option>
                         </select>
-                        <input type="text" id="txtSearch" placeholder="Nhập thông tin">
-                        <img class="iconChucNang" id="iconSearchSach" onclick="searchOfNV" src="img/search1.png" alt="icon">
+                        <input type="text" id="txtSearchSach" placeholder="Nhập thông tin">
+                        <img class="iconChucNang" id="iconSearchSach" src="img/search1.png" alt="icon">
                     </div>
                     <table class="table" id="tableSach">
                         <thead>
@@ -605,16 +608,16 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="divTT" id="divtableCTSach">
-                    <img src="img/cancel.svg" alt="Đóng table nhân viên" onclick="dongTBTT()"
+                <div class="divTT" id="divtableCTSach" onclick="showListAllCTSach">
+                    <img src="img/cancel.svg" alt="Đóng table" onclick="dongTBTT()"
                          style="cursor: pointer;width: 20px;height:auto;margin-left: 97%;" />
                     <h3 style="text-align: center;"> Ban chọn mã vạch ở đây!</h3>
                     <div style="margin-left: 20px;">
-                        <select id="comBoBoxSearch" name="options">
-                            <option value="Mã Sách">Mã vạch</option>
-                            <option value="Tên sách">Trạng thái</option>
+                        <select id="comBoBoxSearchCTSach" name="options">
+                            <option value="Mã sách">Mã sách</option>
+                            <option value="Mã vạch">Mã vạch</option>
                         </select>
-                        <input type="text" id="txtSearch" placeholder="Nhập thông tin">
+                        <input type="text" id="txtSearchCTSach" placeholder="Nhập thông tin">
                         <img class="iconChucNang" id="iconSearchCTSach" onclick="searchOfNV" src="img/search1.png"
                              alt="icon">
                     </div>
@@ -633,17 +636,18 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="divTT" id="divtablePT">
+
+                <div class="divTT" id="divtablePT" onclick="showListAllPT()">
                     <img src="img/cancel.svg" alt="Đóng table" onclick="dongTBTT()"
                          style="cursor: pointer;width: 20px;height:auto;margin-left: 97%;" />
-                    <h3 style="text-align: center;"> Ban chọn mã phiếu phạt ở đây!</h3>
+                    <h3 style="text-align: center;"> Ban chọn mã phiếu trả ở đây!</h3>
                     <div style="margin-left: 20px;">
-                        <select id="comBoBoxSearch" name="options">
-                            <option value="Mã Sách">Mã phiếu</option>
-                            <option value="Mã phiếu mượn">Mã khách</option>
+                        <select id="comBoBoxSearchPT" name="options">
+                            <option value="Mã phiếu trả">Mã phiếu trả</option>
+                            <option value="Mã phiếu mượn">Mã phiếu mượn</option>
                         </select>
-                        <input type="text" id="txtSearch" placeholder="Nhập thông tin">
-                        <img class="iconChucNang" id="iconSearchCTSach" onclick="searchOfNV" src="img/search1.png"
+                        <input type="text" id="txtSearchPT" placeholder="Nhập thông tin">
+                        <img class="iconChucNang" id="iconSearchPT" onclick="searchOfNV" src="img/search1.png"
                              alt="icon">
                     </div>
                     <table class="table" id="tablePT">
@@ -717,332 +721,473 @@
                         const month = String(date.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
                         const day = String(date.getDate()).padStart(2, '0');
                         return `${year}-${month}-${day}`;
-                            }
+                    }
 
-                            // Lấy ngày hiện tại và gán vào input
-                            document.getElementById('txtNgayLapCTPP').value = formatDate(new Date());
+                    // Lấy ngày hiện tại và gán vào input
+                    document.getElementById('txtNgayLapCTPP').value = formatDate(new Date());
 
-                            /*clear dữ liệu*/
-                            function clearInputLoi() {
-                                document.getElementById('txtLoi').value = "";
-                                document.getElementById('txtPhanTramTien').value = "";
-                            }
+                    /*clear dữ liệu*/
+                    function clearInputLoi() {
+                        document.getElementById('txtLoi').value = "";
+                        document.getElementById('txtPhanTramTien').value = "";
+                    }
 
-                            function clearInputCTPP() {
-                                document.getElementById('txtMaPhieuCTPP').value = "";
-                                document.getElementById('txtMaSachCTPP').value = "";
-                                document.getElementById('txtMaVachCTPP').value = "";
-                                document.getElementById('txtNgayLapCTPP').value = formatDate(new Date());
-                                document.getElementById('txtLiDoCTPP').value = "";
-                                document.getElementById('txtTienCTPP').value = "0";
-                            }
-                            function clearInputPP() {
-                                document.getElementById('txtMaPhieuPP').value = "";
-                                document.getElementById('txtMaPTPP').value = "";
-                                document.getElementById('txtMaNVPP').value = "";
-                                document.getElementById('txtTongTienPP').value = "0";
-                            }
-                            function sendDataLoi(action) {
-                                const formData = new URLSearchParams({
-                                    action: action,
-                                    tenLoi: document.getElementById('txtLoi').value,
-                                    phanTramTien: document.getElementById('txtPhanTramTien').value,
-                                    optionSearch: document.getElementById('comBoBoxSearchLoi').value,
-                                    valueSearch: document.getElementById('txtSearchLoi').value,
-                                });
-                                fetch('http://localhost:9999/cnpm/loi', {
-                                    method: 'POST',
-                                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                                    body: formData.toString()
-                                })
-                                        .then(response => {
-                                            if (!response.ok) {
-                                                throw new Error('Đã xảy ra lỗi trong quá trình gửi dữ liệu');
-                                            }
-                                            return response.json(); // Chuyển đổi phản hồi thành JSON
-                                        })
-                                        .then(data => {
-                                            if (data.thongbao)
-                                                alert(data.thongbao); // Hiển thị thông báo từ servlet
-                                            if (data.results && data.results.length > 0) {
-                                                kQTimKiemLoi(data.results);
-                                            }
-
-                                            // Nếu dữ liệu hợp lệ, tải lại trang
-                                            if (data.hopLe) {
-                                                window.location.reload();
-                                            }
-                                        })
-                                        .catch(error => alert('Đã xảy ra lỗi: ' + error));
-                            }
-                            function kQTimKiemLoi(results)
-                            {
-                                const tableBody = document.getElementById('tbodyLoi');
-                                tableBody.innerHTML = '';
-                                if (!Array.isArray(results)) {
-                                    results = Object.values(results);
-                                }
-                                results.forEach(item => {
-                                    const row = document.createElement('tr');
-                                    const cell1 = document.createElement('td');
-                                    cell1.textContent = item.tenLoi || '';
-                                    row.appendChild(cell1);
-                                    const cell2 = document.createElement('td');
-                                    cell2.textContent = item.phanTramTien || '';
-                                    row.appendChild(cell2);
-                                    tableBody.appendChild(row);
-                                });
-                            }
-                            function selectFile(action) {
-                                // Lắng nghe sự kiện thay đổi của input file
-                                alert("Vui lòng chọn hoặc tạo file excel để " + action + " ở trong thư mục C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/");
-                                const fileInput = document.getElementById("fileExcel");
-                                fileInput.onchange = function () {
-                                    if (fileInput.files.length > 0) {
-                                        // Gán đường dẫn file vào biến toàn cục
-                                        namePath = fileInput.files[0].name;
-                                        sendDataPP(action);
+                    function clearInputCTPP() {
+                        document.getElementById('txtMaPhieuCTPP').value = "";
+                        document.getElementById('txtMaSachCTPP').value = "";
+                        document.getElementById('txtMaVachCTPP').value = "";
+                        document.getElementById('txtNgayLapCTPP').value = formatDate(new Date());
+                        document.getElementById('txtLiDoCTPP').value = "";
+                        document.getElementById('txtTienCTPP').value = "0";
+                    }
+                    function clearInputPP() {
+                        document.getElementById('txtMaPhieuPP').value = "";
+                        document.getElementById('txtMaPTPP').value = "";
+                        document.getElementById('txtMaNVPP').value = "";
+                        document.getElementById('txtTongTienPP').value = "0";
+                    }
+                    function sendDataLoi(action) {
+                        const formData = new URLSearchParams({
+                            action: action,
+                            tenLoi: document.getElementById('txtLoi').value,
+                            phanTramTien: document.getElementById('txtPhanTramTien').value,
+                            optionSearch: document.getElementById('comBoBoxSearchLoi').value,
+                            valueSearch: document.getElementById('txtSearchLoi').value,
+                        });
+                        fetch('http://localhost:9999/cnpm/loi', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                            body: formData.toString()
+                        })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Đã xảy ra lỗi trong quá trình gửi dữ liệu');
                                     }
-                                };
-                                // Hiển thị cửa sổ chọn file
-                                fileInput.click();
-                            }
-                            function sendDataPP(action) {
-                                alert("Đã click"); // Kiểm tra xem hàm có được gọi
-                                const formData = new URLSearchParams({
-                                    action: action,
-                                    maPP: document.getElementById('txtMaPhieuPP').value,
-                                    maPT: document.getElementById('txtMaPTPP').value,
-                                    maNV: document.getElementById('txtMaNVPP').value,
-                                    tongTien: document.getElementById('txtTongTienPP').value,
-                                    optionSearch: document.getElementById('comBoBoxSearchPP').value,
-                                    valueSearch: document.getElementById('txtSearchPP').value,
-                                    nameFileExcel: namePath,
-                                });
-
-                                fetch('http://localhost:9999/cnpm/phieuphat', {
-                                    method: 'POST',
-                                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                                    body: formData.toString()
+                                    return response.json(); // Chuyển đổi phản hồi thành JSON
                                 })
-                                        .then(response => {
-                                            if (!response.ok) {
-                                                throw new Error('Đã xảy ra lỗi trong quá trình gửi dữ liệu');
-                                            }
-                                            return response.text(); // Chuyển đổi phản hồi thành văn bản
-                                        })
-                                        .then(content => {
-                                            try {
-                                                const data = JSON.parse(content); // Cố gắng phân tích cú pháp JSON
-                                                if (data.thongbao) {
-                                                    alert(data.thongbao); // Hiển thị thông báo từ server
-                                                }
-                                                if (data.results && data.results.length > 0) {
-                                                    kQTimKiemPP(data.results); // Xử lý kết quả tìm kiếm
-                                                }
-                                                if (data.hopLe) {
-                                                    window.location.reload(); // Tải lại trang nếu hợp lệ
-                                                }
-                                            } catch (e) {
-                                                if (content.startsWith('<')) {
-                                                    if (action === 'print') {
-                                                        // Hiển thị nội dung HTML và in ra
-                                                        const printWindow = window.open('', '_blank');
-                                                        printWindow.document.write('<html><head><title>In Phiếu Mượn</title></head><body>');
-                                                        printWindow.document.write(content); // Thêm nội dung HTML
-                                                        printWindow.document.write('</body></html>');
-                                                        printWindow.document.close();
-                                                        printWindow.print(); // In nội dung
-                                                    }
-                                                } else {
-                                                    alert('Đã xảy ra lỗi trong quá trình xử lý dữ liệu.');
-                                                }
-                                            }
-                                        })
-                                        .catch(error => alert('Đã xảy ra lỗi: ' + error));
-                            }
-                            function kQTimKiemPP(results)
-                            {
-                                const tableBody = document.getElementById('tbodyPP');
-                                tableBody.innerHTML = '';
-                                if (!Array.isArray(results)) {
-                                    results = Object.values(results); // Chuyển đổi đối tượng thành mảng các giá trị
-                                }
-                                results.forEach(item => {
-                                    const row = document.createElement('tr');
-                                    const cell1 = document.createElement('td');
-                                    cell1.textContent = item.maPhieu || '';
-                                    row.appendChild(cell1);
-                                    const cell2 = document.createElement('td');
-                                    cell2.textContent = item.maPT || '';
-                                    row.appendChild(cell2);
-                                    const cell3 = document.createElement('td');
-                                    cell3.textContent = item.maNV || '';
-                                    row.appendChild(cell3);
-                                    const cell4 = document.createElement('td');
-                                    cell4.textContent = item.tongTien || '';
-                                    row.appendChild(cell4);
-                                    tableBody.appendChild(row);
-                                });
-                            }
-                            function sendDataCTPP(action) {
-                                const formData = new URLSearchParams({
-                                    action: action,
-                                    maPP: document.getElementById('txtMaPhieuCTPP').value,
-                                    maSach: document.getElementById('txtMaSachCTPP').value,
-                                    maVach: document.getElementById('txtMaVachCTPP').value,
-                                    ngayLap: document.getElementById('txtNgayLapCTPP').value,
-                                    liDo: document.getElementById('txtLiDoCTPP').value,
-                                    tien: document.getElementById('txtTienCTPP').value,
-                                    optionSearch: document.getElementById('comBoBoxSearchCTPP').value,
-                                    valueSearch: document.getElementById('txtSearchCTPP').value,
-                                });
-                                fetch('http://localhost:9999/cnpm/ctpp', {
-                                    method: 'POST',
-                                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                                    body: formData.toString()
+                                .then(data => {
+                                    if (data.thongbao)
+                                        alert(data.thongbao); // Hiển thị thông báo từ servlet
+                                    if (data.results && data.results.length > 0) {
+                                        kQTimKiemLoi(data.results);
+                                    }
+
+                                    // Nếu dữ liệu hợp lệ, tải lại trang
+                                    if (data.hopLe) {
+                                        window.location.reload();
+                                    }
                                 })
-                                        .then(response => {
-                                            if (!response.ok) {
-                                                throw new Error('Đã xảy ra lỗi trong quá trình gửi dữ liệu');
+                                .catch(error => alert('Đã xảy ra lỗi: ' + error));
+                    }
+                    function kQTimKiemLoi(results)
+                    {
+                        const tableBody = document.getElementById('tbodyLoi');
+                        tableBody.innerHTML = '';
+                        if (!Array.isArray(results)) {
+                            results = Object.values(results);
+                        }
+                        results.forEach(item => {
+                            const row = document.createElement('tr');
+                            const cell1 = document.createElement('td');
+                            cell1.textContent = item.tenLoi || '';
+                            row.appendChild(cell1);
+                            const cell2 = document.createElement('td');
+                            cell2.textContent = item.phanTramTien || '';
+                            row.appendChild(cell2);
+                            tableBody.appendChild(row);
+                        });
+                    }
+                    function selectFile(action) {
+                        // Lắng nghe sự kiện thay đổi của input file
+                        alert("Vui lòng chọn hoặc tạo file excel để " + action + " ở trong thư mục C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/");
+                        const fileInput = document.getElementById("fileExcel");
+                        fileInput.onchange = function () {
+                            if (fileInput.files.length > 0) {
+                                // Gán đường dẫn file vào biến toàn cục
+                                namePath = fileInput.files[0].name;
+                                sendDataPP(action);
+                            }
+                        };
+                        // Hiển thị cửa sổ chọn file
+                        fileInput.click();
+                    }
+                    function sendDataPP(action) {
+                        alert("Đã click"); // Kiểm tra xem hàm có được gọi
+                        const formData = new URLSearchParams({
+                            action: action,
+                            maPP: document.getElementById('txtMaPhieuPP').value,
+                            maPT: document.getElementById('txtMaPTPP').value,
+                            maNV: document.getElementById('txtMaNVPP').value,
+                            tongTien: document.getElementById('txtTongTienPP').value,
+                            optionSearch: document.getElementById('comBoBoxSearchPP').value,
+                            valueSearch: document.getElementById('txtSearchPP').value,
+                            nameFileExcel: namePath,
+                        });
+
+                        fetch('http://localhost:9999/cnpm/phieuphat', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                            body: formData.toString()
+                        })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Đã xảy ra lỗi trong quá trình gửi dữ liệu');
+                                    }
+                                    return response.text(); // Chuyển đổi phản hồi thành văn bản
+                                })
+                                .then(content => {
+                                    try {
+                                        const data = JSON.parse(content); // Cố gắng phân tích cú pháp JSON
+                                        if (data.thongbao) {
+                                            alert(data.thongbao); // Hiển thị thông báo từ server
+                                        }
+
+                                        if (data.resultPP && data.resultPP.length > 0) {
+                                            alert("PM" + data.resultPP);
+                                            alert("CTPM" + data.resultsCTPP);
+                                            kQTimKiemPP(data.resultPP);
+                                            kQTimKiemCTPP(data.resultsCTPP);
+                                        }
+                                        if (data.hopLe) {
+                                            window.location.reload(); // Tải lại trang nếu hợp lệ
+                                        }
+                                    } catch (e) {
+                                        if (content.startsWith('<')) {
+                                            if (action === 'print') {
+                                                // Hiển thị nội dung HTML và in ra
+                                                const printWindow = window.open('', '_blank');
+                                                printWindow.document.write('<html><head><title>In Phiếu Mượn</title></head><body>');
+                                                printWindow.document.write(content); // Thêm nội dung HTML
+                                                printWindow.document.write('</body></html>');
+                                                printWindow.document.close();
+                                                printWindow.print(); // In nội dung
                                             }
-                                            return response.json(); // Chuyển đổi phản hồi thành JSON
-                                        })
-                                        .then(data => {
-                                            if (data.thongbao)
-                                                alert(data.thongbao); // Hiển thị thông báo từ servlet
-                                            if (data.results && data.results.length > 0) {
-                                                kQTimKiemCTPP(data.results);
-                                            }
+                                        } else {
+                                            alert('Đã xảy ra lỗi trong quá trình xử lý dữ liệu.');
+                                        }
+                                    }
+                                })
+                                .catch(error => alert('Đã xảy ra lỗi: ' + error));
+                    }
+                    function kQTimKiemPP(results)
+                    {
+                        const tableBody = document.getElementById('tbodyPP');
+                        tableBody.innerHTML = '';
+                        if (!Array.isArray(results)) {
+                            results = Object.values(results); // Chuyển đổi đối tượng thành mảng các giá trị
+                        }
+                        results.forEach(item => {
+                            const row = document.createElement('tr');
+                            const cell1 = document.createElement('td');
+                            cell1.textContent = item.maPhieu || '';
+                            row.appendChild(cell1);
+                            const cell2 = document.createElement('td');
+                            cell2.textContent = item.maPT || '';
+                            row.appendChild(cell2);
+                            const cell3 = document.createElement('td');
+                            cell3.textContent = item.maNV || '';
+                            row.appendChild(cell3);
+                            const cell4 = document.createElement('td');
+                            cell4.textContent = item.tongTien || '';
+                            row.appendChild(cell4);
+                            tableBody.appendChild(row);
+                        });
+                    }
+                    function sendDataCTPP(action) {
+                        const formData = new URLSearchParams({
+                            action: action,
+                            maPP: document.getElementById('txtMaPhieuCTPP').value,
+                            maSach: document.getElementById('txtMaSachCTPP').value,
+                            maVach: document.getElementById('txtMaVachCTPP').value,
+                            ngayLap: document.getElementById('txtNgayLapCTPP').value,
+                            liDo: document.getElementById('txtLiDoCTPP').value,
+                            tien: document.getElementById('txtTienCTPP').value,
+                            optionSearch: document.getElementById('comBoBoxSearchCTPP').value,
+                            valueSearch: document.getElementById('txtSearchCTPP').value,
+                        });
+                        fetch('http://localhost:9999/cnpm/ctpp', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                            body: formData.toString()
+                        })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Đã xảy ra lỗi trong quá trình gửi dữ liệu');
+                                    }
+                                    return response.json(); // Chuyển đổi phản hồi thành JSON
+                                })
+                                .then(data => {
+                                    if (data.thongbao)
+                                        alert(data.thongbao); // Hiển thị thông báo từ servlet
+                                    if (data.results && data.results.length > 0) {
+                                        kQTimKiemCTPP(data.results);
+                                    }
 
-                                            // Nếu dữ liệu hợp lệ, tải lại trang
-                                            if (data.hopLe) {
-                                                window.location.reload();
-                                            }
-                                        })
-                                        .catch(error => alert('Đã xảy ra lỗi: ' + error));
-                            }
-                            function kQTimKiemCTPP(results)
-                            {
-                                const tableBody = document.getElementById('tbodyCTPP');
-                                tableBody.innerHTML = '';
-                                if (!Array.isArray(results)) {
-                                    results = Object.values(results);
-                                }
-                                results.forEach(item => {
-                                    const row = document.createElement('tr');
-                                    const cell1 = document.createElement('td');
-                                    cell1.textContent = item.maPhieu || '';
-                                    row.appendChild(cell1);
-                                    const cell2 = document.createElement('td');
-                                    cell2.textContent = item.maSach || '';
-                                    row.appendChild(cell2);
+                                    // Nếu dữ liệu hợp lệ, tải lại trang
+                                    if (data.hopLe) {
+                                        window.location.reload();
+                                    }
+                                })
+                                .catch(error => alert('Đã xảy ra lỗi: ' + error));
+                    }
+                    function kQTimKiemCTPP(results)
+                    {
+                        const tableBody = document.getElementById('tbodyCTPP');
+                        tableBody.innerHTML = '';
+                        if (!Array.isArray(results)) {
+                            results = Object.values(results);
+                        }
+                        results.forEach(item => {
+                            const row = document.createElement('tr');
+                            const cell1 = document.createElement('td');
+                            cell1.textContent = item.maPhieu || '';
+                            row.appendChild(cell1);
+                            const cell2 = document.createElement('td');
+                            cell2.textContent = item.maSach || '';
+                            row.appendChild(cell2);
+                            const cell3 = document.createElement('td');
+                            cell3.textContent = item.maVach || '';
+                            row.appendChild(cell3);
 
-                                    const cell3 = document.createElement('td');
-                                    cell3.textContent = item.maVach || '';
-                                    row.appendChild(cell3);
+                            const cell4 = document.createElement('td');
+                            cell4.textContent = item.ngayLap || '';
+                            row.appendChild(cell4);
 
-                                    const cell4 = document.createElement('td');
-                                    cell4.textContent = item.ngayLap || '';
-                                    row.appendChild(cell4);
+                            const cell5 = document.createElement('td');
+                            cell5.textContent = item.liDo || '';
+                            row.appendChild(cell5);
 
-                                    const cell5 = document.createElement('td');
-                                    cell5.textContent = item.liDo || '';
-                                    row.appendChild(cell5);
+                            const cell6 = document.createElement('td');
+                            cell6.textContent = item.tien || '';
+                            row.appendChild(cell6);
 
-                                    const cell6 = document.createElement('td');
-                                    cell6.textContent = item.tien || '';
-                                    row.appendChild(cell6);
+                            tableBody.appendChild(row);
+                        });
+                    }
+                    function thongBaoLayLoi() {
+                        alert("Bạn thêm lỗi bằng cách click vào table Lỗi!");
+                    }
+                    //Đóng các table
+                    function dongTBTT() {
+                        const divs = document.querySelectorAll('.divTT'); // Chọn tất cả div có class 'popupDiv'
+                        divs.forEach(div => div.style.display = 'none'); // Ẩn từng div
+                    }
+                    //Hiện thị table Sách
+                    function hienThiSach() {
+                        const table = document.getElementById('divtableSach');
+                        if (table.style.display === 'none') {
+                            table.style.display = 'block';
+                        } else {
+                            table.style.display = 'none';
+                        }
+                    }
+                    function clickSach(row) {
+                        const cells = row.getElementsByTagName('td');
+                        document.getElementById('txtMaSachCTPP').value = cells[0].innerText;
+                        //document.getElementById('txtMaNV').disabled=true;
+                        const tableNV = document.getElementById('divtableSach');
+                        tableNV.style.display = "none";
 
-                                    tableBody.appendChild(row);
-                                });
-                            }
-                            function thongBaoLayLoi() {
-                                alert("Bạn thêm lỗi bằng cách click vào table Lỗi!")
-                            }
-                            //Đóng các table
-                            function dongTBTT() {
-                                const divs = document.querySelectorAll('.divTT'); // Chọn tất cả div có class 'popupDiv'
-                                divs.forEach(div => div.style.display = 'none'); // Ẩn từng div
-                            }
-                            //Hiện thị table Sách
-                            function hienThiSach() {
-                                const table = document.getElementById('divtableSach');
-                                if (table.style.display === 'none') {
-                                    table.style.display = 'block';
-                                } else {
-                                    table.style.display = 'none';
-                                }
-                            }
-                            function clickSach(row) {
-                                const cells = row.getElementsByTagName('td');
-                                document.getElementById('txtMaSachCTPP').value = cells[0].innerText;
-                                //document.getElementById('txtMaNV').disabled=true;
-                                const tableNV = document.getElementById('divtableSach');
-                                tableNV.style.display = "none";
+                    }
+                    const rows = document.querySelectorAll('#tableSach tbody tr');
+                    rows.forEach(row => {
+                        row.addEventListener('click', () => clickSach(row));
+                    });
+                    //hiện thị chi tiết sách
+                    function hienThiCTSach() {
+                        const table = document.getElementById('divtableCTSach');
+                        if (table.style.display === 'none') {
+                            table.style.display = 'block';
+                        } else {
+                            table.style.display = 'none';
+                        }
+                    }
+                    function clickCTSach(row) {
+                        const cells = row.getElementsByTagName('td');
+                        document.getElementById('txtMaVachCTPP').value = cells[0].innerText;
+                        const tableNV = document.getElementById('divtableCTSach');
+                        tableNV.style.display = "none";
 
-                            }
-                            const rows = document.querySelectorAll('#tableSach tbody tr');
-                            rows.forEach(row => {
-                                row.addEventListener('click', () => clickSach(row));
-                            });
-                            //hiện thị chi tiết sách
-                            function hienThiCTSach() {
-                                const table = document.getElementById('divtableCTSach');
-                                if (table.style.display === 'none') {
-                                    table.style.display = 'block';
-                                } else {
-                                    table.style.display = 'none';
-                                }
-                            }
-                            function clickCTSach(row) {
-                                const cells = row.getElementsByTagName('td');
-                                document.getElementById('txtMaVachCTPP').value = cells[0].innerText;
-                                const tableNV = document.getElementById('divtableCTSach');
-                                tableNV.style.display = "none";
+                    }
+                    const rowsCTSah = document.querySelectorAll('#tableCTSach tbody tr');
+                    rowsCTSah.forEach(row => {
+                        row.addEventListener('click', () => clickCTSach(row));
+                    });
+                    //hiện thị Phiếu trả
+                    function hienThiPT() {
+                        const table = document.getElementById('divtablePT');
+                        if (table.style.display === 'none') {
+                            table.style.display = 'block';
+                        } else {
+                            table.style.display = 'none';
+                        }
+                    }
+                    function clickPT(row) {
+                        const cells = row.getElementsByTagName('td');
+                        document.getElementById('txtMaPTPP').value = cells[0].innerText;
+                        const tableNV = document.getElementById('divtablePT');
+                        tableNV.style.display = "none";
+                        document.getElementById('txtMaNVPP').focus();
 
-                            }
-                            const rowsCTSah = document.querySelectorAll('#tableCTSach tbody tr');
-                            rowsCTSah.forEach(row => {
-                                row.addEventListener('click', () => clickCTSach(row));
-                            });
-                            //hiện thị Phiếu trả
-                            function hienThiPT() {
-                                const table = document.getElementById('divtablePT');
-                                if (table.style.display === 'none') {
-                                    table.style.display = 'block';
-                                } else {
-                                    table.style.display = 'none';
-                                }
-                            }
-                            function clickPT(row) {
-                                const cells = row.getElementsByTagName('td');
-                                document.getElementById('txtMaPTPP').value = cells[0].innerText;
-                                const tableNV = document.getElementById('divtablePT');
-                                tableNV.style.display = "none";
+                    }
+                    const rowsPT = document.querySelectorAll('#tablePT tbody tr');
+                    rowsPT.forEach(row => {
+                        row.addEventListener('click', () => clickPT(row));
+                    });
 
-                            }
-                            const rowsPT = document.querySelectorAll('#tablePT tbody tr');
-                            rowsPT.forEach(row => {
-                                row.addEventListener('click', () => clickPT(row));
-                            });
+                    //Tìm kiếm với table sách
+                    function searchSach()
+                    {
+                        var value = document.getElementById('txtSearchSach').value.toLowerCase();
+                        var option = document.getElementById('comBoBoxSearchSach').value;
+                        var rows = document.querySelectorAll('#tableSach tbody tr');
+                        if (!value) {
+                            alert("Vui lòng nhập thông tin để tìm kiếm Sách!");
+                            return;
+                        }
+                        var columnIndex = 0;
+                        if (option === "Tên sách")
+                            columnIndex = 1;
+                        rows.forEach(row => {
+                            var cell = row.getElementsByTagName('td')[columnIndex];
+                            if (cell && cell.textContent.toLowerCase().includes(value)) {
+                                row.style.display = "";
+                            } else
+                                row.style.display = "none";
+                        });
+                    }
+                    document.getElementById('iconSearchSach').addEventListener('click', function (event) {
+                        event.stopPropagation(); // Ngăn chặn sự kiện click lan ra divTableNV
+                        searchSach();
+                    });
+                    //hiện thị hết dữ liệu của table sách
+                    function showListAllSach() {
+                        var rows = document.querySelectorAll('#tableSach tbody tr');
+                        rows.forEach(row => {
+                            row.style.display = "";
+                        });
+                        document.getElementById('txtSearchSach').value = "";
+                    }
 
-                            // Chặn việc sử dụng tổ hợp phím tắt để phóng to/thu nhỏ
-                            document.addEventListener('keydown', function (event) {
-                                if (event.ctrlKey && (event.key === '+' || event.key === '-' || event.key === '=')) {
-                                    event.preventDefault();
-                                }
-                            });
+                    //tìm kiếm với table ct sách
+                    function searchCTSach()
+                    {
+                        var value = document.getElementById('txtSearchCTSach').value.toLowerCase();
+                        var option = document.getElementById('comBoBoxSearchCTSach').value;
+                        var rows = document.querySelectorAll('#tableCTSach tbody tr');
+                        if (!value) {
+                            alert("Vui lòng nhập thông tin để tìm kiếm mã vạch!");
+                            return;
+                        }
+                        var columnIndex = 0;
+                        if (option === "Mã sách")
+                            columnIndex = 1;
+                        rows.forEach(row => {
+                            var cell = row.getElementsByTagName('td')[columnIndex];
+                            if (cell && cell.textContent.toLowerCase().includes(value)) {
+                                row.style.display = "";
+                            } else
+                                row.style.display = "none";
+                        });
+                    }
+                    document.getElementById('iconSearchCTSach').addEventListener('click', function (event) {
+                        event.stopPropagation(); // Ngăn chặn sự kiện click lan ra divTableNV
+                        searchCTSach();
+                    });
+                    //hiện thị hết dữ liệu của table sách
+                    function showListAllCTSach() {
+                        var rows = document.querySelectorAll('#tableCTSach tbody tr');
+                        rows.forEach(row => {
+                            row.style.display = "";
+                        });
+                        document.getElementById('txtSearchCTSach').value = "";
+                    }
 
+                    //tìm kiếm với table phiếu trả
+                    function searchPT()
+                    {
+                        var value = document.getElementById('txtSearchPT').value.toLowerCase();
+                        var option = document.getElementById('comBoBoxSearchPT').value;
+                        var rows = document.querySelectorAll('#tablePT tbody tr');
+                        if (!value) {
+                            alert("Vui lòng nhập thông tin để tìm kiếm phiếu trả!");
+                            return;
+                        }
+                        var columnIndex = 0;
+                        if (option === "Mã phiếu mượn")
+                            columnIndex = 1;
+                        rows.forEach(row => {
+                            var cell = row.getElementsByTagName('td')[columnIndex];
+                            if (cell && cell.textContent.toLowerCase().includes(value)) {
+                                row.style.display = "";
+                            } else
+                                row.style.display = "none";
+                        });
+                    }
+                    document.getElementById('iconSearchPT').addEventListener('click', function (event) {
+                        event.stopPropagation(); // Ngăn chặn sự kiện click lan ra divTableNV
+                        searchPT();
+                    });
+                    //hiện thị hết dữ liệu của table sách
+                    function showListAllSach() {
+                        var rows = document.querySelectorAll('#tablePT tbody tr');
+                        rows.forEach(row => {
+                            row.style.display = "";
+                        });
+                        document.getElementById('txtSearchPT').value = "";
+                    }
 
-                            // Chặn thao tác phóng to bằng con lăn chuột
-                            document.addEventListener('wheel', function (event) {
-                                if (event.ctrlKey) {
-                                    event.preventDefault();
-                                }
-                            }, {passive: false});
+                    //Sự kiện enter của lỗi
+                    document.getElementById('txtLoi').addEventListener('keydown', function (event) {
+                        if (event.key === "Enter") {
+                            event.preventDefault(); // Ngăn không cho form submit nếu có
+                            document.getElementById('txtPhanTramTien').focus(); // Di chuyển đến ô input txtPhanTramTien
+                        }
+                    });
 
-                </script>
-                </body>
+                    //sự kiện enter của chi tiết phiếu phạt
+                    document.getElementById('txtMaPhieuCTPP').addEventListener('keydown', function (event) {
+                        if (event.key === "Enter") {
+                            event.preventDefault();
+                            hienThiSach();
+                        }
+                    });
+                    document.getElementById('txtNgayLapCTPP').addEventListener('keydown', function (event) {
+                        if (event.key === "Enter") {
+                            event.preventDefault();
+                            document.getElementById('txtLiDoCTPP').focus();
+                        }
+                    });
 
-                </html>
+                    document.getElementById('txtLiDoCTPP').addEventListener('keydown', function (event) {
+                        if (event.key === "Enter") {
+                            event.preventDefault();
+                            document.getElementById('txtTienCTPP').focus();
+                        }
+                    });
+
+                    //Sự kiện enter của phiếu phạt
+                    document.getElementById('txtMaPhieuPP').addEventListener('keydown', function(event) {
+                        if (event.key === "Enter") {
+                            event.preventDefault();
+                            hienThiPT();
+                        }
+                    });
+
+                    // Chặn việc sử dụng tổ hợp phím tắt để phóng to/thu nhỏ
+                    document.addEventListener('keydown', function (event) {
+                        if (event.ctrlKey && (event.key === '+' || event.key === '-' || event.key === '=')) {
+                            event.preventDefault();
+                        }
+                    });
+                    // Chặn thao tác phóng to bằng con lăn chuột
+                    document.addEventListener('wheel', function (event) {
+                        if (event.ctrlKey) {
+                            event.preventDefault();
+                        }
+                    }, {passive: false});
+
+        </script>
+        </body>
+
+        </html>

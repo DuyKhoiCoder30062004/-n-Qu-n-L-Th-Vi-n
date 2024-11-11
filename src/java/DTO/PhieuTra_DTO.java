@@ -1,5 +1,4 @@
 package DTO;
-
 public class PhieuTra_DTO {
     private int maPT;
     private int maPM;
