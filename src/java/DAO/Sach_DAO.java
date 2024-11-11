@@ -17,7 +17,48 @@ public class Sach_DAO {
         try {
             xuLyDB = new dangNhapDatabase();
             connection = xuLyDB.openConnection();
-            String sql = "SELECT * FROM Sach";
+            String sql = "SELECT * FROM sach";
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                Sach_DTO sach = new Sach_DTO();
+                sach.setMaSach(rs.getInt(0));
+                sach.setTenSach(rs.getString(1));
+                sach.setTacGia(rs.getString(2));
+                sach.setMaNXB(rs.getInt(3));
+                sach.setMaNCC(rs.getInt(4));
+                sach.setMaKhuVuc(rs.getInt(5));
+                sach.setGia(rs.getInt(6));
+                sach.setSoLuong(rs.getInt(7));
+                sach.setMoTa(rs.getString(8));
+                sach.setAnh(rs.getString(9));
+                sach.setNamXuatBan(rs.getInt(10));
+                listSach.add(sach);
+            }
+        }
+        catch (Exception e) {
+            return null;
+        }
+        finally {
+            try {
+                xuLyDB.closeConnection(connection);
+                ps.close();
+                rs.close();
+            } catch (SQLException e) {
+                // TODO: handle exception
+                e.printStackTrace();
+            }
+        }
+        return listSach;
+    }
+    // 
+    // Lấy danh sách chưa bị xóa
+    public ArrayList<Sach_DTO> getListSach_not_delete() {
+        ArrayList<Sach_DTO> listSach = new ArrayList<Sach_DTO>();
+        try {
+            xuLyDB = new dangNhapDatabase();
+            connection = xuLyDB.openConnection();
+            String sql = "SELECT * FROM sach WHERE masach <> -masach";
             ps = connection.prepareStatement(sql);
             rs = ps.executeQuery();
             while(rs.next()) {
@@ -191,6 +232,46 @@ public class Sach_DAO {
             }
         }
         return result;
+    }
+    // Tìm kiếm theo mã sách
+    public ArrayList<Sach_DTO> findSachByMaSach(String maSach) {
+        ArrayList<Sach_DTO> listSach = new ArrayList<>();
+        try {
+            xuLyDB = new dangNhapDatabase();
+            connection = xuLyDB.openConnection();
+            String sql = "SELECT * FROM sach WHERE CAST(ma_sach AS CHAR) " + " LIKE '%" + maSach + "%'";
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                Sach_DTO sach = new Sach_DTO();
+                sach.setMaSach(rs.getInt(0));
+                sach.setTenSach(rs.getString(1));
+                sach.setTacGia(rs.getString(2));
+                sach.setMaNXB(rs.getInt(3));
+                sach.setMaNCC(rs.getInt(4));
+                sach.setMaKhuVuc(rs.getInt(5));
+                sach.setGia(rs.getInt(6));
+                sach.setSoLuong(rs.getInt(7));
+                sach.setMoTa(rs.getString(8));
+                sach.setAnh(rs.getString(9));
+                sach.setNamXuatBan(rs.getInt(10));
+                listSach.add(sach);
+            }
+        }
+        catch (Exception e) {
+            return null;
+        }
+        finally {
+            try {
+                xuLyDB.closeConnection(connection);
+                ps.close();
+                rs.close();
+            } catch (SQLException e) {
+                // TODO: handle exception
+                e.printStackTrace();
+            }
+        }
+        return listSach;
     }
 }
     

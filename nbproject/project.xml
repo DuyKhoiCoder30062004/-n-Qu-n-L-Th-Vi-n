@@ -23,6 +23,9 @@
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
+<<<<<<< HEAD
+                    <file>${file.reference.mysql-connector-j-8.3.0.jar-1}</file>
+=======
                     <file>${file.reference.poi-5.2.3.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
@@ -104,6 +107,7 @@
                 </library>
                 <library dirs="200">
                     <file>${file.reference.log4j-api-2.18.0.jar}</file>
+>>>>>>> master
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
             </web-module-libraries>
