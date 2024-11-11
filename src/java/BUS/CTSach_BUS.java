@@ -21,4 +21,12 @@ public class CTSach_BUS {
     public boolean daleteCTSach(CTSach_DTO ctSach) {
         return ctSach_DAO.deleteCTSach(ctSach);
     }
+    // Tìm bằng mã sách
+    public ArrayList<CTSach_DTO> searchCTSachByMaSach(String maSach) {
+        return ctSach_DAO.searchCTSachByMaSach(maSach);
+    }
+    // Tìm bằng mã vạch
+    public ArrayList<CTSach_DTO> searchCTSachByMaVach(String maVach) {
+        return ctSach_DAO.searchCTSachByMaVach(maVach);
+    }
 }
