@@ -1,14 +1,13 @@
 package DAO;
 
+import ConnectDB.dangNhapDatabase;
+import DTO.PhieuNhap_DTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-
-import ConnectDB.dangNhapDatabase;
-import DTO.PhieuNhap_DTO;
 
 public class PhieuNhap_DAO {
     private dangNhapDatabase loginDB = null;
@@ -178,28 +177,4 @@ public class PhieuNhap_DAO {
         return list;
     }
 
-    public boolean isExit(int maPN){
-        try {
-            String query = "Select count(*) from phieunhap where mapn = ?";
-            loginDB = new dangNhapDatabase();
-            connect = loginDB.openConnection();
-            preStatement = connect.prepareStatement(query);
-            preStatement.setInt(1, maPN);
-
-            rs = preStatement.executeQuery();
-            while(rs.next()){
-                return rs.getInt(1) > 0;
-            }
-        } catch (Exception e) {
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (preStatement != null) preStatement.close();
-                if (connect != null) connect.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return false;
-    }
 }
