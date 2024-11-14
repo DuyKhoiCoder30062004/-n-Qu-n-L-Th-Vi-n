@@ -7,32 +7,32 @@ package DTO;
 import java.util.Date;
 
 public class Nhanvien_DTO {
-    private int maNV;         // Mã nhân viên
+    private int manv;         // Mã nhân viên
     private String ho;        // Họ
     private String ten;       // Tên
-    private String soDT;      // Số điện thoại
-    private String chucVu;    // Chức vụ
+    private String sdt;       // Số điện thoại
     private double luong;     // Lương
-    private Date ngaySinh;    // Ngày sinh
+    private Date ngaysinh;    // Ngày sinh
+    private String chucvu;    // Chức vụ
 
     // Constructor
-    public Nhanvien_DTO(int maNV, String ho, String ten, String soDT, String chucVu, double luong, Date ngaySinh) {
-        this.maNV = maNV;
+    public Nhanvien_DTO(int manv, String ho, String ten, String sdt, double luong, Date ngaysinh, String chucvu) {
+        this.manv = manv;
         this.ho = ho;
         this.ten = ten;
-        this.soDT = soDT;
-        this.chucVu = chucVu;
+        this.sdt = sdt;
         this.luong = luong;
-        this.ngaySinh = ngaySinh;
+        this.ngaysinh = ngaysinh;
+        this.chucvu = chucvu;
     }
 
     // Getter and Setter methods
-    public int getMaNV() {
-        return maNV;
+    public int getManv() {
+        return manv;
     }
 
-    public void setMaNV(int maNV) {
-        this.maNV = maNV;
+    public void setManv(int manv) {
+        this.manv = manv;
     }
 
     public String getHo() {
@@ -51,20 +51,12 @@ public class Nhanvien_DTO {
         this.ten = ten;
     }
 
-    public String getSoDT() {
-        return soDT;
+    public String getSdt() {
+        return sdt;
     }
 
-    public void setSoDT(String soDT) {
-        this.soDT = soDT;
-    }
-
-    public String getChucVu() {
-        return chucVu;
-    }
-
-    public void setChucVu(String chucVu) {
-        this.chucVu = chucVu;
+    public void setSdt(String sdt) {
+        this.sdt = sdt;
     }
 
     public double getLuong() {
@@ -75,11 +67,19 @@ public class Nhanvien_DTO {
         this.luong = luong;
     }
 
-    public Date getNgaySinh() {
-        return ngaySinh;
+    public Date getNgaysinh() {
+        return ngaysinh;
     }
 
-    public void setNgaySinh(Date ngaySinh) {
-        this.ngaySinh = ngaySinh;
+    public void setNgaysinh(Date ngaysinh) {
+        this.ngaysinh = ngaysinh;
+    }
+
+    public String getChucvu() {
+        return chucvu;
+    }
+
+    public void setChucvu(String chucvu) {
+        this.chucvu = chucvu;
     }
 }
