@@ -1,38 +1,34 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package DTO;
 
 import java.util.Date;
 
 public class Nhanvien_DTO {
-    private int manv;         // Mã nhân viên
-    private String ho;        // Họ
-    private String ten;       // Tên
-    private String sdt;       // Số điện thoại
-    private double luong;     // Lương
-    private Date ngaysinh;    // Ngày sinh
-    private String chucvu;    // Chức vụ
+    private int maNV;
+    private String ho;
+    private String ten;
+    private String soDT;
+    private Date ngaySinh;
+    private String chucVu;
+    private double luong;
 
     // Constructor
-    public Nhanvien_DTO(int manv, String ho, String ten, String sdt, double luong, Date ngaysinh, String chucvu) {
-        this.manv = manv;
+    public Nhanvien_DTO(int maNV, String ho, String ten, String soDT, double luong, String chucVu, Date ngaySinh) {
+        this.maNV = maNV;
         this.ho = ho;
         this.ten = ten;
-        this.sdt = sdt;
+        this.soDT = soDT;
         this.luong = luong;
-        this.ngaysinh = ngaysinh;
-        this.chucvu = chucvu;
+        this.chucVu = chucVu;
+        this.ngaySinh = ngaySinh;
     }
 
-    // Getter and Setter methods
-    public int getManv() {
-        return manv;
+    // Getters và Setters
+    public int getMaNV() {
+        return maNV;
     }
 
-    public void setManv(int manv) {
-        this.manv = manv;
+    public void setMaNV(int maNV) {
+        this.maNV = maNV;
     }
 
     public String getHo() {
@@ -51,12 +47,28 @@ public class Nhanvien_DTO {
         this.ten = ten;
     }
 
-    public String getSdt() {
-        return sdt;
+    public String getSoDT() {
+        return soDT;
     }
 
-    public void setSdt(String sdt) {
-        this.sdt = sdt;
+    public void setSoDT(String soDT) {
+        this.soDT = soDT;
+    }
+
+    public Date getNgaySinh() {
+        return ngaySinh;
+    }
+
+    public void setNgaySinh(Date ngaySinh) {
+        this.ngaySinh = ngaySinh;
+    }
+
+    public String getChucVu() {
+        return chucVu;
+    }
+
+    public void setChucVu(String chucVu) {
+        this.chucVu = chucVu;
     }
 
     public double getLuong() {
@@ -66,20 +78,5 @@ public class Nhanvien_DTO {
     public void setLuong(double luong) {
         this.luong = luong;
     }
-
-    public Date getNgaysinh() {
-        return ngaysinh;
-    }
-
-    public void setNgaysinh(Date ngaysinh) {
-        this.ngaysinh = ngaysinh;
-    }
-
-    public String getChucvu() {
-        return chucvu;
-    }
-
-    public void setChucvu(String chucvu) {
-        this.chucvu = chucvu;
-    }
 }
+
