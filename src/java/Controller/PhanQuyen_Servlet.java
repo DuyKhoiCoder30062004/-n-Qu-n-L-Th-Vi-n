@@ -53,12 +53,6 @@ public class PhanQuyen_Servlet extends HttpServlet {
             response.getWriter().write("{\"thongbao\": \"Mã nhân viên không được để trống\", \"hopLe\": false}");
             return false; // Dừng hàm nếu lỗi
         }
-        try {
-            Integer.parseInt(maNV);
-        } catch (NumberFormatException e) {
-            response.getWriter().write("{\"thongbao\": \"Mã nhân viên phải là số nguyên\", \"hopLe\": false}");
-            return false;
-        }
 
         // Kiểm tra mật khẩu
         if (matKhau == null || matKhau.trim().isEmpty()) {
@@ -71,7 +65,6 @@ public class PhanQuyen_Servlet extends HttpServlet {
             response.getWriter().write("{\"thongbao\": \"Danh sách công việc không được để trống\", \"hopLe\": false}");
             return false;
         }
-
         return true; 
     }
 
