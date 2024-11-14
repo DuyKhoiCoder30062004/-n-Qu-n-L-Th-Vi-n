@@ -11,13 +11,44 @@ public class CTSach_DAO {
     private Connection connection = null;
     private PreparedStatement ps = null;
     private ResultSet rs = null;
-
+    // get list chi tiết sách
     public ArrayList<CTSach_DTO> getListCTSach() {
         ArrayList<CTSach_DTO> listCTSach = new ArrayList<CTSach_DTO>();
         try {
             xuLyDB = new dangNhapDatabase();
             connection = xuLyDB.openConnection();
             String sql = "SELECT * FROM ctsach";
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                CTSach_DTO ctSach = new CTSach_DTO();
+                ctSach.setMaSach(rs.getInt(0));
+                ctSach.setMaVach(rs.getString(1));
+                ctSach.setTinhTrangSach(rs.getString(2));
+                listCTSach.add(ctSach);
+            }
+        } catch (Exception e) {
+            return null;
+        }
+        finally {
+            try {
+                xuLyDB.closeConnection(connection);
+                ps.close();
+                rs.close();
+            } catch (SQLException e) {
+                // TODO: handle exception
+                e.printStackTrace();
+            }
+        }
+        return listCTSach;
+    }
+    // get list chi tiết sách chưa bị xóa
+    public ArrayList<CTSach_DTO> getListCTSach_not_delete() {
+        ArrayList<CTSach_DTO> listCTSach = new ArrayList<CTSach_DTO>();
+        try {
+            xuLyDB = new dangNhapDatabase();
+            connection = xuLyDB.openConnection();
+            String sql = "SELECT * FROM ctsach where masach <> (masach * -1) AND mavach <> " + "-" + " mavach";
             ps = connection.prepareStatement(sql);
             rs = ps.executeQuery();
             while (rs.next()) {
@@ -121,5 +152,67 @@ public class CTSach_DAO {
         }
         return result;
 
+    }
+    // Tìm theo mã sách
+    public ArrayList<CTSach_DTO> searchCTSachByMaSach(String maSach) {
+        ArrayList<CTSach_DTO> listCTSach = new ArrayList<CTSach_DTO>();
+        try {
+            xuLyDB = new dangNhapDatabase();
+            connection = xuLyDB.openConnection();
+            String sql = "SELECT * FROM ctsach WHERE CAST(masach AS CHAR)" + " LIKE '%" + maSach + "%'";
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                CTSach_DTO ctSach = new CTSach_DTO();
+                ctSach.setMaSach(rs.getInt(0));
+                ctSach.setMaVach(rs.getString(1));
+                ctSach.setTinhTrangSach(rs.getString(2));
+                listCTSach.add(ctSach);
+            }
+        } catch (Exception e) {
+            return null;
+        }
+        finally {
+            try {
+                xuLyDB.closeConnection(connection);
+                ps.close();
+                rs.close();
+            } catch (SQLException e) {
+                // TODO: handle exception
+                e.printStackTrace();
+            }
+        }
+        return listCTSach;
+    }
+    // Tìm theo mã vạch
+    public ArrayList<CTSach_DTO> searchCTSachByMaVach(String maVach) {
+        ArrayList<CTSach_DTO> listCTSach = new ArrayList<CTSach_DTO>();
+        try {
+            xuLyDB = new dangNhapDatabase();
+            connection = xuLyDB.openConnection();
+            String sql = "SELECT * FROM ctsach WHERE mavach" + " LIKE '%" + maVach + "%'";
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                CTSach_DTO ctSach = new CTSach_DTO();
+                ctSach.setMaSach(rs.getInt(0));
+                ctSach.setMaVach(rs.getString(1));
+                ctSach.setTinhTrangSach(rs.getString(2));
+                listCTSach.add(ctSach);
+            }
+        } catch (Exception e) {
+            return null;
+        }
+        finally {
+            try {
+                xuLyDB.closeConnection(connection);
+                ps.close();
+                rs.close();
+            } catch (SQLException e) {
+                // TODO: handle exception
+                e.printStackTrace();
+            }
+        }
+        return listCTSach;
     }
 }
