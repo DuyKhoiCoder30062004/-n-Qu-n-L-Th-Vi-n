@@ -22,17 +22,17 @@ public class Sach_DAO {
             rs = ps.executeQuery();
             while(rs.next()) {
                 Sach_DTO sach = new Sach_DTO();
-                sach.setMaSach(rs.getInt(0));
-                sach.setTenSach(rs.getString(1));
-                sach.setTacGia(rs.getString(2));
-                sach.setMaNXB(rs.getInt(3));
-                sach.setMaNCC(rs.getInt(4));
-                sach.setMaKhuVuc(rs.getInt(5));
-                sach.setGia(rs.getInt(6));
-                sach.setSoLuong(rs.getInt(7));
-                sach.setMoTa(rs.getString(8));
-                sach.setAnh(rs.getString(9));
+                sach.setMaSach(rs.getInt(1));
+                sach.setTenSach(rs.getString(2));
+                sach.setTacGia(rs.getString(3));
+                sach.setMaNXB(rs.getInt(4));
+                sach.setMaNCC(rs.getInt(5));
+                sach.setMaKhuVuc(rs.getInt(6));
+                sach.setGia(rs.getInt(7));
+                sach.setSoLuong(rs.getInt(8));
+                sach.setMoTa(rs.getString(9));
                 sach.setNamXuatBan(rs.getInt(10));
+                sach.setAnh(rs.getString(11));
                 listSach.add(sach);
             }
         }
@@ -63,17 +63,17 @@ public class Sach_DAO {
             rs = ps.executeQuery();
             while(rs.next()) {
                 Sach_DTO sach = new Sach_DTO();
-                sach.setMaSach(rs.getInt(0));
-                sach.setTenSach(rs.getString(1));
-                sach.setTacGia(rs.getString(2));
-                sach.setMaNXB(rs.getInt(3));
-                sach.setMaNCC(rs.getInt(4));
-                sach.setMaKhuVuc(rs.getInt(5));
-                sach.setGia(rs.getInt(6));
-                sach.setSoLuong(rs.getInt(7));
-                sach.setMoTa(rs.getString(8));
-                sach.setAnh(rs.getString(9));
+                sach.setMaSach(rs.getInt(1));
+                sach.setTenSach(rs.getString(2));
+                sach.setTacGia(rs.getString(3));
+                sach.setMaNXB(rs.getInt(4));
+                sach.setMaNCC(rs.getInt(5));
+                sach.setMaKhuVuc(rs.getInt(6));
+                sach.setGia(rs.getInt(7));
+                sach.setSoLuong(rs.getInt(8));
+                sach.setMoTa(rs.getString(9));
                 sach.setNamXuatBan(rs.getInt(10));
+                sach.setAnh(rs.getString(11));
                 listSach.add(sach);
             }
         }
@@ -109,8 +109,8 @@ public class Sach_DAO {
             ps.setInt(7, sach.getGia());
             ps.setInt(8, sach.getSoLuong());
             ps.setString(9, sach.getMoTa());
-            ps.setString(10, sach.getAnh());
-            ps.setInt(11, sach.getNamXuatBan());
+            ps.setInt(10, sach.getNamXuatBan());
+            ps.setString(11, sach.getAnh());
             result = ps.executeUpdate() > 0;
         } catch (Exception e) {
             // TODO: handle exception
@@ -244,17 +244,17 @@ public class Sach_DAO {
             rs = ps.executeQuery();
             while(rs.next()) {
                 Sach_DTO sach = new Sach_DTO();
-                sach.setMaSach(rs.getInt(0));
-                sach.setTenSach(rs.getString(1));
-                sach.setTacGia(rs.getString(2));
-                sach.setMaNXB(rs.getInt(3));
-                sach.setMaNCC(rs.getInt(4));
-                sach.setMaKhuVuc(rs.getInt(5));
-                sach.setGia(rs.getInt(6));
-                sach.setSoLuong(rs.getInt(7));
-                sach.setMoTa(rs.getString(8));
-                sach.setAnh(rs.getString(9));
+                sach.setMaSach(rs.getInt(1));
+                sach.setTenSach(rs.getString(2));
+                sach.setTacGia(rs.getString(3));
+                sach.setMaNXB(rs.getInt(4));
+                sach.setMaNCC(rs.getInt(5));
+                sach.setMaKhuVuc(rs.getInt(6));
+                sach.setGia(rs.getInt(7));
+                sach.setSoLuong(rs.getInt(8));
+                sach.setMoTa(rs.getString(9));
                 sach.setNamXuatBan(rs.getInt(10));
+                sach.setAnh(rs.getString(11));
                 listSach.add(sach);
             }
         }

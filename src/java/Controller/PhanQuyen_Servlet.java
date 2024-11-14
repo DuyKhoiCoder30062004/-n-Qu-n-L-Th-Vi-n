@@ -4,7 +4,9 @@
  */
 package Controller;
 
+import BUS.Nhanvien_BUS;
 import BUS.PhanQuyen_BUS;
+import DTO.Nhanvien_DTO;
 import DTO.PhanQuyen_DTO;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
@@ -25,6 +27,7 @@ import java.util.Arrays;
 public class PhanQuyen_Servlet extends HttpServlet {
 
     private PhanQuyen_BUS pq_BUS = new PhanQuyen_BUS();
+    private Nhanvien_BUS nv_BUS=new Nhanvien_BUS();
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -35,7 +38,10 @@ public class PhanQuyen_Servlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         ArrayList<PhanQuyen_DTO> listPQ = pq_BUS.getList();
+        ArrayList<Nhanvien_DTO> listNV=nv_BUS.getList();
         request.setAttribute("listPQ", listPQ);
+        request.setAttribute("listNV", listNV);
+        System.out.print("lisy NV"+ listNV);
         request.getRequestDispatcher("/WEB-INF/gui/phanquyen.jsp").forward(request, response);
     }
 

@@ -373,7 +373,7 @@
                     </div>
 
                     <div class="input-group">
-                        <label class="nameFeature" style="margin-right: 0px">Tổng SL </label>
+                        <label class="nameFeature" style="margin-right: 4px">Tổng SL </label>
                         <input type="text" id="txtTongSL" value="0"  readonly>
                         <img class="iconChucNang" id="iconSua" src="img/edit.svg" title="Sửa PM" onclick="sendData('edit')">
                         <img class="iconChucNang" id="iconClear" title="Clear input"  onclick="clearInputPM()" src="img/clear.png" alt="icon">
@@ -544,14 +544,16 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1234</td>
-                                <td></td>
-                                <td>Huyền</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
+                            <c:forEach var="dg" items="${requestScope.listDG}">
+                                <tr>
+                                    <td>${dg.maKhach}</td>
+                                    <td>${pm.maKhach}</td>
+                                    <td>${pm.maNV}</td>
+                                    <td>${pm.ngayLap}</td>
+                                    <td>${pm.hanChot}</td>
+                                    <td>${pm.tongSL}</td>
+                                </tr>
+                            </c:forEach>
                             <tr>
                                 <td>1235</td>
                                 <td></td>

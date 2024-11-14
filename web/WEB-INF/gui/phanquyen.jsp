@@ -208,8 +208,8 @@
             position: absolute;
             top: 20%;
             left: 20%;
-            display: none; /* Ẩn bảng nhân viên mặc định */
-            z-index: 1000; /* Hiển thị trên cùng */
+            display: none; 
+            z-index: 1000; 
         }
         #tableNV{
             width: 95%;
@@ -376,30 +376,16 @@
                                 </tr>
                             </thead>
                             <tbody id="tbodyNV">
-                                <tr>
-                                    <td>1234</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>admin</td>
-                                </tr>
-                                <tr>
-                                    <td>1235</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>quản lí</td>
-                                </tr>
-                                <tr>
-                                    <td>1236</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>nhân viên</td>
-                                </tr>
+                                <c:forEach var="nv" items="${requestScope.listNV}">
+                                    <tr>
+                                        <td>${nv.maNV}</td>
+                                        <td>${nv.ho}</td>
+                                        <td>${nv.ten}</td>
+                                        <td>${nv.soDT}</td>
+                                        <td>${nv.ngaySinh}</td>
+                                        <td>${nv.chucVu} </td>
+                                    </tr>
+                                </c:forEach>
                             </tbody>
                         </table>
                     </div>

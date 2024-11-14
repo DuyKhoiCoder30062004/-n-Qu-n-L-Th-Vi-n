@@ -25,13 +25,13 @@ public class Nhanvien_DAO {
             rs = ps.executeQuery();
             while (rs.next()) {
                 Nhanvien_DTO nhanVien = new Nhanvien_DTO(
-                    rs.getInt("maNV"),
+                    rs.getInt("manv"),
                     rs.getString("ho"),
                     rs.getString("ten"),
-                    rs.getString("soDT"),
-                    rs.getString("chucVu"),
+                    rs.getString("sdt"),
+                    rs.getString("chucvu"),
                     rs.getDouble("luong"),
-                    rs.getDate("ngaySinh")
+                    rs.getDate("ngaysinh")
                 );
                 listNhanVien.add(nhanVien);
             }
@@ -54,7 +54,7 @@ public class Nhanvien_DAO {
     public boolean addNhanVien(Nhanvien_DTO nhanVien) {
         boolean result = false;
         try {
-            String sql = "INSERT INTO nhanvien (ho, ten, soDT, chucVu, luong, ngaySinh) VALUES (?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO nhanvien (ho, ten, sdt, chucvu, luong, ngaysinh) VALUES (?, ?, ?, ?, ?, ?)";
             xuLyDB = new dangNhapDatabase();
             connection = xuLyDB.openConnection();
             ps = connection.prepareStatement(sql);

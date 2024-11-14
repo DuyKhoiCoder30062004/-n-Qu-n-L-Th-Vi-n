@@ -144,6 +144,7 @@
             margin-right: 10px;
             vertical-align: middle;
             cursor: pointer;
+            margin-top: 0px;
         }
 
         input {
@@ -154,20 +155,8 @@
             margin-top: 2%;
         }
 
-        #tableLoi,
-        #tableCTPP {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 2px;
-            table-layout: fixed;
-            border: 2px solid #808080;
-            height: 90%;
-            display: block;
-            overflow-y: auto;
-            overflow-x: hidden;
-        }
 
-        #tablePP {
+        .table{
             width: 100%;
             border-collapse: collapse;
             margin-top: 2px;
@@ -181,17 +170,12 @@
 
         .table thead {
             display: table;
-            /* Để hiển thị hàng tiêu đề */
             width: 100%;
             table-layout: fixed;
             position: sticky;
-            /* Cố định vị trí hàng tiêu đề */
             top: 0;
-            /* Gắn hàng tiêu đề ở trên cùng */
             background-color: #D9D9D9;
-            /* Màu nền cho hàng tiêu đề */
             z-index: 1;
-            /* Đảm bảo hàng tiêu đề ở trên các hàng khác */
         }
 
         .table tbody {
@@ -205,13 +189,9 @@
             border: 1px solid #808080;
             text-align: center;
             word-wrap: break-word;
-            /* Ngắt dòng nếu nội dung quá dài */
             white-space: nowrap;
-            /* Không cho phép ngắt dòng nếu cần */
             overflow: hidden;
-            /* Ẩn phần nội dung tràn ra ngoài */
             text-overflow: ellipsis;
-            /* Hiển thị "..." khi nội dung quá dài */
         }
 
         .table tbody tr {
@@ -223,14 +203,12 @@
 
         .table td:hover {
             white-space: normal;
-            /* Cho phép ngắt dòng */
             z-index: 1;
             background-color: #f1f1f1;
-            /* Tô màu nền để dễ đọc */
         }
 
         .input-groupPP {
-            margin-right: 5.5%;
+            margin-right:5%;
             display: inline;
 
         }
@@ -255,7 +233,7 @@
             border: 2px solid darkgray;
             border-collapse: collapse;
             width: 95%;
-            height: 70%;
+            height: 65%;
             margin-left: 20px;
         }
 
@@ -367,7 +345,7 @@
                                     <option value="% tiền">% tiền</option>
                                 </select>
                                 <input type="text" id="txtSearchLoi" placeholder="Nhập thông tin">
-                                <img class="iconChucNang" id="iconSearchLoi" style="margin-top: 0%;" src="img/search1.png"
+                                <img class="iconChucNang" id="iconSearchLoi"  src="img/search1.png"
                                      title="Tìm kiếm Lỗi" onclick="sendDataLoi('searchLoi')">
 
                             </div>
@@ -442,7 +420,7 @@
                             </div>
                         </div>
                         <div id="divtableCTPP" style="width: 75%; margin-right: 2%;">
-                            <div>
+                            <div style="display: flex; align-items: center;justify-content: flex-start;">
                                 <select id="comBoBoxSearchCTPP" name="options">
                                     <option value="Mã phiếu">Mã phiếu</option>
                                     <option value="Mã sách">Mã sách</option>
@@ -452,10 +430,10 @@
                                     <option value="Tiền">Tiền</option>
                                 </select>
                                 <input type="text" id="txtSearchCTPP" placeholder="Nhập thông tin">
-                                <img class="iconChucNang" id="iconSearchCTPP" style="margin-top: 0%;" src="img/search1.png"
-                                     title="Tìm kiếm CTPP" onclick="sendDataCTPP('searchCTPP')">
-                                <img class="iconChucNang" id="iconFinishCTPP" style="margin-top: 0%; margin-left: 60%;"
-                                     src="img/refresh.svg" title="Tại lại table" onclick="sendDataCTPP('finishCTPP')">
+                                <img class="iconChucNang" id="iconSearchCTPP"  src="img/search1.png"
+                                title="Tìm kiếm CTPP">
+                                <img class="iconChucNang" id="iconFinishCTPP" style=" margin-left: 60%;"
+                                    src="img/refresh.svg" title="Tại lại table">
                             </div>
                             <table class="table" id="tableCTPP">
                                 <thead>
@@ -521,13 +499,13 @@
                             <input type="text" id="txtTongTienPP" value="0" readonly>
                         </div>
                         <div class="input-groupPP">
-                            <img class="iconChucNang" id="iconThemPP" style="margin-top: 0px;" src="img/add.svg"
+                            <img class="iconChucNang" id="iconThemPP"  src="img/add.svg"
                                  title="Thêm PP" onclick="sendDataPP('addPP')">
-                            <img class="iconChucNang" id="iconXoaPP" style="margin-top: 0px;" src="img/delete.svg"
+                            <img class="iconChucNang" id="iconXoaPP"  src="img/delete.svg"
                                  title="Xóa PP" onclick="sendDataPP('deletePP')">
-                            <img class="iconChucNang" id="iconSuaPP" style="margin-top: 0px;" src="img/edit.svg"
+                            <img class="iconChucNang" id="iconSuaPP" src="img/edit.svg"
                                  title="Sửa PP" onclick="sendDataPP('updatePP')">
-                            <img class="iconChucNang" id="iconClearPP" style="margin-top: 0px;" onclick="clearInputPP()"
+                            <img class="iconChucNang" id="iconClearPP" onclick="clearInputPP()"
                                  src="img/clear.png" title="Clear input PP">
                         </div>
                     </div>
@@ -540,17 +518,17 @@
                                 <option value="Tổng tiền">Tổng tiền</option>
                             </select>
                             <input type="text" id="txtSearchPP" placeholder="Nhập thông tin">
-                            <img class="iconChucNang" id="iconSearchPP" style="margin-top: 0%;" src="img/search1.png"
+                            <img class="iconChucNang" id="iconSearchPP"  src="img/search1.png"
                                  title="Tìm kiếm PP" onclick="sendDataPP('searchPP')">
                             <img class="iconChucNang" id="iconImportExcelPP"
-                                 style="margin-left:55%;margin-top: 0%; margin-right: 3%;" src="img/import_excel.svg" title="Import Excel PP" 
+                                 style="margin-left:55%; margin-right: 3%;" src="img/import_excel.svg" title="Import Excel PP" 
                                  onclick="selectFile('import')">
-                            <img class="iconChucNang" id="iconExportExcelPP" style="margin-top: 0%;margin-right: 3%;"
+                            <img class="iconChucNang" id="iconExportExcelPP" style="margin-right: 3%;"
                                  src="img/export_excel.svg" title="Export Excel PP" onclick="selectFile('export')">
                             <input  type="file" id="fileExcel" style="display:none;">
-                            <img class="iconChucNang" id="iconPrintPP" style="margin-top: 0%;margin-right: 3%;"
+                            <img class="iconChucNang" id="iconPrintPP" style="margin-right: 3%;"
                                  src="img/print.jpg" title="print PP" onclick="sendDataPP('print')">
-                            <img class="iconChucNang" id="iconFinishPP" style="margin-top: 0%;" src="img/refresh.svg"
+                            <img class="iconChucNang" id="iconFinishPP"  src="img/refresh.svg"
                                  title="Tại lại table" onclick="sendDataPP('finishPP')">
                         </div>
                         <table class="table" id="tablePP">
@@ -606,19 +584,21 @@
                             <tr>
                                 <th>Mã sách</th>
                                 <th>Tên sách</th>
-                                <th>tác giả</th>
+                                <th>Tác giả</th>
                                 <th>Số lượng</th>
                                 <th>Mô tả</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1234</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
+                           <c:forEach var="pm" items="${requestScope.listSach}">
+                                <tr>
+                                    <td>${pm.maSach}</td>
+                                    <td>${pm.tenSach}</td>
+                                    <td>${pm.tacGia}</td>
+                                    <td>${pm.soLuong}</td>
+                                    <td>${pm.moTa}</td>
+                                </tr>
+                            </c:forEach>
                         </tbody>
                     </table>
                 </div>
@@ -674,12 +654,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1234</td>
-                                <td></td>
-                                <td>1234</td>
-                                <td></td>
-                            </tr>
+                            <c:forEach var="pm" items="${requestScope.listPT}">
+                                <tr>
+                                    <td>${pm.maPT}</td>
+                                    <td>${pm.maPM}</td>
+                                    <td>${pm.maNV}</td>
+                                    <td>${pm.tongSL}</td>
+                                </tr>
+                            </c:forEach>
                         </tbody>
                     </table>
                 </div>

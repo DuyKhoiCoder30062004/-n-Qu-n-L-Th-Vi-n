@@ -5,8 +5,10 @@
 package Controller;
 
 import BUS.CTPM_BUS;
+import BUS.DocGiaBUS;
 import BUS.PhieuMuon_BUS;
 import DTO.CTPM_DTO;
+import DTO.DocGiaDTO;
 import DTO.PhieuMuon_DTO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -19,6 +21,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -31,6 +34,7 @@ public class PhieuMuon_Servlet extends HttpServlet {
 
     private PhieuMuon_BUS pm_BUS = new PhieuMuon_BUS();
     private CTPM_BUS ctpm_BUS = new CTPM_BUS();
+    private DocGiaBUS dg_BUS=new DocGiaBUS();
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -42,8 +46,10 @@ public class PhieuMuon_Servlet extends HttpServlet {
             throws ServletException, IOException {
         ArrayList<PhieuMuon_DTO> listPM = pm_BUS.getList();
         ArrayList<CTPM_DTO> listCTPM = ctpm_BUS.getList();
+        //List<DocGiaDTO> listDG =dg_BUS.getAllDocGia();
         request.setAttribute("listCTPM", listCTPM);
         request.setAttribute("listPM", listPM);
+        //request.setAttribute("listDG",listDG);
         request.getRequestDispatcher("/WEB-INF/gui/phieumuon.jsp").forward(request, response);
     }
 
