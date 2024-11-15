@@ -150,7 +150,7 @@ public class PhieuMuon_Servlet extends HttpServlet {
                 if (result[0].length() > 2) {
                     // Có dữ liệu
                     response.getWriter().write("{"
-                        + "\"thongbao\": \"Tìm kiếm thành công\", "
+                        + "\"thongbao\": \"\", "
                         + "\"hopLe\": false, "
                         + "\"resultsPM\": " + result[0].toString() + ", "
                         + "\"resultsCTPM\": " + result[1].toString()

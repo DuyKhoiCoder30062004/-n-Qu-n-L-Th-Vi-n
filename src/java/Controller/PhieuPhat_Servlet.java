@@ -172,7 +172,7 @@ public class PhieuPhat_Servlet extends HttpServlet {
                 StringBuilder[] result = pp_BUS.searchPP(optionSearch, valueSearch);
                 if (result[0].length() > 2) {
                     // Có dữ liệu
-                    response.getWriter().write("{\"thongbao\": \"tìm kiếm thành công\", \"hopLe\": false, "
+                    response.getWriter().write("{\"thongbao\": \"\", \"hopLe\": false, "
                             + "\"resultPP\": " + result[0].toString() + ", "
                             + "\"resultsCTPP\": " + result[1].toString()
                             + "}");

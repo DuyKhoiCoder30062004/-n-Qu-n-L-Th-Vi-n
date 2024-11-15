@@ -141,14 +141,14 @@ public class CTPP_Servlet extends HttpServlet {
                 StringBuilder result = ctpp_BUS.searchPP(optionSearch, valueSearch);
                 if (result.length() > 2) {
                     // Có dữ liệu
-                    response.getWriter().write("{\"thongbao\": \"tìm kiếm thành công\", \"hopLe\": false, \"results\": " + result.toString() + "}");
+                    response.getWriter().write("{\"thongbao\": \"\", \"hopLe\": false, \"results\": " + result.toString() + "}");
                 } else {
                     // Không có dữ liệu
                     response.getWriter().write("{\"thongbao\": \"Không có phiếu mượn bạn cần tìm\", \"hopLe\": false}");
                 }
                 break;
-                case "finishCTPP":
-                response.getWriter().write("{\"thongbao\": \"\", \"hopLe\": true}");
+            case "finishCTPP":
+                response.getWriter().write("{\"thongbao\": \"đÃ CLICK  RELOAFD\", \"hopLe\": true}");
                 break;
             default:
                 response.getWriter().write("{\"thongbao\": \"Không thấy hoạt động\", \"hopLe\": false}");

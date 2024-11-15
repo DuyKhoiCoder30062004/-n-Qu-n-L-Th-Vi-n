@@ -1,40 +1,51 @@
 package DTO;
-import java.util.Date;
+
+import java.time.LocalDate;
 
 public class DocGiaDTO {
-    private int maKhach;
-    private String tenKhach;
+    private int maDG;
+    private String hoDG;
+    private String tenDG;
     private String diaChi;
     private String soDienThoai;
-    private Date ngaySinh;
+    private LocalDate ngaySinh;
 
     // Constructor không tham số
     public DocGiaDTO() {}
 
     // Constructor có tham số
-    public DocGiaDTO(int maKhach, String tenKhach, String diaChi, String soDienThoai, Date ngaySinh) {
-        this.maKhach = maKhach;
-        this.tenKhach = tenKhach;
+    public DocGiaDTO(int maDG, String hoDG, String tenDG, String diaChi, String soDienThoai, LocalDate ngaySinh) {
+        this.maDG = maDG;
+        this.hoDG = hoDG;
+        this.tenDG = tenDG;
         this.diaChi = diaChi;
         this.soDienThoai = soDienThoai;
         this.ngaySinh = ngaySinh;
     }
 
     // Getter và Setter cho từng thuộc tính
-    public int getMaKhach() {
-        return maKhach;
+    public int getMaDG() {
+        return maDG;
     }
 
-    public void setMaKhach(int maKhach) {
-        this.maKhach = maKhach;
+    public void setMaDG(int maDG) {
+        this.maDG = maDG;
+    }
+    
+    public String getHoDG(){
+        return hoDG;
     }
 
-    public String getTenKhach() {
-        return tenKhach;
+    public void setHoDG(String hoDG) {
+        this.hoDG = hoDG;
     }
 
-    public void setTenKhach(String tenKhach) {
-        this.tenKhach = tenKhach;
+    public String getTenDG() {
+        return tenDG;
+    }
+
+    public void setTenDG(String tenDG) {
+        this.tenDG = tenDG;
     }
 
     public String getDiaChi() {
@@ -53,11 +64,11 @@ public class DocGiaDTO {
         this.soDienThoai = soDienThoai;
     }
 
-    public Date getNgaySinh() {
+    public LocalDate getNgaySinh() {
         return ngaySinh;
     }
 
-    public void setNgaySinh(Date ngaySinh) {
+    public void setNgaySinh(LocalDate ngaySinh) {
         this.ngaySinh = ngaySinh;
     }
 }

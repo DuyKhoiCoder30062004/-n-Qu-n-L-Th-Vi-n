@@ -6,16 +6,25 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="DTO.Nhanvien_DTO" %>
+<%
+    Nhanvien_DTO nv = (Nhanvien_DTO) session.getAttribute("nv");
+    String tasks = (String) session.getAttribute("tasks");
+    if (nv == null) {
+        response.sendRedirect("/cnpm/login");
+        return;
+    }
+%>
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta rel="icon" type="image/x-icon" href="">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
         <title>Quản lí phân quyền và tài khoản</title>
     </head>
     <style>
         body, html {
+            
             margin: 0;
             padding: 0;
             height:100vh;
@@ -230,43 +239,43 @@
             <div id="menu">
                 <div class="conponentMenu" id="iconAndName">
                     <img src="img/account.svg" alt="icon">
-                    Nguyễn Trung
-                    Quản lí
+                    ${nv.ho}  ${nv.ten}<br>
+                    ${nv.chucvu}
                 </div>
-                <button id="btnSach" class="conponentMenu">
+                <button id="btnSach" class="conponentMenu" value="sách" onclick="reDirect(this,'/cnpm/sach')">
                     <img src="img/sach.jpg" alt="icon"> Sách
                 </button>
-                <button id="btnNhanVien" class="conponentMenu">
+                <button id="btnNhanVien" class="conponentMenu" value="nhân viên" onclick="reDirect(this,'/cnpm/nhanvien')">
                     <img src="img/stafff.svg" alt="icon"> Nhân viên
                 </button>
-                <button id="btnDocGia" class="conponentMenu">
+                <button id="btnDocGia" class="conponentMenu" value="độc giả" onclick="reDirect(this,'/cnpm/docgia')">
                     <img src="img/customerr.svg" alt="icon"> Độc giả
                 </button>
-                <button id="btnNhaXuatBan" class="conponentMenu">
+                <button id="btnNhaXuatBan" class="conponentMenu" value="nhà xuất bản" onclick="reDirect(this,'/cnpm/nhaxuatban')">
                     <img src="img/nhaxuatban.jpg" alt="icon"> Nhà xuất bản
                 </button>
-                <button id="btnNhaCungCap" class="conponentMenu">
+                <button id="btnNhaCungCap" class="conponentMenu" value="nhà cung cấp" onclick="reDirect(this,'/cnpm/nhacungcap')">
                     <img src="img/nhacc.jpg" alt="icon"> Nhà cung cấp
                 </button>
-                <button id="btnKhuVuc" class="conponentMenu">
+                <button id="btnKhuVuc" class="conponentMenu" value="khu vực" onclick="reDirect(this,'/cnpm/khuvuc')">
                     <img src="img/khuvuc.jpg" alt="icon"> Khu vực
                 </button>
-                <button id="btnPhieuMuon" class="conponentMenu">
+                <button id="btnPhieuMuon" class="conponentMenu" value="phiếu mượn" onclick="reDirect(this,'/cnpm/phieumuon')">
                     <img src="img/export.svg" alt="icon"> Phiếu mượn
                 </button>
-                <button id="btnPhieuTra" class="conponentMenu">
+                <button id="btnPhieuTra" class="conponentMenu" value="phiếu trả" onclick="reDirect(this,'/cnpm/phieutra')">
                     <img src="img/phieutra.jpg" alt="icon"> Phiếu trả
                 </button>
-                <button id="btnPhieuPhat" class="conponentMenu">
+                <button id="btnPhieuPhat" class="conponentMenu" value="phiếu phạt" onclick="reDirect(this,'/cnpm/phieuphat')">
                     <img src="img/phieuphat.jpg" alt="icon"> Phiếu phạt
                 </button>
-                <button id="btnPhieuNhap" class="conponentMenu">
+                <button id="btnPhieuNhap" class="conponentMenu" value="phiếu nhập" onclick="reDirect(this,'/cnpm/phieunhap')">
                     <img src="img/phieunhap.jpg" alt="icon"> Phiếu nhập
                 </button>
-                <button id="btnPhanQuyen" class="conponentMenu">
+                <button id="btnPhanQuyen" class="conponentMenu" value="phân quyền" onclick="reDirect(this,'/cnpm/phanquyen')">
                     <img src="img/permission.svg" alt="icon"> Phân quyền
                 </button>
-                <button id="btnThongKe" class="conponentMenu">
+                <button id="btnThongKe" class="conponentMenu" value="thống kê" onclick="reDirect(this,'/cnpm/thongke')">
                     <img src="img/tinhhieuqua_128px.svg" alt="icon"> Thống kê
                 </button>
                 <button id="btnDangXuat" class="conponentMenu">
@@ -282,7 +291,8 @@
                         <div class="input-group">
                             <label class="nameFeature">Mã nhân viên</label><br>
                             <input type="text" name="txtMaNV" id="txtMaNV" placeholder="Nhập mã nv" readonly>
-                            <img src="img/add.svg" alt="mở table nhân viên" onclick="hienThiTBNV()"  style="cursor: pointer;width: 15px;height:auto;" />
+                            <img src="img/add.svg" alt="mở table nhân viên" onclick="hienThiTBNV()"
+                                style="cursor: pointer;width: 15px;height:auto;" />
                         </div>
                         <div class="input-group">
                             <label class="nameFeature">Mật khẩu</label><br>
@@ -292,9 +302,10 @@
                             <label class="nameFeature">Tác vụ/Quản lí</label><br>
                             <label class="checkbox"><input type="checkbox" name="task" value="sách">Sách</label><br>
                             <label class="checkbox"><input type="checkbox" name="task" value="nhân viên">Nhân viên</label><br>
-                            <label class="checkbox"><input type="checkbox" name="task" value="khách hàng">Khách hàng</label><br>
+                            <label class="checkbox"><input type="checkbox" name="task" value="đọc giả">Độc giả</label><br>
                             <label class="checkbox"><input type="checkbox" name="task" value="nhà xuất bản">Nhà xuất bản</label><br>
                             <label class="checkbox"><input type="checkbox" name="task" value="nhà cung cấp">Nhà cung cấp</label><br>
+                            <label class="checkbox"><input type="checkbox" name="task" value="khu vực">Khu vực</label><br>
                             <label class="checkbox"><input type="checkbox" name="task" value="phiếu mượn">Phiếu mượn</label><br>
                             <label class="checkbox"><input type="checkbox" name="task" value="phiếu trả">Phiếu trả</label><br>
                             <label class="checkbox"><input type="checkbox" name="task" value="phiếu phạt">Phiếu phạt</label><br>
@@ -393,6 +404,7 @@
             </div>
         </form>
         <script>
+            alert("hiii");
             /*click table*/
             function clickPQ(row) {
                 const cells = row.getElementsByTagName('td');
@@ -425,7 +437,6 @@
                     valueSearch: document.getElementById('txtSearch').value,
                 });
 
-                //alert(formData.get('tasks').split(',').length);
                 fetch('http://localhost:9999/cnpm/phanquyen', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
@@ -565,6 +576,24 @@
                     row.style.display = ""; // Hiển thị tất cả các hàng
                 });
                 document.getElementById('txtSearchNV').value="";
+            }
+            
+            document.getElementById('btnDangXuat').addEventListener('click', function(event) {
+                event.preventDefault();  
+                window.location.href = '/cnpm/login';  
+            });
+            function reDirect(button,url)
+            {
+                event.preventDefault(); 
+                var tasks = "<%= tasks %>";
+                if(tasks.includes(button.value))
+                {
+                    window.location.href =url;
+                }
+                else
+                {
+                    alert("Bạn không có quyền quản lí tác vụ "+ button.value);
+                }
             }
             // Chặn việc sử dụng tổ hợp phím tắt để phóng to/thu nhỏ
             document.addEventListener('keydown', function (event) {

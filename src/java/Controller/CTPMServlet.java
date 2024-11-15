@@ -138,7 +138,7 @@ public class CTPMServlet extends HttpServlet {
                 StringBuilder result = ctpm_BUS.searchCTPM(optionSearch, valueSearch);
                 if (result.length() > 2) {
                     // Có dữ liệu
-                    response.getWriter().write("{\"thongbao\": \"tìm kiếm thành công\", \"hopLe\": false, \"results\": " + result.toString() + "}");
+                    response.getWriter().write("{\"thongbao\": \"\", \"hopLe\": false, \"results\": " + result.toString() + "}");
                 } else {
                     // Không có dữ liệu
                     response.getWriter().write("{\"thongbao\": \"Không có phiếu mượn bạn cần tìm\", \"hopLe\": false}");
