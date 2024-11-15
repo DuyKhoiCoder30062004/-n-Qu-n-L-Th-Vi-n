@@ -83,7 +83,7 @@ public class loginServlet extends HttpServlet {
         session.setAttribute("tasks",tasks); 
         // Kiểm tra quyền để chuyển hướng
         String redirectUrl;
-        if (nv_BUS.timKiemNhanVien(username).get(0).getChucvu().equals("admin")) {
+        if (nv_BUS.timKiemNhanVien(username).get(0).getChucVu().equals("admin")) {
             redirectUrl = "/cnpm/phanquyen";
         } else {
             redirectUrl = "/cnpm/phieumuon";
