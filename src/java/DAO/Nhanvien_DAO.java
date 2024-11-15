@@ -23,21 +23,29 @@ public class Nhanvien_DAO {
             String sql = "SELECT * FROM nhanvien"; // Thay đổi tên bảng nếu cần
             ps = connection.prepareStatement(sql);
             rs = ps.executeQuery();
+            
+            // Kiểm tra nếu không có dữ liệu
+            if (!rs.isBeforeFirst()) {
+                System.out.println("Không có dữ liệu nhân viên.");
+                return listNhanVien; // Trả về danh sách rỗng nếu không có nhân viên
+            }
+
             while (rs.next()) {
                 Nhanvien_DTO nhanVien = new Nhanvien_DTO(
-                    rs.getInt("maNV"),
+                    rs.getInt("manv"),
                     rs.getString("ho"),
                     rs.getString("ten"),
-                    rs.getString("soDT"),
-                    rs.getString("chucVu"),
+                    rs.getString("sdt"),
                     rs.getDouble("luong"),
-                    rs.getDate("ngaySinh")
+                    rs.getString("chucvu"),
+                    rs.getTimestamp("ngaysinh") // Sử dụng getTimestamp cho trường datetime
                 );
                 listNhanVien.add(nhanVien);
             }
         } catch (Exception e) {
+            System.err.println("Lỗi khi lấy danh sách nhân viên: " + e.getMessage());
             e.printStackTrace();
-            return null;
+            return null; // Trả về null nếu có lỗi
         } finally {
             try {
                 xuLyDB.closeConnection(connection);
@@ -54,16 +62,17 @@ public class Nhanvien_DAO {
     public boolean addNhanVien(Nhanvien_DTO nhanVien) {
         boolean result = false;
         try {
-            String sql = "INSERT INTO nhanvien (ho, ten, soDT, chucVu, luong, ngaySinh) VALUES (?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO nhanvien (manv, ho, ten, sdt, luong, ngaysinh, chucvu) VALUES (?, ?, ?, ?, ?, ?, ?)";
             xuLyDB = new dangNhapDatabase();
             connection = xuLyDB.openConnection();
             ps = connection.prepareStatement(sql);
-            ps.setString(1, nhanVien.getHo());
-            ps.setString(2, nhanVien.getTen());
-            ps.setString(3, nhanVien.getSoDT());
-            ps.setString(4, nhanVien.getChucVu());
+            ps.setInt(1, nhanVien.getMaNV()); // Thêm manv vào vị trí đầu tiên
+            ps.setString(2, nhanVien.getHo());
+            ps.setString(3, nhanVien.getTen());
+            ps.setString(4, nhanVien.getSoDT());
             ps.setDouble(5, nhanVien.getLuong());
-            ps.setDate(6, new java.sql.Date(nhanVien.getNgaySinh().getTime()));
+            ps.setTimestamp(6, new java.sql.Timestamp(nhanVien.getNgaySinh().getTime())); // Sử dụng Timestamp cho ngày sinh
+            ps.setString(7, nhanVien.getChucVu());
             result = ps.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -83,16 +92,16 @@ public class Nhanvien_DAO {
     public boolean updateNhanVien(Nhanvien_DTO nhanVien) {
         boolean result = false;
         try {
-            String sql = "UPDATE nhanvien SET ho = ?, ten = ?, soDT = ?, chucVu = ?, luong = ?, ngaySinh = ? WHERE maNV = ?";
+            String sql = "UPDATE nhanvien SET ho = ?, ten = ?, sdt = ?, luong = ?, ngaysinh = ?, chucvu = ? WHERE manv = ?";
             xuLyDB = new dangNhapDatabase();
             connection = xuLyDB.openConnection();
             ps = connection.prepareStatement(sql);
             ps.setString(1, nhanVien.getHo());
             ps.setString(2, nhanVien.getTen());
             ps.setString(3, nhanVien.getSoDT());
-            ps.setString(4, nhanVien.getChucVu());
-            ps.setDouble(5, nhanVien.getLuong());
-            ps.setDate(6, new java.sql.Date(nhanVien.getNgaySinh().getTime()));
+            ps.setDouble(4, nhanVien.getLuong());
+            ps.setTimestamp(5, new java.sql.Timestamp(nhanVien.getNgaySinh().getTime())); // Sử dụng Timestamp cho ngày sinh
+            ps.setString(6, nhanVien.getChucVu());
             ps.setInt(7, nhanVien.getMaNV());
             result = ps.executeUpdate() > 0;
         } catch (Exception e) {
@@ -115,7 +124,7 @@ public class Nhanvien_DAO {
         try {
             xuLyDB = new dangNhapDatabase();
             connection = xuLyDB.openConnection();
-            String sql = "DELETE FROM nhanvien WHERE maNV = ?";
+            String sql = "DELETE FROM nhanvien WHERE manv = ?";
             ps = connection.prepareStatement(sql);
             ps.setInt(1, maNV);
             result = ps.executeUpdate() > 0;
@@ -132,4 +141,52 @@ public class Nhanvien_DAO {
         }
         return result;
     }
+
+    // Tìm kiếm nhân viên theo mã hoặc tên
+    public ArrayList<Nhanvien_DTO> searchNhanVien(String keyword) {
+        ArrayList<Nhanvien_DTO> listNhanVien = new ArrayList<>();
+        try {
+            xuLyDB = new dangNhapDatabase();
+            connection = xuLyDB.openConnection();
+            String sql = "SELECT * FROM nhanvien WHERE manv = ? OR ten LIKE ?";
+            ps = connection.prepareStatement(sql);
+            
+            // Cố gắng chuyển keyword sang số nguyên cho trường hợp tìm kiếm theo mã
+            try {
+                int maNV = Integer.parseInt(keyword);
+                ps.setInt(1, maNV);
+            } catch (NumberFormatException e) {
+                ps.setInt(1, -1); // Nếu không phải số, đặt giá trị không hợp lệ
+            }
+            
+            ps.setString(2, "%" + keyword + "%"); // Tìm kiếm tên có chứa từ khóa
+            rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                Nhanvien_DTO nhanVien = new Nhanvien_DTO(
+                    rs.getInt("manv"),
+                    rs.getString("ho"),
+                    rs.getString("ten"),
+                    rs.getString("sdt"),
+                    rs.getDouble("luong"),
+                    rs.getString("chucvu"),
+                    rs.getTimestamp("ngaysinh") // Dùng getTimestamp cho trường ngày sinh
+                );
+                listNhanVien.add(nhanVien);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            try {
+                xuLyDB.closeConnection(connection);
+                if (ps != null) ps.close();
+                if (rs != null) rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return listNhanVien;
+    }
 }
+

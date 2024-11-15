@@ -5,11 +5,17 @@
 package Controller;
 
 import BUS.CTPP_BUS;
+import BUS.CTPT_BUS;
 import BUS.Loi_BUS;
 import BUS.PhieuPhat_BUS;
+import BUS.PhieuTra_BUS;
+import BUS.Sach_BUS;
 import DTO.CTPP_DTO;
+import DTO.CTPT_DTO;
 import DTO.Loi_DTO;
 import DTO.PhieuPhat_DTO;
+import DTO.PhieuTra_DTO;
+import DTO.Sach_DTO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -30,23 +36,50 @@ public class PhieuPhat_Servlet extends HttpServlet {
     private PhieuPhat_BUS pp_BUS = new PhieuPhat_BUS();
     private Loi_BUS loi_BUS = new Loi_BUS();
     private CTPP_BUS ctpp_BUS = new CTPP_BUS();
-
+    private PhieuTra_BUS pt_BUS=new PhieuTra_BUS();
+    private CTPT_BUS ctpt_BUS=new CTPT_BUS();
+    private Sach_BUS sach_BUS=new Sach_BUS();
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
     }
-
+//    private boolean checkMaSach(ArrayList<Sach_DTO> listSach,int masach)
+//    {
+//        for(Sach_DTO i:listSach)
+//        {
+//            if(i.getMaSach()==masach)
+//                return false;
+//        }
+//        return true;
+//    }
+//
+//    private ArrayList<Sach_DTO> getListSachOfPT(int mapt)
+//    {
+//        ArrayList<Sach_DTO> listSach=new ArrayList<>();
+//        for (CTPT_DTO i: ctpt_BUS.searchCTPTByMaPT(mapt))
+//        {
+//            if(checkMaSach(listSach,i.getMaSach()))
+//            {
+//                listSach.add(sach_BUS.timSachTheoMaSach(String.valueOf(i.getMaSach())).get(0));
+//            }
+//        }
+//        return listSach;
+//    }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         ArrayList<PhieuPhat_DTO> listPP = pp_BUS.getList();
         ArrayList<CTPP_DTO> listCTPP = ctpp_BUS.getList();
         ArrayList<Loi_DTO> listLoi = loi_BUS.getList();
-        System.out.println("list ctpp:" +listCTPP);
+        ArrayList<PhieuTra_DTO> listPT=pt_BUS.getListPhieuTra();
+        ArrayList<Sach_DTO> listSach=sach_BUS.getListSach();
         request.setAttribute("listLoi", listLoi);
         request.setAttribute("listCTPP", listCTPP);
         request.setAttribute("listPP", listPP);
+        request.setAttribute("listPT", listPT);
+        request.setAttribute("listSach", listSach);
+       System.out.println("lisstSách" +listSach);
         request.getRequestDispatcher("/WEB-INF/gui/phieuphat.jsp").forward(request, response);
     }
 

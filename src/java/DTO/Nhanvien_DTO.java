@@ -1,32 +1,28 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package DTO;
 
 import java.util.Date;
 
 public class Nhanvien_DTO {
-    private int maNV;         // Mã nhân viên
-    private String ho;        // Họ
-    private String ten;       // Tên
-    private String soDT;      // Số điện thoại
-    private String chucVu;    // Chức vụ
-    private double luong;     // Lương
-    private Date ngaySinh;    // Ngày sinh
+    private int maNV;
+    private String ho;
+    private String ten;
+    private String soDT;
+    private Date ngaySinh;
+    private String chucVu;
+    private double luong;
 
     // Constructor
-    public Nhanvien_DTO(int maNV, String ho, String ten, String soDT, String chucVu, double luong, Date ngaySinh) {
+    public Nhanvien_DTO(int maNV, String ho, String ten, String soDT, double luong, String chucVu, Date ngaySinh) {
         this.maNV = maNV;
         this.ho = ho;
         this.ten = ten;
         this.soDT = soDT;
-        this.chucVu = chucVu;
         this.luong = luong;
+        this.chucVu = chucVu;
         this.ngaySinh = ngaySinh;
     }
 
-    // Getter and Setter methods
+    // Getters và Setters
     public int getMaNV() {
         return maNV;
     }
@@ -59,6 +55,14 @@ public class Nhanvien_DTO {
         this.soDT = soDT;
     }
 
+    public Date getNgaySinh() {
+        return ngaySinh;
+    }
+
+    public void setNgaySinh(Date ngaySinh) {
+        this.ngaySinh = ngaySinh;
+    }
+
     public String getChucVu() {
         return chucVu;
     }
@@ -74,12 +78,5 @@ public class Nhanvien_DTO {
     public void setLuong(double luong) {
         this.luong = luong;
     }
-
-    public Date getNgaySinh() {
-        return ngaySinh;
-    }
-
-    public void setNgaySinh(Date ngaySinh) {
-        this.ngaySinh = ngaySinh;
-    }
 }
+

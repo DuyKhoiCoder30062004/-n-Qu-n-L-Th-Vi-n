@@ -2,6 +2,7 @@ package BUS;
 
 import DAO.CTPT_DAO;
 import DTO.CTPT_DTO;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,7 +32,7 @@ public class CTPT_BUS {
     }
 
     // Method to search CTPT by maPT
-    public CTPT_DTO searchCTPTByMaPT(int maPT) {
+    public ArrayList<CTPT_DTO> searchCTPTByMaPT(int maPT) {
         return ctptDAO.searchByMaPT(maPT);
     }
 }

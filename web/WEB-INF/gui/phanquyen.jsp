@@ -27,54 +27,59 @@
             height:100vh;
 
         }
-        #title{
+        #title {
             width: 100%;
-            height:3%;
-            background-color:#D9D9D9;
+            height: 3%;
+            background-color:white;
             font-size: 16px;
-            font-style: Italic;
-            position:fixed;
-            top: 0;
-            left: 0;
+            font-weight: bolder;
+            position: fixed;
 
-        }
-        #menu{
+            }
+
+        #menu {
             width: 12%;
             height: 97%;
-            background-color:#99B3A1 ;
-            position:fixed;
+            background-color:#2C2F48;
+            position: fixed;
             top: 3%;
             left: 0;
         }
-        #detail{
+
+        #detail {
             width: 88%;
             height: 97%;
-            background-color:#F5A9FC ;
+            background-color:#D9D9D9;
             top: 3%;
             left: 12%;
-            position:fixed;
+            position: fixed;
+            overflow-y: auto;
         }
-        #iconAndName
-        {
+
+        #iconAndName {
             height: 14.5%;
             margin-top: 0px;
             border-radius: 0px;
         }
-        .conponentMenu{
+
+        .conponentMenu {
             width: 100%;
-            border-radius: 10px;
             height: 6%;
             margin-top: 2%;
-            font-weight:bold ;
+            font-weight: bold;
             text-align: center;
-            display: flex; /* Thay đổi để sử dụng flexbox */
-            align-items: center; /* Căn giữa theo chiều dọc */
-            justify-content: flex-start; /* Căn giữa theo chiều ngang */
-            border:#D9D9D9;
-            background-color: #D9D9D9;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            border: #4A4D66;
+            background-color: #4A4D66;
+            color: #FFFFFF;
+            border-bottom:1px solid white ;
+
         }
+
         .conponentMenu:hover {
-            background-color: #ffffff;
+            background-color:burlywood;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
@@ -90,9 +95,9 @@
             margin-right: 0%;
             margin-left: 0%;
         }
-        #tacVuThucThi
+        #btnPhanQuyen
         {
-            background-color: #00CED1;
+            background-color: #5A4E9B;
         }
         #titleDetail
         {
@@ -203,8 +208,8 @@
             position: absolute;
             top: 20%;
             left: 20%;
-            display: none; /* Ẩn bảng nhân viên mặc định */
-            z-index: 1000; /* Hiển thị trên cùng */
+            display: none; 
+            z-index: 1000; 
         }
         #tableNV{
             width: 95%;
@@ -219,41 +224,54 @@
     <body>
         <form id="form">
             <div id="title">
-                Hệ thống quản lí thư viện
+                Hệ thống quản lí thư viện của trường Đại học ABC
             </div>
 
             <div id="menu">
-                <div class="conponentMenu" id="iconAndName" style="background-color:#99B3A1 ;">
+                <div class="conponentMenu" id="iconAndName">
                     <img src="img/account.svg" alt="icon">
                     Nguyễn Trung
                     Quản lí
                 </div>
-                <button class="conponentMenu">
-                    <img src="img/sach.jpg" alt="icon"> Sách</button>
-                <button class="conponentMenu">
-                    <img src="img/stafff.svg" alt="icon">Nhân viên</button>
-                <button class="conponentMenu">
-                    <img src="img/customerr.svg" alt="icon">Độc giả</button>
-                <button class="conponentMenu">
-                    <img src="img/nhaxuatban.jpg" alt="icon">Nhà xuất bản</button>
-                <button class="conponentMenu">
-                    <img src="img/nhacc.jpg" alt="icon">Nhà cung cấp</button>
-                <button class="conponentMenu">
-                    <img src="img/khuvuc.jpg" alt="icon">Khu vực</button>
-                <button class="conponentMenu" >
-                    <img src="img/export.svg" alt="icon">Phiếu mượn</button>
-                <button class="conponentMenu">
-                    <img src="img/phieutra.jpg" alt="icon">Phiếu trả</button>
-                <button class="conponentMenu">
-                    <img src="img/phieuphat.jpg" alt="icon">Phiếu phạt</button>
-                <button class="conponentMenu">
-                    <img src="img/phieunhap.jpg" alt="icon">Phiếu nhập</button>
-                <button id="tacVuThucThi" class="conponentMenu">
-                    <img src="img/permission.svg" alt="icon">Phân quyền</button>
-                <button class="conponentMenu">
-                    <img src="img/tinhhieuqua_128px.svg" alt="icon">Thống kê</button>
-                <button class="conponentMenu" >
-                    <img src="img/logout.jpg" alt="icon">Đăng xuất</button>
+                <button id="btnSach" class="conponentMenu">
+                    <img src="img/sach.jpg" alt="icon"> Sách
+                </button>
+                <button id="btnNhanVien" class="conponentMenu">
+                    <img src="img/stafff.svg" alt="icon"> Nhân viên
+                </button>
+                <button id="btnDocGia" class="conponentMenu">
+                    <img src="img/customerr.svg" alt="icon"> Độc giả
+                </button>
+                <button id="btnNhaXuatBan" class="conponentMenu">
+                    <img src="img/nhaxuatban.jpg" alt="icon"> Nhà xuất bản
+                </button>
+                <button id="btnNhaCungCap" class="conponentMenu">
+                    <img src="img/nhacc.jpg" alt="icon"> Nhà cung cấp
+                </button>
+                <button id="btnKhuVuc" class="conponentMenu">
+                    <img src="img/khuvuc.jpg" alt="icon"> Khu vực
+                </button>
+                <button id="btnPhieuMuon" class="conponentMenu">
+                    <img src="img/export.svg" alt="icon"> Phiếu mượn
+                </button>
+                <button id="btnPhieuTra" class="conponentMenu">
+                    <img src="img/phieutra.jpg" alt="icon"> Phiếu trả
+                </button>
+                <button id="btnPhieuPhat" class="conponentMenu">
+                    <img src="img/phieuphat.jpg" alt="icon"> Phiếu phạt
+                </button>
+                <button id="btnPhieuNhap" class="conponentMenu">
+                    <img src="img/phieunhap.jpg" alt="icon"> Phiếu nhập
+                </button>
+                <button id="btnPhanQuyen" class="conponentMenu">
+                    <img src="img/permission.svg" alt="icon"> Phân quyền
+                </button>
+                <button id="btnThongKe" class="conponentMenu">
+                    <img src="img/tinhhieuqua_128px.svg" alt="icon"> Thống kê
+                </button>
+                <button id="btnDangXuat" class="conponentMenu">
+                    <img src="img/logout.jpg" alt="icon"> Đăng xuất
+                </button>
             </div>
             <div id="detail">
                 <p id="titleDetail">
@@ -358,30 +376,16 @@
                                 </tr>
                             </thead>
                             <tbody id="tbodyNV">
-                                <tr>
-                                    <td>1234</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>admin</td>
-                                </tr>
-                                <tr>
-                                    <td>1235</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>quản lí</td>
-                                </tr>
-                                <tr>
-                                    <td>1236</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>nhân viên</td>
-                                </tr>
+                                <c:forEach var="nv" items="${requestScope.listNV}">
+                                    <tr>
+                                        <td>${nv.maNV}</td>
+                                        <td>${nv.ho}</td>
+                                        <td>${nv.ten}</td>
+                                        <td>${nv.soDT}</td>
+                                        <td>${nv.ngaySinh}</td>
+                                        <td>${nv.chucVu} </td>
+                                    </tr>
+                                </c:forEach>
                             </tbody>
                         </table>
                     </div>
