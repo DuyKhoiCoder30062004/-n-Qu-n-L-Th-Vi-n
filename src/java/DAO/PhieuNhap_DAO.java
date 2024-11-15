@@ -1,13 +1,14 @@
 package DAO;
 
-import ConnectDB.dangNhapDatabase;
-import DTO.PhieuNhap_DTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+
+import ConnectDB.dangNhapDatabase;
+import DTO.PhieuNhap_DTO;
 
 public class PhieuNhap_DAO {
     private dangNhapDatabase loginDB = null;
@@ -124,6 +125,7 @@ public class PhieuNhap_DAO {
             preStatement.setInt(1, maPN);
 
             int cnt = preStatement.executeUpdate();
+
             result = cnt > 0;
         } catch (SQLException e) {
             System.err.println("SQL Error: " + e.getMessage());

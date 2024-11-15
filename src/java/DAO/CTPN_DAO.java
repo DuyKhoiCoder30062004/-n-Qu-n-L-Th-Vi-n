@@ -1,12 +1,13 @@
 package DAO;
 
-import ConnectDB.dangNhapDatabase;
-import DTO.CTPN_DTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import ConnectDB.dangNhapDatabase;
+import DTO.CTPN_DTO;
 
 public class CTPN_DAO{
     private dangNhapDatabase loginDB = null;
@@ -59,6 +60,7 @@ public class CTPN_DAO{
             preStatement.setFloat(4, ctpn.getDonGia());
 
             int cnt = preStatement.executeUpdate();
+            updatePhieuNhapTotals(ctpn.getMaPN());
             result = cnt > 0; //Kiểm tra số dòng thay đổi
 
         } catch (SQLException e) {
@@ -90,6 +92,7 @@ public class CTPN_DAO{
             preStatement.setInt(4, ctpn.getMaSach());
 
             int cnt = preStatement.executeUpdate();
+            updatePhieuNhapTotals(ctpn.getMaPN());
             result = cnt > 0;
         } catch (SQLException e) {
             System.err.println("SQL Error: " + e.getMessage());
@@ -118,6 +121,7 @@ public class CTPN_DAO{
             preStatement.setInt(2, maSach);
 
             int cnt = preStatement.executeUpdate();
+            updatePhieuNhapTotals(maPN);
             result = cnt > 0;
         } catch (SQLException e) {
             System.err.println("SQL Error: " + e.getMessage());
@@ -145,6 +149,7 @@ public class CTPN_DAO{
             preStatement.setInt(1, maPN);
 
             int cnt = preStatement.executeUpdate();
+            updatePhieuNhapTotals(maPN);
             result = cnt > 0;
         } catch (SQLException e) {
             System.err.println("SQL Error: " + e.getMessage());
@@ -230,5 +235,29 @@ public class CTPN_DAO{
             }
         }
         return ctpn;
+    }
+
+    private void updatePhieuNhapTotals(int maPN) {
+        try {
+            // Tính lại tổng số lượng và tổng tiền từ các CTPN liên quan đến phiếu nhập này
+            String query = "SELECT SUM(soLuong), SUM(soLuong * donGia) FROM ctpn WHERE maPN = ?";
+            PreparedStatement ps = connect.prepareStatement(query);
+            ps.setInt(1, maPN);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                int tongSL = rs.getInt(1);
+                double tongTien = rs.getDouble(2);
+
+                // Cập nhật lại Phiếu Nhập với tổng số lượng và tổng tiền mới
+                String updatePN = "UPDATE phieunhap SET tongSL = ?, tongTien = ? WHERE maPN = ?";
+                PreparedStatement psUpdate = connect.prepareStatement(updatePN);
+                psUpdate.setInt(1, tongSL);
+                psUpdate.setDouble(2, tongTien);
+                psUpdate.setInt(3, maPN);
+                psUpdate.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
