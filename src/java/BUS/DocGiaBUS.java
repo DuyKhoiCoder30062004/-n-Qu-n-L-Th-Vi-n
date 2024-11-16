@@ -1,48 +1,37 @@
 package BUS;
 import DAO.DocGiaDAO;
 import DTO.DocGiaDTO;
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DocGiaBUS {
-    private DocGiaDAO docGiaDAO;
 
-    public List<DocGiaDTO> getAllDocGia() {
-        try {
-            return docGiaDAO.getAllDocGia();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
+   private ArrayList<DocGiaDTO> dgList = null;
+    private DocGiaDAO dgDAO = new DocGiaDAO();
+    public ArrayList<DocGiaDTO> getListNCC()
+    {
+        dgList = dgDAO.getList();
+        return dgList;
     }
 
-    public void addDocGia(DocGiaDTO docGia) {
-        try {
-            docGiaDAO.addDocGia(docGia);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public boolean addDocGia(DocGiaDTO dg){
+        return dgDAO.addDocGia(dg);
     }
-
-    public void updateDocGia(DocGiaDTO docGia) {
-        try {
-            docGiaDAO.updateDocGia(docGia);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    
+    public boolean deleteDocGia(int maDG) {
+        return dgDAO.deleteDocGia(maDG);
     }
-
-    public void deleteDocGia(int maKhach) {
-        try {
-            docGiaDAO.deleteDocGia(maKhach);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    
+    public boolean updateDocGia(DocGiaDTO dg) {
+        return dgDAO.updateDocGia(dg);
     }
+    
 
     public DocGiaDTO findDocGiaByMaKhach(int maKhach) {
         try {
-            return docGiaDAO.findDocGiaByMaKhach(maKhach);
+            return dgDAO.findDocGiaByMaKhach(maKhach);
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
