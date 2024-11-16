@@ -1,5 +1,8 @@
 package BUS;
 
+import DAO.PhieuNhap_DAO;
+import DTO.CTPN_DTO;
+import DTO.PhieuNhap_DTO;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -7,19 +10,6 @@ import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
-import DAO.PhieuNhap_DAO;
-import DTO.CTPN_DTO;
-import DTO.PhieuNhap_DTO;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class PhieuNhap_BUS {
     private ArrayList<PhieuNhap_DTO> listPN;
@@ -47,33 +37,17 @@ public class PhieuNhap_BUS {
         return pn_DAO.searchByMaPN(maPN);
     }
 
-    public StringBuilder searchPN(String option, String value){
+    public StringBuilder[] searchPN(String option, String value){
+        StringBuilder[] arrayrs = new StringBuilder[2];
         StringBuilder jsonResult = new StringBuilder("["); // Sử dụng StringBuilder để dễ dàng quản lý chuỗi
+        StringBuilder jsonRsCTPN = new StringBuilder("[");
         boolean firstItem = true;
+        boolean fItemCTPM=true;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        
         for(PhieuNhap_DTO pn : pn_DAO.getList()){
-
-            if(option.equals("Mã phiếu") && String.valueOf(pn.getMaPN()).contains(value) 
-                || option.equals("Mã nhà cung cấp") && String.valueOf(pn.getMaNCC()).contains(value)
-                || option.equals("Mã nhân viên") && String.valueOf(pn.getMaNV()).contains(value) 
-                || option.equals("Ngày lập") && pn.getNgayLap().format(formatter).contains(value)) {
-                    if (!firstItem) {
-                        jsonResult.append(","); // Thêm dấu phẩy trước mỗi phần tử sau phần tử đầu tiên
-                    }
-                    jsonResult.append("{"
-                        + "\"maPhieu\": \"" + pn.getMaPN() + "\","
-                        + "\"maKhach\": \"" + pn.getMaNCC() + "\","
-                        + "\"maNV\": \"" + pn.getMaNV() + "\","
-                        + "\"ngayLap\": \"" + pn.getNgayLap() + "\","
-                        + "\"tongTien\": \"" +pn.getTongTien() + "\","
-                        + "\"tongSL\": \"" + pn.getTongSL() + "\""
-                        + "}");
-                firstItem = false;
-            }
+            if(option.equals("Mã phiếu") && String.valueOf(pn.getMaPN().contain(value))|| option.equals("Mã NCC"))
         }
-        jsonResult.append("]");
-        return jsonResult;
+        return arrayrs;
     }
 
     public String printPN(int maPN) { 
@@ -224,11 +198,11 @@ public class PhieuNhap_BUS {
         try (FileOutputStream out = new FileOutputStream(filePath)) {
             excelWorkbook.write(out);
         }
-    } catch (IOException e) {
-        e.printStackTrace();
-        return false;
-    }
-    return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
 }
