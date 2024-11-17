@@ -687,13 +687,12 @@
                     }
                     function selectFile(action) {
                         // Lắng nghe sự kiện thay đổi của input file
-                        //alert("Vui lòng chọn hoặc tạo file excel để "+action+" ở trong thư mục C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/");
+                        alert("Vui lòng chọn hoặc tạo file excel để "+action+" ở trong thư mục C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/");
                         const fileInput = document.getElementById("fileExcel");
                         fileInput.onchange = function() {
                             if (fileInput.files.length > 0) {
                                 // Gán đường dẫn file vào biến toàn cục
-//                                namePath = fileInput.files[0].name;
-                                namPath=fileInput.files[0];    
+                                namePath = fileInput.files[0].name;
                                 sendData(action);
                             }
                         };

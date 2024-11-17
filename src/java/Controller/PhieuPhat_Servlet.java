@@ -69,18 +69,27 @@ public class PhieuPhat_Servlet extends HttpServlet {
 //        }
 //        return listSach;
 //    }
-    private boolean CheckCoLoi(int maPT)
+    private boolean checkCoLoi(int maPT)
     {
-        for(CTPT_DTO i:ctpt_BUS.searchCTPTByMaPT(maPT))
+        for(CTPT_DTO i:ctpt_BUS.searchByMaPT(maPT))
         {
-            if()
+            if(i.getMaVachLoi().length()>0)
+                return true;
         }
+        return false;
     }
     
-    private ArrayList<PhieuTra_DTO> listPT_Phat()
+    private ArrayList<PhieuTra_DTO> listPT_BiPhat()
     {
         ArrayList<PhieuTra_DTO> listPT=new ArrayList<PhieuTra_DTO>();
-        for
+        for(PhieuTra_DTO i:pt_BUS.getListPhieuTra())
+        {
+            if(checkCoLoi(i.getMaPT())==true)
+            {
+                listPT.add(i);
+            }
+        }
+        return listPT;
     }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -88,7 +97,7 @@ public class PhieuPhat_Servlet extends HttpServlet {
         ArrayList<PhieuPhat_DTO> listPP = pp_BUS.getList();
         ArrayList<CTPP_DTO> listCTPP = ctpp_BUS.getList();
         ArrayList<Loi_DTO> listLoi = loi_BUS.getList();
-        ArrayList<PhieuTra_DTO> listPT=pt_BUS.getListPhieuTra();
+        ArrayList<PhieuTra_DTO> listPT=listPT_BiPhat();
         ArrayList<Sach_DTO> listSach=sach_BUS.getListSach();
         ArrayList<CTSach_DTO> listCTS=cts_BUS.getList();
         System.out.print("list CTS"+ listCTS);

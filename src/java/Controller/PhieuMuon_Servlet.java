@@ -42,15 +42,17 @@ public class PhieuMuon_Servlet extends HttpServlet {
 
     private PhieuMuon_BUS pm_BUS = new PhieuMuon_BUS();
     private CTPM_BUS ctpm_BUS = new CTPM_BUS();
-    private DocGiaBUS dg_BUS=new DocGiaBUS();
-    private Sach_BUS sach_BUS=new Sach_BUS();
-    private PhieuTra_BUS pt_BUS=new PhieuTra_BUS();
-    private PhieuPhat_BUS pp_BUS=new PhieuPhat_BUS();
+    private DocGiaBUS dg_BUS = new DocGiaBUS();
+    private Sach_BUS sach_BUS = new Sach_BUS();
+    private PhieuTra_BUS pt_BUS = new PhieuTra_BUS();
+    private PhieuPhat_BUS pp_BUS = new PhieuPhat_BUS();
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
     }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -64,26 +66,27 @@ public class PhieuMuon_Servlet extends HttpServlet {
         request.setAttribute("listSach", listSach);
         request.getRequestDispatcher("/WEB-INF/gui/phieumuon.jsp").forward(request, response);
     }
-    private PhieuTra_DTO  searchPM_In_PT(int maPM)
-    {
-        for (PhieuTra_DTO i:pt_BUS.getListPhieuTra())
-        {
-            if(i.getMaPM()==maPM)
+
+    private PhieuTra_DTO searchPM_In_PT(int maPM) {
+        for (PhieuTra_DTO i : pt_BUS.getListPhieuTra()) {
+            if (i.getMaPM() == maPM) {
                 return i;
+            }
         }
         return null;
     }
-    private PhieuPhat_DTO searchPT_In_PP(int maPT)
-    {
-        for(PhieuPhat_DTO i:pp_BUS.getList())
-        {
-            if(i.getMaPT()==maPT)
+
+    private PhieuPhat_DTO searchPT_In_PP(int maPT) {
+        for (PhieuPhat_DTO i : pp_BUS.getList()) {
+            if (i.getMaPT() == maPT) {
                 return i;
+            }
         }
         return null;
     }
+
     private boolean checkInfor(HttpServletRequest request, HttpServletResponse response,
-            String maPhieu,String madg, String ngayLap, String hanChot)
+            String maPhieu, String madg, String ngayLap, String hanChot)
             throws IOException {
         // Kiểm tra mã phiếu
         if (maPhieu == null || maPhieu.trim().isEmpty()) {
@@ -96,7 +99,7 @@ public class PhieuMuon_Servlet extends HttpServlet {
             response.getWriter().write("{\"thongbao\": \"Mã phiếu phải là số nguyên\", \"hopLe\": false}");
             return false;
         }
-        if ( madg== null || madg.trim().isEmpty()) {
+        if (madg == null || madg.trim().isEmpty()) {
             response.getWriter().write("{\"thongbao\": \"Vui lòng chọn mã độc giả\", \"hopLe\": false}");
             return false; // Dừng hàm nếu lỗi
         }
@@ -110,8 +113,9 @@ public class PhieuMuon_Servlet extends HttpServlet {
             response.getWriter().write("{\"thongbao\": \"Hạn chót không được để trống\", \"hopLe\": false}");
             return false;
         }
-        return true; 
+        return true;
     }
+
     private boolean checkDelete(HttpServletRequest request, HttpServletResponse response,
             String maPhieu)
             throws IOException {
@@ -126,24 +130,22 @@ public class PhieuMuon_Servlet extends HttpServlet {
             response.getWriter().write("{\"thongbao\": \"Mã phiếu phải là số nguyên\", \"hopLe\": false}");
             return false;
         }
-        
+
         if (pm_BUS.searchByMaPM(Integer.parseInt(maPhieu)) == null) {
             response.getWriter().write("{\"thongbao\": \"Mã phiếu không tồn tại vui lòng chọn trên table để xóa\", \"hopLe\": false}");
             return false;
         }
-        return true; 
+        return true;
     }
-    private void DeleteCacPhieu(String maPhieu)
-    {
-        CTPT_BUS ctpt_BUS=new CTPT_BUS();
-        CTPP_BUS ctpp_BUS=new CTPP_BUS();
+
+    private void DeleteCacPhieu(String maPhieu) {
+        CTPT_BUS ctpt_BUS = new CTPT_BUS();
+        CTPP_BUS ctpp_BUS = new CTPP_BUS();
         ctpm_BUS.deleteByMaPM(Integer.parseInt(maPhieu));
-        if(searchPM_In_PT(Integer.parseInt(maPhieu))!=null)
-        {
+        if (searchPM_In_PT(Integer.parseInt(maPhieu)) != null) {
             pt_BUS.deletePhieuTra(searchPM_In_PT(Integer.parseInt(maPhieu)).getMaPT());
             ctpt_BUS.deleteCTPT(searchPM_In_PT(Integer.parseInt(maPhieu)).getMaPT());
-            if(searchPT_In_PP(searchPM_In_PT(Integer.parseInt(maPhieu)).getMaPT())!=null)
-            {
+            if (searchPT_In_PP(searchPM_In_PT(Integer.parseInt(maPhieu)).getMaPT()) != null) {
                 pp_BUS.deletePP(searchPT_In_PP(searchPM_In_PT(Integer.parseInt(maPhieu)).getMaPT()).getMaPP());
                 ctpp_BUS.deleteByMaPP(searchPT_In_PP(searchPM_In_PT(Integer.parseInt(maPhieu)).getMaPT()).getMaPP());
             }
@@ -164,11 +166,11 @@ public class PhieuMuon_Servlet extends HttpServlet {
         String tongSL = request.getParameter("tongSL");
         String optionSearch = request.getParameter("optionSearch");
         String valueSearch = request.getParameter("valueSearch");
-        String namePath=request.getParameter("nameFileExcel");
-        System.out.println("path: "+namePath);
+        String namePath = request.getParameter("nameFileExcel");
+        System.out.println("path: " + namePath);
         switch (action) {
             case "add":
-                if (!checkInfor(request, response, maPhieu,maKhach, ngayLap, hanChot)) {
+                if (!checkInfor(request, response, maPhieu, maKhach, ngayLap, hanChot)) {
                     return;
                 }
                 if (pm_BUS.searchByMaPM(Integer.parseInt(maPhieu)) != null) {
@@ -182,7 +184,7 @@ public class PhieuMuon_Servlet extends HttpServlet {
                 }
                 break;
             case "edit":
-                if (!checkInfor(request, response, maPhieu,maKhach, ngayLap, hanChot)) {
+                if (!checkInfor(request, response, maPhieu, maKhach, ngayLap, hanChot)) {
                     return;
                 }
                 if (pm_BUS.searchByMaPM(Integer.parseInt(maPhieu)) == null) {
@@ -215,11 +217,11 @@ public class PhieuMuon_Servlet extends HttpServlet {
                 if (result[0].length() > 2) {
                     // Có dữ liệu
                     response.getWriter().write("{"
-                        + "\"thongbao\": \"\", "
-                        + "\"hopLe\": false, "
-                        + "\"resultsPM\": " + result[0].toString() + ", "
-                        + "\"resultsCTPM\": " + result[1].toString()
-                        + "}");
+                            + "\"thongbao\": \"\", "
+                            + "\"hopLe\": false, "
+                            + "\"resultsPM\": " + result[0].toString() + ", "
+                            + "\"resultsCTPM\": " + result[1].toString()
+                            + "}");
                 } else {
                     // Không có dữ liệu
                     response.getWriter().write("{\"thongbao\": \"Không có phiếu mượn bạn cần tìm\", \"hopLe\": false}");
@@ -269,17 +271,13 @@ public class PhieuMuon_Servlet extends HttpServlet {
 //                }
                 break;
             case "export":
-                if(namePath.isEmpty())
-                {
+                if (namePath.isEmpty()) {
                     response.getWriter().write("{\"thongbao\": \"Vui lòng nhập tên file excel để export\", \"hopLe\": false}");
                     return;
                 }
-                if(pm_BUS.exportExcel(namePath))
-                {
+                if (pm_BUS.exportExcel(namePath)) {
                     response.getWriter().write("{\"thongbao\": \"Export excel thành công\", \"hopLe\": true}");
-                }
-                else
-                {
+                } else {
                     response.getWriter().write("{\"thongbao\": \"Export thất bại vui lòng kiểm tra lại\", \"hopLe\": false}");
                 }
                 break;
