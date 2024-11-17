@@ -29,13 +29,12 @@ public class CTPT_DAO {
             ps = conn.prepareStatement(query);
             rs = ps.executeQuery();
             while (rs.next()) {
-                CTPT_DTO ctpt = new CTPT_DTO(
-                    rs.getInt("mapt"),
-                    rs.getInt("masach"),
-                    rs.getInt("mavachloi"),
-                    rs.getDate("ngaytra").toLocalDate(),
-                    rs.getInt("soluong")
-                );
+                CTPT_DTO ctpt = new CTPT_DTO();
+                ctpt.setMaPT(rs.getInt("mapt"));
+                ctpt.setMaSach(rs.getInt("masach"));
+                ctpt.setMaVachLoi(rs.getString("mavachloi")); 
+                ctpt.setNgayTra(rs.getDate("ngaytra").toLocalDate());
+                ctpt.setSoLuong(rs.getInt("soluong"));
                 listCTPT.add(ctpt);
             }
         } catch (SQLException e) {
@@ -56,7 +55,7 @@ public class CTPT_DAO {
             ps = conn.prepareStatement(query);
             ps.setInt(1, ctpt.getMaPT());
             ps.setInt(2, ctpt.getMaSach());
-            ps.setInt(3, ctpt.getMaVachLoi());
+            ps.setString(3, ctpt.getMaVachLoi()); 
             ps.setDate(4, java.sql.Date.valueOf(ctpt.getNgayTra()));
             ps.setInt(5, ctpt.getSoLuong());
             ps.executeUpdate();
@@ -78,7 +77,7 @@ public class CTPT_DAO {
             conn = dnDB.openConnection();
             ps = conn.prepareStatement(query);
             ps.setInt(1, ctpt.getMaSach());
-            ps.setInt(2, ctpt.getMaVachLoi());
+            ps.setString(2, ctpt.getMaVachLoi()); 
             ps.setDate(3, java.sql.Date.valueOf(ctpt.getNgayTra()));
             ps.setInt(4, ctpt.getSoLuong());
             ps.setInt(5, ctpt.getMaPT());
@@ -111,9 +110,9 @@ public class CTPT_DAO {
         return success;
     }
 
-    // Method to search CTPT by maPT
-    public ArrayList<CTPT_DTO> searchByMaPT(int maPT) {
-        ArrayList <CTPT_DTO> listctpt =  new ArrayList<>();
+    // Method to search CTPT records by maPT
+    public List<CTPT_DTO> searchByMaPT(int maPT) {
+        List<CTPT_DTO> ctptList = new ArrayList<>();
         try {
             String query = "SELECT * FROM ctpt WHERE mapt = ?";
             dnDB = new dangNhapDatabase();
@@ -122,21 +121,20 @@ public class CTPT_DAO {
             ps.setInt(1, maPT);
             rs = ps.executeQuery();
             while (rs.next()) {
-                CTPT_DTO ctpt = new CTPT_DTO(
-                    rs.getInt("mapt"),
-                    rs.getInt("masach"),
-                    rs.getInt("mavachloi"),
-                    rs.getDate("ngaytra").toLocalDate(),
-                    rs.getInt("soluong")
-                );
-                listctpt.add(ctpt);
+                CTPT_DTO ctpt = new CTPT_DTO();
+                ctpt.setMaPT(rs.getInt("mapt"));
+                ctpt.setMaSach(rs.getInt("masach"));
+                ctpt.setMaVachLoi(rs.getString("mavachloi")); 
+                ctpt.setNgayTra(rs.getDate("ngaytra").toLocalDate());
+                ctpt.setSoLuong(rs.getInt("soluong"));
+                ctptList.add(ctpt);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             closeResources();
         }
-        return listctpt;
+        return ctptList;
     }
 
     // Method to close database resources
