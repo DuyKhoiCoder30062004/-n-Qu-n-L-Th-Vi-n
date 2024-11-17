@@ -7,6 +7,13 @@ import BUS.CTPN_BUS;
 import BUS.PhieuNhap_BUS;
 import DTO.CTPN_DTO;
 import DTO.PhieuNhap_DTO;
+import java.io.IOException;
+import java.io.PrintWriter;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 
 @WebServlet(name = "CTPNServlet", urlPatterns = {"/ctpn"})

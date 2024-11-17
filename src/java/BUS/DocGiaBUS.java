@@ -10,7 +10,7 @@ public class DocGiaBUS {
 
    private ArrayList<DocGiaDTO> dgList = null;
     private DocGiaDAO dgDAO = new DocGiaDAO();
-    public ArrayList<DocGiaDTO> getListNCC()
+    public ArrayList<DocGiaDTO> getList()
     {
         dgList = dgDAO.getList();
         return dgList;

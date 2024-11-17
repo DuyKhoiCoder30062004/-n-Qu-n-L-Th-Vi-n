@@ -15,7 +15,7 @@
 //        }
 //    }
 //    jsonString.append("]");
-    if (nv == null) {
+    if (nv == null || nv.getChucVu().equals("admin")) {
         response.sendRedirect("/cnpm/login");
         return;
     }
@@ -167,7 +167,7 @@
             cursor: pointer;
         }
 
-        #tablePM {
+        .table {
             width: 90%;
             border-collapse: collapse;
             margin-top: 2px;
@@ -182,17 +182,12 @@
 
         .table thead {
             display: table;
-            /* Để hiển thị hàng tiêu đề */
             width: 100%;
             table-layout: fixed;
             position: sticky;
-            /* Cố định vị trí hàng tiêu đề */
             top: 0;
-            /* Gắn hàng tiêu đề ở trên cùng */
             background-color: #D9D9D9;
-            /* Màu nền cho hàng tiêu đề */
             z-index: 1;
-            /* Đảm bảo hàng tiêu đề ở trên các hàng khác */
         }
 
         .table tr {
@@ -213,21 +208,15 @@
             border: 1px solid black;
             text-align: center;
             word-wrap: break-word;
-            /* Ngắt dòng nếu nội dung quá dài */
             white-space: nowrap;
-            /* Không cho phép ngắt dòng nếu cần */
             overflow: hidden;
-            /* Ẩn phần nội dung tràn ra ngoài */
             text-overflow: ellipsis;
-            /* Hiển thị "..." khi nội dung quá dài */
         }
 
         .table td:hover {
             white-space: normal;
-            /* Cho phép ngắt dòng */
             z-index: 1;
             background-color: #f1f1f1;
-            /* Tô màu nền để dễ đọc */
         }
 
         #detailCTPM {
@@ -284,9 +273,9 @@
             overflow-y: auto;
             overflow-x: hidden;
         }
-        #divtableKhach,#divtableSach {
+        .divTT {
             width: 50%;
-            height: 50%;
+            height: 50%; /* Thay vì 50% */
             background-color: azure;
             border: 2px solid black;
             position: absolute;
@@ -294,15 +283,16 @@
             left: 20%;
             display: none;
             z-index: 1000;
+            overflow: hidden; /* Đảm bảo nội dung không tràn */
         }
-
-        #tableSach,#tableKhach {
+        #tableSach, #tableKhach {
             border-collapse: collapse;
             width: 95%;
-            height: 67%;
+            height: 67%; 
             border: 2px solid black;
             margin-left: 20px;
         }
+
         input:focus{
             outline: none;
             border-color: darkturquoise;
@@ -317,8 +307,8 @@
             <div id="menu">
                 <div class="conponentMenu" id="iconAndName" >
                     <img src="img/account.svg" alt="icon">
-                    ${nv.ho}  ${nv.ten}<br>
-                    ${nv.chucvu}
+                    ${nv.getHo()}  ${nv.getTen()}<br>
+                    ${nv.getChucVu()} 
                 </div>
                 <button id="btnSach" class="conponentMenu" value="sách" onclick="reDirect(this,'/cnpm/sach')">
                     <img src="img/sach.jpg" alt="icon"> Sách
@@ -372,15 +362,15 @@
                     </div>
                     <div class="input-group">
                         <label class="nameFeature">Mã độc giả </label>
-                        <input type="text" id="txtMaKhach" placeholder="Nhập mã khách">
+                        <input type="text" id="txtMaKhach" placeholder="Nhập mã khách" readonly>
                         <img src="img/add.svg"  onclick="hienThiKhach()" style="cursor: pointer;width: 15px;height:auto;" />
                     </div>
 
                     <div class="input-group">
                         <label class="nameFeature">Mã NV </label>
-                        <input type="text" id="txtMaNV" placeholder="Nhập mã NV">
+                        <input type="text" id="txtMaNV" value="${nv.getMaNV()}" placeholder="Nhập mã NV" readonly>
                         <img class="iconChucNang" id="iconThem" src="img/add.svg" title="Thêm PM" onclick="sendData('add')">
-                        <img class="iconChucNang" id="iconXoa" src="img/delete.svg" title="Xóa PM" onclick="sendData('delete')">
+                        <img class="iconChucNang" id="iconXoa" src="img/delete.svg" title="Xóa PM" >
                     </div><br>
                     <div class="input-group">
                         <label class="nameFeature" style="margin-right: 11px;">Ngày lập </label>
@@ -469,7 +459,7 @@
                             </div>
                             <div class="input-groupCTPM">
                                 <label class="nameFeatureCTPM" style="margin-right: 18px;">Mã sách</label>
-                                <input type="text" id="txtSachCTPM" placeholder="Nhập mã sách" style="margin-right: 2px">
+                                <input type="text" id="txtSachCTPM" placeholder="Nhập mã sách" style="margin-right: 2px" readonly>
                                 <img src="img/add.svg" onclick="hienThiSach()"
                                      style="cursor: pointer;width: 12px;height:auto;" />
                             </div>
@@ -484,7 +474,7 @@
                             <div>
                                 <img class="iconChucNangCTPM" id="iconThemCTPM" style="margin-left: 24%;"
                                      src="img/add.svg" title="Thêm CTPM" onclick="sendDataCTPM('addCTPM')">
-                                <img class="iconChucNangCTPM" id="iconXoaCTPM" src="img/delete.svg" title="Xóa CTPM" onclick="sendDataCTPM('deleteCTPM')">
+                                <img class="iconChucNangCTPM" id="iconXoaCTPM" src="img/delete.svg" title="Xóa CTPM" >
                                 <img class="iconChucNangCTPM" id="iconSuaCTPM" src="img/edit.svg" title="Sửa CTPM" onclick="sendDataCTPM('updateCTPM')">
                                 <img class="iconChucNangCTPM" id="iconClearCTPM" onclick="clearInputCTPM()"
                                      src="img/clear.png" title="clear input CTPM">
@@ -541,7 +531,7 @@
                     </div>
                 </section>
 
-                    <div class="divTT" id="divtableKhach" onclick="showListAllKhach()">
+                <div class="divTT" id="divtableKhach" onclick="showListAllKhach()">
                     <img src="img/cancel.svg"  onclick="dongTBTT()"  style="cursor: pointer;width: 20px;height:auto;margin-left: 97%;" />
                     <h3 style="text-align: center;"> Ban chọn mã độc giả ở đây!</h3>
                     <div style="margin-left: 20px;">
@@ -566,22 +556,28 @@
                         <tbody>
                             <c:forEach var="dg" items="${requestScope.listDG}">
                                 <tr>
-                                    <td>${dg.maKhach}</td>
-                                    <td>${pm.maKhach}</td>
-                                    <td>${pm.maNV}</td>
-                                    <td>${pm.ngayLap}</td>
-                                    <td>${pm.hanChot}</td>
-                                    <td>${pm.tongSL}</td>
+                                    <td>${dg.maDG}</td>
+                                    <td>${dg.hoDG}</td>
+                                    <td>${dg.tenDG}</td>
+                                    <td>${dg.diaChi}</td>
+                                    <td>${dg.soDienThoai}</td>
+                                    <td>${dg.ngaySinh}</td>
                                 </tr>
                             </c:forEach>
+                                <%
+                            for (int i = 1; i <= 10; i++) {
+                            %>
                             <tr>
-                                <td>1235</td>
                                 <td></td>
-                                <td>kuen</td>
+                                <td></td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                             </tr>
+                            <%
+                                }
+                            %>
                         </tbody>
                     </table>
                 </div>
@@ -608,20 +604,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1234</td>
-                                <td>Vật lí</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                             <tr>
-                                <td>1235</td>
-                                <td>Lí hóa</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
+                            <c:forEach var="pm" items="${requestScope.listSach}">
+                                <tr>
+                                    <td>${pm.maSach}</td>
+                                    <td>${pm.tenSach}</td>
+                                    <td>${pm.tacGia}</td>
+                                    <td>${pm.soLuong}</td>
+                                    <td>${pm.moTa}</td>
+                                </tr>
+                            </c:forEach>
                         </tbody>
                     </table>
                 </div>
@@ -634,9 +625,8 @@
             function clickPM(row) {
                 const cells = row.getElementsByTagName('td');
                 document.getElementById('txtMaPhieu').value = cells[0].innerText;
+                document.getElementById('txtMaPhieu').readOnly = true;
                 document.getElementById('txtMaKhach').value = cells[1].innerText;
-                document.getElementById('txtMaNV').value = cells[2].innerText;
-
                 const dateValueNN = cells[3].innerText;
                 document.getElementById('txtNgayLap').value = dateValueNN;
 
@@ -649,7 +639,9 @@
             function clickCTPM(row) {
                 const cells = row.getElementsByTagName('td');
                 document.getElementById('txtMaPhieuCTPM').value = cells[0].innerText;
+                document.getElementById('txtMaPhieuCTPM').readOnly = true;
                 document.getElementById('txtSachCTPM').value = cells[1].innerText;
+                document.getElementById('txtSachCTPM').readOnly = true;
                 document.getElementById('txtSLCTPM').value = cells[2].innerText;
                 document.getElementById('txtTrangThaiCTPM').value = cells[3].innerText;
             }
@@ -695,12 +687,13 @@
                     }
                     function selectFile(action) {
                         // Lắng nghe sự kiện thay đổi của input file
-                        alert("Vui lòng chọn hoặc tạo file excel để "+action+" ở trong thư mục C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/");
+                        //alert("Vui lòng chọn hoặc tạo file excel để "+action+" ở trong thư mục C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/");
                         const fileInput = document.getElementById("fileExcel");
                         fileInput.onchange = function() {
                             if (fileInput.files.length > 0) {
                                 // Gán đường dẫn file vào biến toàn cục
-                                namePath = fileInput.files[0].name;
+//                                namePath = fileInput.files[0].name;
+                                namPath=fileInput.files[0];    
                                 sendData(action);
                             }
                         };
@@ -864,6 +857,26 @@
                             tableBody.appendChild(row);
                         });
                     }
+                    //hiện thị xác nhận xóa phiếu mượn
+                    document.getElementById('iconXoa').addEventListener('click', function(event) {
+                        // Hiển thị hộp thoại xác nhận
+                        const confirmDelete = confirm("Bạn có chắc muốn xóa không phiếu mượn này không?");
+                        if (!confirmDelete) {
+                            event.preventDefault();
+                        } else {
+                            sendData('delete');
+                        }
+                    });
+                    //hiện thị xác nhận xóa chi tiết phiếu mượn
+                    document.getElementById('iconXoaCTPM').addEventListener('click', function(event) {
+                        // Hiển thị hộp thoại xác nhận
+                        const confirmDelete = confirm("Bạn có chắc muốn xóa không chi tiết phiếu mượn này không?");
+                        if (!confirmDelete) {
+                            event.preventDefault();
+                        } else {
+                            sendDataCTPM('deleteCTPM');
+                        }
+                    });
                     //Đóng các table
                     function dongTBTT() {
                         const divs = document.querySelectorAll('.divTT'); // Chọn tất cả div có class 'popupDiv'

@@ -9,8 +9,14 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 
   @WebServlet(name = "PhieuMuon_Servlet", urlPatterns = {"/phieunhap"})
@@ -81,6 +87,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
     pn.setTongTien(Float.parseFloat(tongTien));
     return pn_BUS.addPN(pn);
   }
+
 
   private boolean updatePN(String maPN, String maNCC, String maNV, String ngayLap, String tongSL, String tongTien){
     PhieuNhap_DTO pn = new PhieuNhap_DTO();
@@ -207,4 +214,5 @@ import javax.swing.filechooser.FileNameExtensionFilter;
       }
 
   }
+
 }

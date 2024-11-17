@@ -41,7 +41,6 @@ public class PhanQuyen_Servlet extends HttpServlet {
         ArrayList<Nhanvien_DTO> listNV=nv_BUS.getList();
         request.setAttribute("listPQ", listPQ);
         request.setAttribute("listNV", listNV);
-        System.out.print("lisy NV"+ listNV);
         request.getRequestDispatcher("/WEB-INF/gui/phanquyen.jsp").forward(request, response);
     }
 

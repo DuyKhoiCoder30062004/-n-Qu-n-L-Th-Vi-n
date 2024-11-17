@@ -22,9 +22,9 @@ public class CTSach_DAO {
             rs = ps.executeQuery();
             while (rs.next()) {
                 CTSach_DTO ctSach = new CTSach_DTO();
-                ctSach.setMaSach(rs.getInt(0));
+                ctSach.setMaSach(rs.getInt(2));
                 ctSach.setMaVach(rs.getString(1));
-                ctSach.setTinhTrangSach(rs.getString(2));
+                ctSach.setTinhTrangSach(rs.getString(3));
                 listCTSach.add(ctSach);
             }
         } catch (Exception e) {
@@ -53,9 +53,9 @@ public class CTSach_DAO {
             rs = ps.executeQuery();
             while (rs.next()) {
                 CTSach_DTO ctSach = new CTSach_DTO();
-                ctSach.setMaSach(rs.getInt(0));
+                ctSach.setMaSach(rs.getInt(2));
                 ctSach.setMaVach(rs.getString(1));
-                ctSach.setTinhTrangSach(rs.getString(2));
+                ctSach.setTinhTrangSach(rs.getString(3));
                 listCTSach.add(ctSach);
             }
         } catch (Exception e) {
@@ -81,8 +81,8 @@ public class CTSach_DAO {
             connection = xuLyDB.openConnection();
             String sql = "INSERT INTO ctsach(masach, mavach, trangthai) VALUES (?,?,?)";
             ps = connection.prepareStatement(sql);
-            ps.setInt(1, ctSach.getMaSach());
-            ps.setString(2, ctSach.getMaVach());
+            ps.setInt(2, ctSach.getMaSach());
+            ps.setString(1, ctSach.getMaVach());
             ps.setString(3, ctSach.getTinhTrangSach());
             result = ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -107,8 +107,8 @@ public class CTSach_DAO {
             connection = xuLyDB.openConnection();
             String sql = "UPDATE ctsach SET trangthai =? WHERE mavach =? AND masach =?";
             ps = connection.prepareStatement(sql);
-            ps.setString(1, ctSach.getTinhTrangSach());
-            ps.setString(2, ctSach.getMaVach());
+            ps.setString(2, ctSach.getTinhTrangSach());
+            ps.setString(1, ctSach.getMaVach());
             ps.setInt(3, ctSach.getMaSach());
             result = ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -134,8 +134,8 @@ public class CTSach_DAO {
             connection = xuLyDB.openConnection();
             String sql = "UPDATE ctsach SET mavach =? WHERE mavach =? AND masach =?";
             ps = connection.prepareStatement(sql);
-            ps.setString(1, "-" + ctSach.getMaVach());
-            ps.setString(2, ctSach.getMaVach());
+            ps.setString(2, "-" + ctSach.getMaVach());
+            ps.setString(1, ctSach.getMaVach());
             ps.setInt(3, ctSach.getMaSach());
             result = ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -164,9 +164,9 @@ public class CTSach_DAO {
             rs = ps.executeQuery();
             while (rs.next()) {
                 CTSach_DTO ctSach = new CTSach_DTO();
-                ctSach.setMaSach(rs.getInt(0));
+                ctSach.setMaSach(rs.getInt(2));
                 ctSach.setMaVach(rs.getString(1));
-                ctSach.setTinhTrangSach(rs.getString(2));
+                ctSach.setTinhTrangSach(rs.getString(3));
                 listCTSach.add(ctSach);
             }
         } catch (Exception e) {
@@ -195,9 +195,9 @@ public class CTSach_DAO {
             rs = ps.executeQuery();
             while (rs.next()) {
                 CTSach_DTO ctSach = new CTSach_DTO();
-                ctSach.setMaSach(rs.getInt(0));
+                ctSach.setMaSach(rs.getInt(2));
                 ctSach.setMaVach(rs.getString(1));
-                ctSach.setTinhTrangSach(rs.getString(2));
+                ctSach.setTinhTrangSach(rs.getString(3));
                 listCTSach.add(ctSach);
             }
         } catch (Exception e) {
