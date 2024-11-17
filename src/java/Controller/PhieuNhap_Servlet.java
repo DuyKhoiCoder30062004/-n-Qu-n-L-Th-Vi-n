@@ -10,6 +10,13 @@ import DTO.CTPN_DTO;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.io.IOException;
+import java.io.PrintWriter;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 public class PhieuNhap_Servlet {
 
@@ -81,8 +88,5 @@ public class PhieuNhap_Servlet {
     pn.setTongTien(Double.parseDouble(tongTien));
     return pn_BUS.addPN(pn);
   }
-
-
-
 
 }

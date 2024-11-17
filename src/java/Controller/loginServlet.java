@@ -75,10 +75,9 @@ public class loginServlet extends HttpServlet {
             return;
         }
 
-
+//        System.out.print("nv" + nv_BUS.timKiemNhanVien(username).get(0).getMaNV());
         HttpSession session = request.getSession();
-        session.setAttribute("nv", nv_BUS.timKiemNhanVien(username).get(0)); 
-        //session.setAttribute("tasks",pq_BUS.searchByMaNV(Integer.parseInt(username)).getTacVu()); 
+        session.setAttribute("nv",nv_BUS.timKiemNhanVien(username).get(0));  
         String tasks=String.join(",",pq_BUS.searchByMaNV(Integer.parseInt(username)).getTacVu());
         session.setAttribute("tasks",tasks); 
         // Kiểm tra quyền để chuyển hướng

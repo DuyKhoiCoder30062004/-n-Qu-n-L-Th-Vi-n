@@ -4,9 +4,12 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/src/java/Controller/CTPMServlet.java</file>
+            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/src/java/BUS/PhieuNhap_BUS.java</file>
+            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/src/java/BUS/PhieuMuon_BUS.java</file>
+            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/src/java/DTO/Nhanvien_DTO.java</file>
             <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/src/java/Controller/PhanQuyen_Servlet.java</file>
-            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/src/java/Controller/PhieuPhat_Servlet.java</file>
-            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/src/java/Controller/CTPP_Servlet.java</file>
+            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/web/WEB-INF/gui/phieumuon.jsp</file>
+            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/src/java/Controller/loginServlet.java</file>
             <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/web/WEB-INF/gui/phanquyen.jsp</file>
             <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/src/java/Controller/PhieuMuon_Servlet.java</file>
             <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/web/WEB-INF/gui/phieuphat.jsp</file>

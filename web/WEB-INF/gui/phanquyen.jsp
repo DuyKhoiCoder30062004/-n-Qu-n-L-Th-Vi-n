@@ -10,7 +10,7 @@
 <%
     Nhanvien_DTO nv = (Nhanvien_DTO) session.getAttribute("nv");
     String tasks = (String) session.getAttribute("tasks");
-    if (nv == null) {
+    if (nv == null || !nv.getChucVu().equals("admin")) {
         response.sendRedirect("/cnpm/login");
         return;
     }
@@ -239,8 +239,8 @@
             <div id="menu">
                 <div class="conponentMenu" id="iconAndName">
                     <img src="img/account.svg" alt="icon">
-                    ${nv.ho}  ${nv.ten}<br>
-                    ${nv.chucvu}
+                    ${nv.getHo()}  ${nv.getTen()}<br>
+                    ${nv.getChucVu()} 
                 </div>
                 <button id="btnSach" class="conponentMenu" value="sách" onclick="reDirect(this,'/cnpm/sach')">
                     <img src="img/sach.jpg" alt="icon"> Sách
@@ -316,7 +316,7 @@
                         <div class="input-group">
                             <img class="iconChucNang"  src="img/add.svg" title="Thêm" onclick="sendData('add')">
                             <img class="iconChucNang" src="img/edit.svg" title="Sửa" onclick="sendData('edit')">
-                            <img class="iconChucNang" src="img/delete.svg" title="Xóa" onclick="sendData('delete')">
+                            <img class="iconChucNang" id="iconDelete" src="img/delete.svg" title="Xóa" >
                             <img class="iconChucNang" id="iconClear" src="img/clear.png" title="Clear Input" onclick="clearInputPQ()">
                         </div>
                     </div>
@@ -404,7 +404,6 @@
             </div>
         </form>
         <script>
-            alert("hiii");
             /*click table*/
             function clickPQ(row) {
                 const cells = row.getElementsByTagName('td');
@@ -486,7 +485,16 @@
                     tableBody.appendChild(row);
                 });
             }
-            
+            //hiện thị xác nhận xóa
+            document.getElementById('iconDelete').addEventListener('click', function(event) {
+                // Hiển thị hộp thoại xác nhận
+                const confirmDelete = confirm("Bạn có chắc muốn xóa không tài khoản này không?");
+                if (!confirmDelete) {
+                    event.preventDefault();
+                } else {
+                    sendData('delete');
+                }
+            });
             /*clear dữ liệu*/
             function clearInputPQ() {
                 document.getElementById('txtMaNV').value = "";
