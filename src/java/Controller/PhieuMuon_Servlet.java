@@ -254,21 +254,19 @@ public class PhieuMuon_Servlet extends HttpServlet {
                 }
                 break;
             case "import":
-//                System.out.print("đã vô import");
-//                if(pathExcel.isEmpty())
-//                {
-//                    response.getWriter().write("{\"thongbao\": \"Vui lòng chọn file excel bạn muốn import vô hệ thống\", \"hopLe\": false}");
-//                    return;
-//                }
-//             
-//                if(pm_BUS.importExcel(pathExcel))
-//                {
-//                    response.getWriter().write("{\"thongbao\": \"Import excel thành công\", \"hopLe\": true}");
-//                }
-//                else
-//                {
-//                    response.getWriter().write("{\"thongbao\": \"Import thất bại vui lòng kiểm tra lại\", \"hopLe\": false}");
-//                }
+                if (namePath.isEmpty()) {
+                    response.getWriter().write("{\"thongbao\": \"Vui lòng nhập tên file excel để import\", \"hopLe\": false}");
+                    return;
+                }
+             
+                if(pm_BUS.importExcel(namePath))
+                {
+                    response.getWriter().write("{\"thongbao\": \"Import excel thành công\", \"hopLe\": true}");
+                }
+                else
+                {
+                    response.getWriter().write("{\"thongbao\": \"Import thất bại vui lòng kiểm tra lại\", \"hopLe\": false}");
+                }
                 break;
             case "export":
                 if (namePath.isEmpty()) {

@@ -801,6 +801,7 @@
                             action: action,
                             maPM: document.getElementById('txtMaPhieuCTPM').value,
                             maSach: document.getElementById('txtSachCTPM').value,
+                            maNV: document.getElementById('txtMaNV').value,
                             soLuong: document.getElementById('txtSLCTPM').value,
                             trangThai: document.getElementById('txtTrangThaiCTPM').value,
                             optionSearch: document.getElementById('comBoBoxSearchCTPM').value,

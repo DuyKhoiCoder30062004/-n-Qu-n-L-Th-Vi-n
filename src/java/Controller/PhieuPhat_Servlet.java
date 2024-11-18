@@ -241,6 +241,21 @@ public class PhieuPhat_Servlet extends HttpServlet {
                     response.getWriter().write("{\"thongbao\": \"Export thất bại vui lòng kiểm tra lại\", \"hopLe\": false}");
                 }
                 break;
+            case "import":
+            if(namePath.isEmpty())
+            {
+                response.getWriter().write("{\"thongbao\": \"Vui lòng nhập tên file excel để import\", \"hopLe\": false}");
+                return;
+            }
+            if(pp_BUS.importExcel(namePath))
+            {
+                response.getWriter().write("{\"thongbao\": \"Export excel thành công\", \"hopLe\": true}");
+            }
+            else
+            {
+                response.getWriter().write("{\"thongbao\": \"Export thất bại vui lòng kiểm tra lại\", \"hopLe\": false}");
+            }
+            break;
             case "print":
                 if(maPP==null || maPP.isEmpty())
                 {

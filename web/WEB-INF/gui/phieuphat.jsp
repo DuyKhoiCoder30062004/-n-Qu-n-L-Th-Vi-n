@@ -921,6 +921,7 @@
                             maSach: document.getElementById('txtMaSachCTPP').value,
                             maVach: document.getElementById('txtMaVachCTPP').value,
                             ngayLap: document.getElementById('txtNgayLapCTPP').value,
+                            maNV: document.getElementById('txtMaNVPP').value,
                             liDo: document.getElementById('txtLiDoCTPP').value,
                             tien: document.getElementById('txtTienCTPP').value,
                             optionSearch: document.getElementById('comBoBoxSearchCTPP').value,

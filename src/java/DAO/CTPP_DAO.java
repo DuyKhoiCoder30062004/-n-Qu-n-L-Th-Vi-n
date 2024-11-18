@@ -226,7 +226,7 @@ public class CTPP_DAO {
         }
         return listPQ;
     }
-    public CTPP_DTO searchByMaPP_MaVach(int mapp,int maVach) {
+    public CTPP_DTO searchByMaPP_MaVach(int mapp,String maVach) {
         CTPP_DTO ctpp=null;
         try {
             String qry = "select mapp,masach,mavachloi,ngaylap,lido,tien from ctpp where mapp = ? and mavach = ?";
@@ -234,7 +234,7 @@ public class CTPP_DAO {
             conn = dnDB.openConnection();
             ps = conn.prepareStatement(qry);
             ps.setInt(1, mapp);
-            ps.setInt(2, maVach);
+            ps.setString(2, maVach);
             rs = ps.executeQuery();
             if (rs.next()) {
                 ctpp = new CTPP_DTO();
