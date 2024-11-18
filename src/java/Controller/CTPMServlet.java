@@ -118,6 +118,7 @@ public class CTPMServlet extends HttpServlet {
         String action = request.getParameter("action");
         String maPM = request.getParameter("maPM");
         String maSach = request.getParameter("maSach");
+        String maNV=request.getParameter("maNV");
         String soLuong = request.getParameter("soLuong");
         String trangThai = request.getParameter("trangThai");
         String optionSearch = request.getParameter("optionSearch");
@@ -131,8 +132,9 @@ public class CTPMServlet extends HttpServlet {
                     response.getWriter().write("{\"thongbao\": \"ctpm đã tồn tại vui lòng kiểm tra lại dữ liệu hoặc bạn có thể sửa trên ctpm đó\", \"hopLe\": false}");
                     return;
                 }
-                if (addCTPM(maPM, maSach, soLuong, trangThai)) {
-                    pm_BUS.updateTongSL(Integer.parseInt(maPM), pm_BUS.searchByMaPM(Integer.parseInt(maPM)).getTongSL() + Integer.parseInt(soLuong));
+                if (addCTPM(maPM, maSach, soLuong, trangThai) &&
+                        pm_BUS.updateTongSL(Integer.parseInt(maPM), pm_BUS.searchByMaPM(Integer.parseInt(maPM)).getTongSL() + Integer.parseInt(soLuong))) {
+                    
                     response.getWriter().write("{\"thongbao\": \"Thêm CTPM thành công\", \"hopLe\": true}");
                 } else {
                     response.getWriter().write("{\"thongbao\": \"Thêm CTPM thất bại\", \"hopLe\": false}");
@@ -147,8 +149,9 @@ public class CTPMServlet extends HttpServlet {
                     return;
                 }
                 int slcu = ctpm_BUS.searchByMaPM_MaSach(Integer.parseInt(maPM), Integer.parseInt(maSach)).getSoLuong();
-                if (updateCTPM(maPM, maSach, soLuong, trangThai)) {
-                    pm_BUS.updateTongSL(Integer.parseInt(maPM), pm_BUS.searchByMaPM(Integer.parseInt(maPM)).getTongSL() + Integer.parseInt(soLuong) - slcu);
+                if (updateCTPM(maPM, maSach, soLuong, trangThai) &&
+                       pm_BUS.updateTongSL(Integer.parseInt(maPM), pm_BUS.searchByMaPM(Integer.parseInt(maPM)).getTongSL() + Integer.parseInt(soLuong) - slcu) ) {
+                    
                     response.getWriter().write("{\"thongbao\": \"Update CTPM thành công\", \"hopLe\": true}");
                 } else {
                     response.getWriter().write("{\"thongbao\": \"Update CTPM thất bại\", \"hopLe\": false}");
@@ -159,8 +162,9 @@ public class CTPMServlet extends HttpServlet {
                     return;
                 }
                 int sl = ctpm_BUS.searchByMaPM_MaSach(Integer.parseInt(maPM), Integer.parseInt(maSach)).getSoLuong();
-                if (ctpm_BUS.deleteCTPM(Integer.parseInt(maPM), Integer.parseInt(maSach))) {
-                    pm_BUS.updateTongSL(Integer.parseInt(maPM), pm_BUS.searchByMaPM(Integer.parseInt(maPM)).getTongSL() - sl);
+                if (ctpm_BUS.deleteCTPM(Integer.parseInt(maPM), Integer.parseInt(maSach)) &&
+                       pm_BUS.updateTongSL(Integer.parseInt(maPM), pm_BUS.searchByMaPM(Integer.parseInt(maPM)).getTongSL() - sl) ) {
+                    
                     response.getWriter().write("{\"thongbao\": \"Xóa thành công\", \"hopLe\": true}");
                 } else {
                     response.getWriter().write("{\"thongbao\": \"Xóa thất bại\", \"hopLe\": false}");
@@ -187,7 +191,13 @@ public class CTPMServlet extends HttpServlet {
                 response.getWriter().write("{\"thongbao\": \"Không thấy hoạt động\", \"hopLe\": false}");
                 return;
         }
-
+        if( (action.equals("addCTPM") || action.equals("updateCTPM") || action.equals("deleteCTPM")) 
+                &&pm_BUS.searchByMaPM(Integer.parseInt(maPM)).getMaNV()!= Integer.parseInt(maNV) )
+        {
+            PhieuMuon_DTO pm=pm_BUS.searchByMaPM(Integer.parseInt(maPM));
+            pm.setMaNV(Integer.parseInt(maNV));
+            pm_BUS.updatePM(pm);
+        }
     }
 
     private boolean addCTPM(String maPM, String maSach, String soLuong, String trangThai) {

@@ -40,7 +40,7 @@ public class CTPP_BUS {
     public ArrayList<CTPP_DTO> searchByMaPP(int mapp) {
         return ctpp_DAO.searchByMaPP(mapp);
     }
-    public CTPP_DTO searchByMaPP_MaVach(int mapp,int maVach)
+    public CTPP_DTO searchByMaPP_MaVach(int mapp,String maVach)
     {
         return ctpp_DAO.searchByMaPP_MaVach(mapp, maVach);
     }

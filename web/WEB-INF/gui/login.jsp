@@ -101,14 +101,15 @@
                 <span class="icon">🔒|</span>
                 <input id="pass" type="password" placeholder="Password">
             </div>
-            <button type="submit" onclick="sendData()">ĐĂNG NHẬP</button>
-            <a href="">Tôi là độc giả</a>
+            <button type="submit" onclick="sendData('NV')">ĐĂNG NHẬP</button>
+            <a href="javascript:void(0);" onclick="sendData('DG')">Tôi là độc giả</a>
         </div>
     </body>
     <script>
-        function sendData() {
+        function sendData(actor) {
             event.preventDefault();
             const formData = new URLSearchParams({
+                actor:actor,
                 username: document.getElementById('username').value,
                 pass: document.getElementById('pass').value,
             });

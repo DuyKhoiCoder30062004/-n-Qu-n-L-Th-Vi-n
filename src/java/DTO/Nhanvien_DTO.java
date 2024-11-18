@@ -11,6 +11,9 @@ public class Nhanvien_DTO {
     private String chucVu;
     private double luong;
 
+    public Nhanvien_DTO() {
+    }
+
     // Constructor
     public Nhanvien_DTO(int maNV, String ho, String ten, String soDT, double luong, String chucVu, Date ngaySinh) {
         this.maNV = maNV;

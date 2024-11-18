@@ -15,6 +15,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -36,7 +37,12 @@ public class PhieuPhat_BUS {
 
     private PhieuPhat_DAO pp_DAO = new PhieuPhat_DAO();
     private CTPP_BUS ctpp_BUS=new CTPP_BUS();
- 
+    private PhieuTra_BUS pt_BUS=new PhieuTra_BUS();
+    private CTPT_BUS ctpt_BUS=new CTPT_BUS();
+    private Nhanvien_BUS nv_BUS=new Nhanvien_BUS();
+    private Sach_BUS sach_BUS=new Sach_BUS();
+    private CTSach_BUS cts_BUS=new CTSach_BUS();
+    private Loi_BUS loi_BUS=new Loi_BUS();
     public ArrayList<PhieuPhat_DTO> getList() {
         return pp_DAO.getList();
     }
@@ -162,6 +168,51 @@ public class PhieuPhat_BUS {
 
         return pp;
     }
+    private boolean checkInfor(String maPP,String maNV,String maPT,String listMS,String listMV,String listNL,
+            String listLiDo,String listT)
+    {
+        if(maPP.isEmpty() || maNV.isEmpty() || maPT.isEmpty() || listMS.isEmpty() || listMV.isEmpty()
+                || listNL.isEmpty() || listLiDo.isEmpty() || listT.isEmpty()
+                ||pp_DAO.searchByMaPP(Integer.parseInt(maPP))!=null || pt_BUS.searchByMaPT(Integer.parseInt(maPT))==null
+                ||nv_BUS.timKiemNhanVien(maNV)==null) 
+        {
+            return false;
+        }
+        String[] list1 = listMS.split("\n");
+        String[] list2 = listMV.split("\n");
+        String[] list3 = listNL.split("\n");
+        String[] list4 = listLiDo.split("\n");
+        String[] list5 = listT.split("\n");
+        boolean areLengthsEqual = (list1.length == list2.length) && 
+                                   (list2.length == list3.length) && 
+                                   (list3.length == list4.length) && 
+                                   (list4.length == list5.length);
+        if(!areLengthsEqual)
+            return false;
+        for(int i=0;i<list1.length;i++)
+        {
+            if(sach_BUS.timSachTheoMaSach(list1[i])==null 
+               || !cts_BUS.searchCTSachByMaSach(list1[i]).contains(list2[i])
+                ||loi_BUS.searchByTenLoi(list4[i])!=null)
+                return false;
+        }
+        try
+        {
+            for (int i = 0; i < list1.length; i++) {
+                LocalDate.parse(list3[i]);
+            }
+        }catch (DateTimeParseException e) {
+            return false;  
+        }
+        try {
+            for (int i = 0; i < list1.length; i++) {
+                Float.parseFloat(list5[i]);
+            }
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
+    }
     public boolean importExcel(String fileName)
     {
         String filePath = "C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/" + fileName;
@@ -173,6 +224,12 @@ public class PhieuPhat_BUS {
             if (rowIterator.hasNext()) rowIterator.next();
             while (rowIterator.hasNext()) {
                 Row row = rowIterator.next();
+                if(!checkInfor(row.getCell(0).getStringCellValue(),row.getCell(1).getStringCellValue(),row.getCell(2).getStringCellValue(),
+                        row.getCell(3).getStringCellValue(),row.getCell(4).getStringCellValue(),row.getCell(5).getStringCellValue(),
+                        row.getCell(6).getStringCellValue(),row.getCell(7).getStringCellValue()))
+                {
+                    continue;
+                }
                 PhieuPhat_DTO pp=new PhieuPhat_DTO();
                 pp.setMaPP(Integer.parseInt(row.getCell(0).getStringCellValue()));
                 pp.setMaNV(Integer.parseInt(row.getCell(1).getStringCellValue()));
@@ -182,7 +239,7 @@ public class PhieuPhat_BUS {
                 ArrayList<String> listNL = new ArrayList<>(Arrays.asList(row.getCell(5).getStringCellValue().split("\n")));
                 ArrayList<String> listLiDo = new ArrayList<>(Arrays.asList(row.getCell(6).getStringCellValue().split("\n")));
                 ArrayList<String> listT = new ArrayList<>(Arrays.asList(row.getCell(7).getStringCellValue().split("\n")));
-                
+                double tt=0;
                 for (int i=0;i<listMS.size();i++)
                 {
                     CTPP_DTO ct=new CTPP_DTO();
@@ -192,9 +249,10 @@ public class PhieuPhat_BUS {
                     ct.setNgayLap(LocalDate.parse(listNL.get(i)));
                     ct.setLiDo(new ArrayList<>(Arrays.asList(listLiDo.get(i).split(","))));
                     ct.setTien(Float.parseFloat(listT.get(i)));
+                    tt+=ct.getTien();
                     ctpp_BUS.addCTPP(ct);
                 }
-                pp.setTongTien(Double.parseDouble(row.getCell(8).getStringCellValue()));
+                pp.setTongTien(tt);
                 pp_DAO.addPP(pp);
             }
         }catch (IOException e) {
