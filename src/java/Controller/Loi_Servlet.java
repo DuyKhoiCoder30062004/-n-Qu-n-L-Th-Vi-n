@@ -5,11 +5,18 @@
 package Controller;
 
 import BUS.CTPP_BUS;
+import BUS.CTPT_BUS;
+import BUS.CTSach_BUS;
 import BUS.Loi_BUS;
 import BUS.PhieuPhat_BUS;
+import BUS.PhieuTra_BUS;
+import BUS.Sach_BUS;
 import DTO.CTPP_DTO;
+import DTO.CTSach_DTO;
 import DTO.Loi_DTO;
 import DTO.PhieuPhat_DTO;
+import DTO.PhieuTra_DTO;
+import DTO.Sach_DTO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -29,6 +36,10 @@ public class Loi_Servlet extends HttpServlet {
     private PhieuPhat_BUS pp_BUS = new PhieuPhat_BUS();
     private Loi_BUS loi_BUS = new Loi_BUS();
     private CTPP_BUS ctpp_BUS = new CTPP_BUS();
+    private PhieuTra_BUS pt_BUS=new PhieuTra_BUS();
+    private CTPT_BUS ctpt_BUS=new CTPT_BUS();
+    private Sach_BUS sach_BUS=new Sach_BUS();
+    private CTSach_BUS cts_BUS=new CTSach_BUS();
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -41,9 +52,16 @@ public class Loi_Servlet extends HttpServlet {
         ArrayList<PhieuPhat_DTO> listPP = pp_BUS.getList();
         ArrayList<CTPP_DTO> listCTPP = ctpp_BUS.getList();
         ArrayList<Loi_DTO> listLoi = loi_BUS.getList();
+        ArrayList<PhieuTra_DTO> listPT=pt_BUS.getListPhieuTra();
+        ArrayList<Sach_DTO> listSach=sach_BUS.getListSach();
+        ArrayList<CTSach_DTO> listCTS=cts_BUS.getList();
+        System.out.print("list CTS"+ listCTS);
         request.setAttribute("listLoi", listLoi);
         request.setAttribute("listCTPP", listCTPP);
         request.setAttribute("listPP", listPP);
+        request.setAttribute("listPT", listPT);
+        request.setAttribute("listSach", listSach);
+        request.setAttribute("listCTS", listCTS);
         request.getRequestDispatcher("/WEB-INF/gui/phieuphat.jsp").forward(request, response);
     }
 
@@ -55,7 +73,6 @@ public class Loi_Servlet extends HttpServlet {
             response.getWriter().write("{\"thongbao\": \"Vui lòng nhập tên lỗi\", \"hopLe\": false}");
             return false;
         }
-
         float ptt;
         try {
             ptt = Float.parseFloat(phanTramTien);
@@ -136,7 +153,7 @@ public class Loi_Servlet extends HttpServlet {
                 StringBuilder result = loi_BUS.searchLoi(optionSearch, valueSearch);
                 if (result.length() > 2) {
                     // Có dữ liệu
-                    response.getWriter().write("{\"thongbao\": \"tìm kiếm thành công\", \"hopLe\": false, \"results\": " + result.toString() + "}");
+                    response.getWriter().write("{\"thongbao\": \"\", \"hopLe\": false, \"results\": " + result.toString() + "}");
                 } else {
                     // Không có dữ liệu
                     response.getWriter().write("{\"thongbao\": \"Không có phiếu mượn bạn cần tìm\", \"hopLe\": false}");

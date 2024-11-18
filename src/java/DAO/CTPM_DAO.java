@@ -184,7 +184,7 @@ public class CTPM_DAO {
     }
 
     public ArrayList<CTPM_DTO> searchByMaPM(int mapm) {
-        ArrayList<CTPM_DTO> listCTPM = new ArrayList<>();;
+        ArrayList<CTPM_DTO> listCTPM = new ArrayList<>();
         try {
             String qry = "select mapm,masach,soluong,trangthai from ctpm where mapm = ?";
             dnDB = new dangNhapDatabase();

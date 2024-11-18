@@ -125,6 +125,7 @@ public class PhieuNhap_DAO {
             preStatement.setInt(1, maPN);
 
             int cnt = preStatement.executeUpdate();
+
             result = cnt > 0;
         } catch (SQLException e) {
             System.err.println("SQL Error: " + e.getMessage());
@@ -178,28 +179,4 @@ public class PhieuNhap_DAO {
         return list;
     }
 
-    public boolean isExit(int maPN){
-        try {
-            String query = "Select count(*) from phieunhap where mapn = ?";
-            loginDB = new dangNhapDatabase();
-            connect = loginDB.openConnection();
-            preStatement = connect.prepareStatement(query);
-            preStatement.setInt(1, maPN);
-
-            rs = preStatement.executeQuery();
-            while(rs.next()){
-                return rs.getInt(1) > 0;
-            }
-        } catch (Exception e) {
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (preStatement != null) preStatement.close();
-                if (connect != null) connect.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return false;
-    }
 }

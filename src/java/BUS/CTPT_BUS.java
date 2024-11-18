@@ -30,8 +30,7 @@ public class CTPT_BUS {
         return ctptDAO.deleteCTPT(maPT);
     }
 
-    // Method to search CTPT by maPT
-    public CTPT_DTO searchCTPTByMaPT(int maPT) {
+    public List<CTPT_DTO> searchByMaPT(int maPT) {
         return ctptDAO.searchByMaPT(maPT);
     }
 }

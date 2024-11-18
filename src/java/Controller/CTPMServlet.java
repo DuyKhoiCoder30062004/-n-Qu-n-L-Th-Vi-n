@@ -5,9 +5,17 @@
 package Controller;
 
 import BUS.CTPM_BUS;
+import BUS.DocGiaBUS;
 import BUS.PhieuMuon_BUS;
+import BUS.PhieuPhat_BUS;
+import BUS.PhieuTra_BUS;
+import BUS.Sach_BUS;
 import DTO.CTPM_DTO;
+import DTO.DocGiaDTO;
 import DTO.PhieuMuon_DTO;
+import DTO.PhieuPhat_DTO;
+import DTO.PhieuTra_DTO;
+import DTO.Sach_DTO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -26,7 +34,9 @@ public class CTPMServlet extends HttpServlet {
 
     private PhieuMuon_BUS pm_BUS = new PhieuMuon_BUS();
     private CTPM_BUS ctpm_BUS = new CTPM_BUS();
-
+    private DocGiaBUS dg_BUS=new DocGiaBUS();
+    private Sach_BUS sach_BUS=new Sach_BUS();
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -37,25 +47,37 @@ public class CTPMServlet extends HttpServlet {
             throws ServletException, IOException {
         ArrayList<PhieuMuon_DTO> listPM = pm_BUS.getList();
         ArrayList<CTPM_DTO> listCTPM = ctpm_BUS.getList();
+        ArrayList<DocGiaDTO> listDG = dg_BUS.getList();
+        ArrayList<Sach_DTO> listSach = sach_BUS.getListSach();
         request.setAttribute("listCTPM", listCTPM);
         request.setAttribute("listPM", listPM);
+        request.setAttribute("listDG", listDG);
+        request.setAttribute("listSach", listSach);
         request.getRequestDispatcher("/WEB-INF/gui/phieumuon.jsp").forward(request, response);
     }
-
+    
     private boolean checkInfor(HttpServletRequest request, HttpServletResponse response,
             String maPM, String maSach, String soLuong) throws IOException {
         if (maPM.isEmpty() || maPM == null) {
             response.getWriter().write("{\"thongbao\": \"Mã phiếu mượn không được để trống vui lòng nhập\", \"hopLe\": false}");
             return false;
         }
-        if (pm_BUS.searchByMaPM(Integer.parseInt(maPM)) == null) {
-            response.getWriter().write("{\"thongbao\": \"Mã phiếu mượn không tồn tại vui lòng chọn lại\", \"hopLe\": false}");
+        try {
+            Integer.parseInt(maPM);
+        } catch (NumberFormatException e) {
+            response.getWriter().write("{\"thongbao\": \"Mã phiếu phải là số nguyên\", \"hopLe\": false}");
             return false;
         }
-        try {
-            Integer.parseInt(soLuong);
-        } catch (NumberFormatException e) {
-            response.getWriter().write("{\"thongbao\": \"Số lượng không phải số nguyên vui lòng nhập lại\", \"hopLe\": false}");
+        if (pm_BUS.searchByMaPM(Integer.parseInt(maPM)) == null) {
+            response.getWriter().write("{\"thongbao\": \"Mã phiếu mượn không tồn tại vui lòng nhập lại mã phiếu mượn\", \"hopLe\": false}");
+            return false;
+        }
+        if (maSach.isEmpty() || maSach == null) {
+            response.getWriter().write("{\"thongbao\": \"Vui lòng chọn mã sách bạn muốn  mượn\", \"hopLe\": false}");
+            return false;
+        }
+        if (pm_BUS.searchByMaPM(Integer.parseInt(maPM)) == null) {
+            response.getWriter().write("{\"thongbao\": \"Mã phiếu mượn không tồn tại vui lòng chọn lại\", \"hopLe\": false}");
             return false;
         }
         return true;
@@ -67,8 +89,18 @@ public class CTPMServlet extends HttpServlet {
             response.getWriter().write("{\"thongbao\": \"Mã phiếu mượn không được để trống vui lòng nhập để xóa\", \"hopLe\": false}");
             return false;
         }
+        try {
+            Integer.parseInt(maPM);
+        } catch (NumberFormatException e) {
+            response.getWriter().write("{\"thongbao\": \"Mã phiếu mượn phải là số nguyên\", \"hopLe\": false}");
+            return false;
+        }
         if (pm_BUS.searchByMaPM(Integer.parseInt(maPM)) == null) {
             response.getWriter().write("{\"thongbao\": \"Mã phiếu mượn không tồn tại vui lòng chọn lại để xóa\", \"hopLe\": false}");
+            return false;
+        }
+        if (maSach.isEmpty() || maSach == null) {
+            response.getWriter().write("{\"thongbao\": \"Vui lòng chọn mã sách bạn muốn  mượn\", \"hopLe\": false}");
             return false;
         }
         if (ctpm_BUS.searchByMaPM_MaSach(Integer.parseInt(maPM), Integer.parseInt(maSach)) == null) {
@@ -93,9 +125,12 @@ public class CTPMServlet extends HttpServlet {
         switch (action) {
             case "addCTPM":
                 if (!checkInfor(request, response, maPM, maSach, soLuong)) {
-                    return; // Nếu không hợp lệ, dừng xử lý tại đây
+                    return; 
                 }
-
+                if (ctpm_BUS.searchByMaPM_MaSach(Integer.parseInt(maPM), Integer.parseInt(maSach)) != null) {
+                    response.getWriter().write("{\"thongbao\": \"ctpm đã tồn tại vui lòng kiểm tra lại dữ liệu hoặc bạn có thể sửa trên ctpm đó\", \"hopLe\": false}");
+                    return;
+                }
                 if (addCTPM(maPM, maSach, soLuong, trangThai)) {
                     pm_BUS.updateTongSL(Integer.parseInt(maPM), pm_BUS.searchByMaPM(Integer.parseInt(maPM)).getTongSL() + Integer.parseInt(soLuong));
                     response.getWriter().write("{\"thongbao\": \"Thêm CTPM thành công\", \"hopLe\": true}");
@@ -109,6 +144,7 @@ public class CTPMServlet extends HttpServlet {
                 }
                 if (ctpm_BUS.searchByMaPM_MaSach(Integer.parseInt(maPM), Integer.parseInt(maSach)) == null) {
                     response.getWriter().write("{\"thongbao\": \"ctpm không tồn tại vui lòng chọn ctpm trên table để sửa\", \"hopLe\": false}");
+                    return;
                 }
                 int slcu = ctpm_BUS.searchByMaPM_MaSach(Integer.parseInt(maPM), Integer.parseInt(maSach)).getSoLuong();
                 if (updateCTPM(maPM, maSach, soLuong, trangThai)) {
@@ -138,7 +174,7 @@ public class CTPMServlet extends HttpServlet {
                 StringBuilder result = ctpm_BUS.searchCTPM(optionSearch, valueSearch);
                 if (result.length() > 2) {
                     // Có dữ liệu
-                    response.getWriter().write("{\"thongbao\": \"tìm kiếm thành công\", \"hopLe\": false, \"results\": " + result.toString() + "}");
+                    response.getWriter().write("{\"thongbao\": \"\", \"hopLe\": false, \"results\": " + result.toString() + "}");
                 } else {
                     // Không có dữ liệu
                     response.getWriter().write("{\"thongbao\": \"Không có phiếu mượn bạn cần tìm\", \"hopLe\": false}");

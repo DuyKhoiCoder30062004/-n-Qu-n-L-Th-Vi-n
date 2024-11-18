@@ -6,16 +6,25 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="DTO.Nhanvien_DTO" %>
+<%
+    Nhanvien_DTO nv = (Nhanvien_DTO) session.getAttribute("nv");
+    String tasks = (String) session.getAttribute("tasks");
+    if (nv == null || !nv.getChucVu().equals("admin")) {
+        response.sendRedirect("/cnpm/login");
+        return;
+    }
+%>
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta rel="icon" type="image/x-icon" href="">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
         <title>Quản lí phân quyền và tài khoản</title>
     </head>
     <style>
         body, html {
+            
             margin: 0;
             padding: 0;
             height:100vh;
@@ -27,54 +36,59 @@
             height:100vh;
 
         }
-        #title{
+        #title {
             width: 100%;
-            height:3%;
-            background-color:#D9D9D9;
+            height: 3%;
+            background-color:white;
             font-size: 16px;
-            font-style: Italic;
-            position:fixed;
-            top: 0;
-            left: 0;
+            font-weight: bolder;
+            position: fixed;
 
-        }
-        #menu{
+            }
+
+        #menu {
             width: 12%;
             height: 97%;
-            background-color:#99B3A1 ;
-            position:fixed;
+            background-color:#2C2F48;
+            position: fixed;
             top: 3%;
             left: 0;
         }
-        #detail{
+
+        #detail {
             width: 88%;
             height: 97%;
-            background-color:#F5A9FC ;
+            background-color:#D9D9D9;
             top: 3%;
             left: 12%;
-            position:fixed;
+            position: fixed;
+            overflow-y: auto;
         }
-        #iconAndName
-        {
+
+        #iconAndName {
             height: 14.5%;
             margin-top: 0px;
             border-radius: 0px;
         }
-        .conponentMenu{
+
+        .conponentMenu {
             width: 100%;
-            border-radius: 10px;
             height: 6%;
             margin-top: 2%;
-            font-weight:bold ;
+            font-weight: bold;
             text-align: center;
-            display: flex; /* Thay đổi để sử dụng flexbox */
-            align-items: center; /* Căn giữa theo chiều dọc */
-            justify-content: flex-start; /* Căn giữa theo chiều ngang */
-            border:#D9D9D9;
-            background-color: #D9D9D9;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            border: #4A4D66;
+            background-color: #4A4D66;
+            color: #FFFFFF;
+            border-bottom:1px solid white ;
+
         }
+
         .conponentMenu:hover {
-            background-color: #ffffff;
+            background-color:burlywood;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
@@ -90,9 +104,9 @@
             margin-right: 0%;
             margin-left: 0%;
         }
-        #tacVuThucThi
+        #btnPhanQuyen
         {
-            background-color: #00CED1;
+            background-color: #5A4E9B;
         }
         #titleDetail
         {
@@ -203,8 +217,8 @@
             position: absolute;
             top: 20%;
             left: 20%;
-            display: none; /* Ẩn bảng nhân viên mặc định */
-            z-index: 1000; /* Hiển thị trên cùng */
+            display: none; 
+            z-index: 1000; 
         }
         #tableNV{
             width: 95%;
@@ -219,41 +233,54 @@
     <body>
         <form id="form">
             <div id="title">
-                Hệ thống quản lí thư viện
+                Hệ thống quản lí thư viện của trường Đại học ABC
             </div>
 
             <div id="menu">
-                <div class="conponentMenu" id="iconAndName" style="background-color:#99B3A1 ;">
+                <div class="conponentMenu" id="iconAndName">
                     <img src="img/account.svg" alt="icon">
-                    Nguyễn Trung
-                    Quản lí
+                    ${nv.getHo()}  ${nv.getTen()}<br>
+                    ${nv.getChucVu()} 
                 </div>
-                <button class="conponentMenu">
-                    <img src="img/sach.jpg" alt="icon"> Sách</button>
-                <button class="conponentMenu">
-                    <img src="img/stafff.svg" alt="icon">Nhân viên</button>
-                <button class="conponentMenu">
-                    <img src="img/customerr.svg" alt="icon">Độc giả</button>
-                <button class="conponentMenu">
-                    <img src="img/nhaxuatban.jpg" alt="icon">Nhà xuất bản</button>
-                <button class="conponentMenu">
-                    <img src="img/nhacc.jpg" alt="icon">Nhà cung cấp</button>
-                <button class="conponentMenu">
-                    <img src="img/khuvuc.jpg" alt="icon">Khu vực</button>
-                <button class="conponentMenu" >
-                    <img src="img/export.svg" alt="icon">Phiếu mượn</button>
-                <button class="conponentMenu">
-                    <img src="img/phieutra.jpg" alt="icon">Phiếu trả</button>
-                <button class="conponentMenu">
-                    <img src="img/phieuphat.jpg" alt="icon">Phiếu phạt</button>
-                <button class="conponentMenu">
-                    <img src="img/phieunhap.jpg" alt="icon">Phiếu nhập</button>
-                <button id="tacVuThucThi" class="conponentMenu">
-                    <img src="img/permission.svg" alt="icon">Phân quyền</button>
-                <button class="conponentMenu">
-                    <img src="img/tinhhieuqua_128px.svg" alt="icon">Thống kê</button>
-                <button class="conponentMenu" >
-                    <img src="img/logout.jpg" alt="icon">Đăng xuất</button>
+                <button id="btnSach" class="conponentMenu" value="sách" onclick="reDirect(this,'/cnpm/sach')">
+                    <img src="img/sach.jpg" alt="icon"> Sách
+                </button>
+                <button id="btnNhanVien" class="conponentMenu" value="nhân viên" onclick="reDirect(this,'/cnpm/nhanvien')">
+                    <img src="img/stafff.svg" alt="icon"> Nhân viên
+                </button>
+                <button id="btnDocGia" class="conponentMenu" value="độc giả" onclick="reDirect(this,'/cnpm/docgia')">
+                    <img src="img/customerr.svg" alt="icon"> Độc giả
+                </button>
+                <button id="btnNhaXuatBan" class="conponentMenu" value="nhà xuất bản" onclick="reDirect(this,'/cnpm/nhaxuatban')">
+                    <img src="img/nhaxuatban.jpg" alt="icon"> Nhà xuất bản
+                </button>
+                <button id="btnNhaCungCap" class="conponentMenu" value="nhà cung cấp" onclick="reDirect(this,'/cnpm/nhacungcap')">
+                    <img src="img/nhacc.jpg" alt="icon"> Nhà cung cấp
+                </button>
+                <button id="btnKhuVuc" class="conponentMenu" value="khu vực" onclick="reDirect(this,'/cnpm/khuvuc')">
+                    <img src="img/khuvuc.jpg" alt="icon"> Khu vực
+                </button>
+                <button id="btnPhieuMuon" class="conponentMenu" value="phiếu mượn" onclick="reDirect(this,'/cnpm/phieumuon')">
+                    <img src="img/export.svg" alt="icon"> Phiếu mượn
+                </button>
+                <button id="btnPhieuTra" class="conponentMenu" value="phiếu trả" onclick="reDirect(this,'/cnpm/phieutra')">
+                    <img src="img/phieutra.jpg" alt="icon"> Phiếu trả
+                </button>
+                <button id="btnPhieuPhat" class="conponentMenu" value="phiếu phạt" onclick="reDirect(this,'/cnpm/phieuphat')">
+                    <img src="img/phieuphat.jpg" alt="icon"> Phiếu phạt
+                </button>
+                <button id="btnPhieuNhap" class="conponentMenu" value="phiếu nhập" onclick="reDirect(this,'/cnpm/phieunhap')">
+                    <img src="img/phieunhap.jpg" alt="icon"> Phiếu nhập
+                </button>
+                <button id="btnPhanQuyen" class="conponentMenu" value="phân quyền" onclick="reDirect(this,'/cnpm/phanquyen')">
+                    <img src="img/permission.svg" alt="icon"> Phân quyền
+                </button>
+                <button id="btnThongKe" class="conponentMenu" value="thống kê" onclick="reDirect(this,'/cnpm/thongke')">
+                    <img src="img/tinhhieuqua_128px.svg" alt="icon"> Thống kê
+                </button>
+                <button id="btnDangXuat" class="conponentMenu">
+                    <img src="img/logout.jpg" alt="icon"> Đăng xuất
+                </button>
             </div>
             <div id="detail">
                 <p id="titleDetail">
@@ -264,7 +291,8 @@
                         <div class="input-group">
                             <label class="nameFeature">Mã nhân viên</label><br>
                             <input type="text" name="txtMaNV" id="txtMaNV" placeholder="Nhập mã nv" readonly>
-                            <img src="img/add.svg" alt="mở table nhân viên" onclick="hienThiTBNV()"  style="cursor: pointer;width: 15px;height:auto;" />
+                            <img src="img/add.svg" alt="mở table nhân viên" onclick="hienThiTBNV()"
+                                style="cursor: pointer;width: 15px;height:auto;" />
                         </div>
                         <div class="input-group">
                             <label class="nameFeature">Mật khẩu</label><br>
@@ -274,9 +302,10 @@
                             <label class="nameFeature">Tác vụ/Quản lí</label><br>
                             <label class="checkbox"><input type="checkbox" name="task" value="sách">Sách</label><br>
                             <label class="checkbox"><input type="checkbox" name="task" value="nhân viên">Nhân viên</label><br>
-                            <label class="checkbox"><input type="checkbox" name="task" value="khách hàng">Khách hàng</label><br>
+                            <label class="checkbox"><input type="checkbox" name="task" value="đọc giả">Độc giả</label><br>
                             <label class="checkbox"><input type="checkbox" name="task" value="nhà xuất bản">Nhà xuất bản</label><br>
                             <label class="checkbox"><input type="checkbox" name="task" value="nhà cung cấp">Nhà cung cấp</label><br>
+                            <label class="checkbox"><input type="checkbox" name="task" value="khu vực">Khu vực</label><br>
                             <label class="checkbox"><input type="checkbox" name="task" value="phiếu mượn">Phiếu mượn</label><br>
                             <label class="checkbox"><input type="checkbox" name="task" value="phiếu trả">Phiếu trả</label><br>
                             <label class="checkbox"><input type="checkbox" name="task" value="phiếu phạt">Phiếu phạt</label><br>
@@ -287,7 +316,7 @@
                         <div class="input-group">
                             <img class="iconChucNang"  src="img/add.svg" title="Thêm" onclick="sendData('add')">
                             <img class="iconChucNang" src="img/edit.svg" title="Sửa" onclick="sendData('edit')">
-                            <img class="iconChucNang" src="img/delete.svg" title="Xóa" onclick="sendData('delete')">
+                            <img class="iconChucNang" id="iconDelete" src="img/delete.svg" title="Xóa" >
                             <img class="iconChucNang" id="iconClear" src="img/clear.png" title="Clear Input" onclick="clearInputPQ()">
                         </div>
                     </div>
@@ -358,30 +387,16 @@
                                 </tr>
                             </thead>
                             <tbody id="tbodyNV">
-                                <tr>
-                                    <td>1234</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>admin</td>
-                                </tr>
-                                <tr>
-                                    <td>1235</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>quản lí</td>
-                                </tr>
-                                <tr>
-                                    <td>1236</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>nhân viên</td>
-                                </tr>
+                                <c:forEach var="nv" items="${requestScope.listNV}">
+                                    <tr>
+                                        <td>${nv.maNV}</td>
+                                        <td>${nv.ho}</td>
+                                        <td>${nv.ten}</td>
+                                        <td>${nv.soDT}</td>
+                                        <td>${nv.ngaySinh}</td>
+                                        <td>${nv.chucVu} </td>
+                                    </tr>
+                                </c:forEach>
                             </tbody>
                         </table>
                     </div>
@@ -421,7 +436,6 @@
                     valueSearch: document.getElementById('txtSearch').value,
                 });
 
-                //alert(formData.get('tasks').split(',').length);
                 fetch('http://localhost:9999/cnpm/phanquyen', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
@@ -471,7 +485,16 @@
                     tableBody.appendChild(row);
                 });
             }
-            
+            //hiện thị xác nhận xóa
+            document.getElementById('iconDelete').addEventListener('click', function(event) {
+                // Hiển thị hộp thoại xác nhận
+                const confirmDelete = confirm("Bạn có chắc muốn xóa không tài khoản này không?");
+                if (!confirmDelete) {
+                    event.preventDefault();
+                } else {
+                    sendData('delete');
+                }
+            });
             /*clear dữ liệu*/
             function clearInputPQ() {
                 document.getElementById('txtMaNV').value = "";
@@ -561,6 +584,24 @@
                     row.style.display = ""; // Hiển thị tất cả các hàng
                 });
                 document.getElementById('txtSearchNV').value="";
+            }
+            
+            document.getElementById('btnDangXuat').addEventListener('click', function(event) {
+                event.preventDefault();  
+                window.location.href = '/cnpm/login';  
+            });
+            function reDirect(button,url)
+            {
+                event.preventDefault(); 
+                var tasks = "<%= tasks %>";
+                if(tasks.includes(button.value))
+                {
+                    window.location.href =url;
+                }
+                else
+                {
+                    alert("Bạn không có quyền quản lí tác vụ "+ button.value);
+                }
             }
             // Chặn việc sử dụng tổ hợp phím tắt để phóng to/thu nhỏ
             document.addEventListener('keydown', function (event) {

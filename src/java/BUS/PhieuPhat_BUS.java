@@ -36,6 +36,7 @@ public class PhieuPhat_BUS {
 
     private PhieuPhat_DAO pp_DAO = new PhieuPhat_DAO();
     private CTPP_BUS ctpp_BUS=new CTPP_BUS();
+ 
     public ArrayList<PhieuPhat_DTO> getList() {
         return pp_DAO.getList();
     }

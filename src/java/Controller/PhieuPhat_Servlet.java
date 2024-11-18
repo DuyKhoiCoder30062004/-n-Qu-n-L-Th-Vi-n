@@ -5,11 +5,19 @@
 package Controller;
 
 import BUS.CTPP_BUS;
+import BUS.CTPT_BUS;
+import BUS.CTSach_BUS;
 import BUS.Loi_BUS;
 import BUS.PhieuPhat_BUS;
+import BUS.PhieuTra_BUS;
+import BUS.Sach_BUS;
 import DTO.CTPP_DTO;
+import DTO.CTPT_DTO;
+import DTO.CTSach_DTO;
 import DTO.Loi_DTO;
 import DTO.PhieuPhat_DTO;
+import DTO.PhieuTra_DTO;
+import DTO.Sach_DTO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -30,28 +38,81 @@ public class PhieuPhat_Servlet extends HttpServlet {
     private PhieuPhat_BUS pp_BUS = new PhieuPhat_BUS();
     private Loi_BUS loi_BUS = new Loi_BUS();
     private CTPP_BUS ctpp_BUS = new CTPP_BUS();
-
+    private PhieuTra_BUS pt_BUS=new PhieuTra_BUS();
+    private CTPT_BUS ctpt_BUS=new CTPT_BUS();
+    private Sach_BUS sach_BUS=new Sach_BUS();
+    private CTSach_BUS cts_BUS=new CTSach_BUS();
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
     }
-
+//    private boolean checkMaSach(ArrayList<Sach_DTO> listSach,int masach)
+//    {
+//        for(Sach_DTO i:listSach)
+//        {
+//            if(i.getMaSach()==masach)
+//                return false;
+//        }
+//        return true;
+//    }
+//
+//    private ArrayList<Sach_DTO> getListSachOfPT(int mapt)
+//    {
+//        ArrayList<Sach_DTO> listSach=new ArrayList<>();
+//        for (CTPT_DTO i: ctpt_BUS.searchCTPTByMaPT(mapt))
+//        {
+//            if(checkMaSach(listSach,i.getMaSach()))
+//            {
+//                listSach.add(sach_BUS.timSachTheoMaSach(String.valueOf(i.getMaSach())).get(0));
+//            }
+//        }
+//        return listSach;
+//    }
+    private boolean checkCoLoi(int maPT)
+    {
+        for(CTPT_DTO i:ctpt_BUS.searchByMaPT(maPT))
+        {
+            if(i.getMaVachLoi().length()>0)
+                return true;
+        }
+        return false;
+    }
+    
+    private ArrayList<PhieuTra_DTO> listPT_BiPhat()
+    {
+        ArrayList<PhieuTra_DTO> listPT=new ArrayList<PhieuTra_DTO>();
+        for(PhieuTra_DTO i:pt_BUS.getListPhieuTra())
+        {
+            if(checkCoLoi(i.getMaPT())==true)
+            {
+                listPT.add(i);
+            }
+        }
+        return listPT;
+    }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         ArrayList<PhieuPhat_DTO> listPP = pp_BUS.getList();
         ArrayList<CTPP_DTO> listCTPP = ctpp_BUS.getList();
         ArrayList<Loi_DTO> listLoi = loi_BUS.getList();
-        System.out.println("list ctpp:" +listCTPP);
+        ArrayList<PhieuTra_DTO> listPT=listPT_BiPhat();
+        ArrayList<Sach_DTO> listSach=sach_BUS.getListSach();
+        ArrayList<CTSach_DTO> listCTS=cts_BUS.getList();
+        System.out.print("list CTS"+ listCTS);
         request.setAttribute("listLoi", listLoi);
         request.setAttribute("listCTPP", listCTPP);
         request.setAttribute("listPP", listPP);
+        request.setAttribute("listPT", listPT);
+        request.setAttribute("listSach", listSach);
+        request.setAttribute("listCTS", listCTS);
+        
         request.getRequestDispatcher("/WEB-INF/gui/phieuphat.jsp").forward(request, response);
     }
-
+    
     private boolean checkInfor(HttpServletRequest request, HttpServletResponse response,
-            String maPP, String maPT, String maNV)
+            String maPP, String maPT)
             throws IOException {
         if (maPP == null || maPP.isEmpty()) {
             response.getWriter().write("{\"thongbao\": \"Vui lòng nhập mã phiếu phạt\", \"hopLe\": false}");
@@ -67,13 +128,35 @@ public class PhieuPhat_Servlet extends HttpServlet {
             response.getWriter().write("{\"thongbao\": \"Vui lòng chọn mã phiếu trả\", \"hopLe\": false}");
             return false;
         }
-        if (maNV == null || maNV.isEmpty()) {
-            response.getWriter().write("{\"thongbao\": \"Vui lòng chọn mã nhân viên\", \"hopLe\": false}");
+        for(PhieuPhat_DTO i:pp_BUS.getList())
+        {
+            if(i.getMaPT()==Integer.parseInt(maPT))
+            {
+                response.getWriter().write("{\"thongbao\": \"Mã phiếu trả này đã có phiếu phạt vui lòng chỉnh sửa ở phiếu phạt này\", \"hopLe\": false}");
+                return false;
+            }
+        }
+        return true;
+    }
+    private boolean checkDelete(HttpServletRequest request, HttpServletResponse response,
+            String maPP)
+            throws IOException {
+        if (maPP == null || maPP.isEmpty()) {
+            response.getWriter().write("{\"thongbao\": \"Vui lòng nhập mã phiếu phạt\", \"hopLe\": false}");
+            return false;
+        }
+        try {
+            Integer.parseInt(maPP);
+        } catch (NumberFormatException e) {
+            response.getWriter().write("{\"thongbao\": \"Mã phiếu phạt phải là số nguyên\", \"hopLe\": false}");
+            return false;
+        }
+        if (pp_BUS.searchByMaPP(Integer.parseInt(maPP)) == null) {
+            response.getWriter().write("{\"thongbao\": \"Mã phiếu phạt không tồn tại vui lòng chọn lại phiếu phạt trên table\", \"hopLe\": false}");
             return false;
         }
         return true;
     }
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -88,7 +171,7 @@ public class PhieuPhat_Servlet extends HttpServlet {
         System.out.println("path: "+namePath);
         switch (action) {
             case "addPP":
-                if (!checkInfor(request, response, maPP, maPT, maNV)) {
+                if (!checkInfor(request, response, maPP, maPT)) {
                     return;
                 }
                 if (pp_BUS.searchByMaPP(Integer.parseInt(maPP)) != null) {
@@ -102,7 +185,7 @@ public class PhieuPhat_Servlet extends HttpServlet {
                 }
                 break;
             case "updatePP":
-                if (!checkInfor(request, response, maPP, maPT, maNV)) {
+                if (!checkInfor(request, response, maPP, maPT)) {
                     return;
                 }
                 if (pp_BUS.searchByMaPP(Integer.parseInt(maPP)) == null) {
@@ -116,12 +199,7 @@ public class PhieuPhat_Servlet extends HttpServlet {
                 }
                 break;
             case "deletePP":
-                if (maPP == null || maPP.trim().isEmpty()) {
-                    response.getWriter().write("{\"thongbao\": \"Vui lòng nhập phiếu phạt hoặc trên phiếu phạt trên table để xóa\", \"hopLe\": false}");
-                    return;
-                }
-                if (pp_BUS.searchByMaPP(Integer.parseInt(maPP)) == null) {
-                    response.getWriter().write("{\"thongbao\": \"Mã phiếu phạt không tồn tại vui lòng chọn lại phiếu phạt trên table\", \"hopLe\": false}");
+                if (!checkDelete(request, response, maPP)) {
                     return;
                 }
                 if (pp_BUS.deletePP(Integer.parseInt(maPP))) {
@@ -139,7 +217,7 @@ public class PhieuPhat_Servlet extends HttpServlet {
                 StringBuilder[] result = pp_BUS.searchPP(optionSearch, valueSearch);
                 if (result[0].length() > 2) {
                     // Có dữ liệu
-                    response.getWriter().write("{\"thongbao\": \"tìm kiếm thành công\", \"hopLe\": false, "
+                    response.getWriter().write("{\"thongbao\": \"\", \"hopLe\": false, "
                             + "\"resultPP\": " + result[0].toString() + ", "
                             + "\"resultsCTPP\": " + result[1].toString()
                             + "}");

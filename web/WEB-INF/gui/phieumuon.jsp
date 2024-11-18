@@ -1,5 +1,25 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="DTO.Nhanvien_DTO" %>
+<%
+    Nhanvien_DTO nv = (Nhanvien_DTO) session.getAttribute("nv");
+    String tasks = (String) session.getAttribute("tasks");
+//    ArrayList<String> tasks = (ArrayList<String>) session.getAttribute("tasks");
+//    StringBuilder jsonString = new StringBuilder();
+//    jsonString.append("[");
+//
+//    for (int i = 0; i < tasks.size(); i++) {
+//        jsonString.append("\"").append(tasks.get(i)).append("\"");
+//        if (i < tasks.size() - 1) {
+//            jsonString.append(",");
+//        }
+//    }
+//    jsonString.append("]");
+    if (nv == null || nv.getChucVu().equals("admin")) {
+        response.sendRedirect("/cnpm/login");
+        return;
+    }
+%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -26,17 +46,17 @@
         #title {
             width: 100%;
             height: 3%;
-            background-color: #D9D9D9;
+            background-color:white;
             font-size: 16px;
-            font-style: Italic;
+            font-weight: bolder;
             position: fixed;
 
-        }
+            }
 
         #menu {
             width: 12%;
             height: 97%;
-            background-color: #99B3A1;
+            background-color:#2C2F48;
             position: fixed;
             top: 3%;
             left: 0;
@@ -45,10 +65,11 @@
         #detail {
             width: 88%;
             height: 97%;
-            background-color: #F5A9FC;
+            background-color:lightgray;
             top: 3%;
             left: 12%;
             position: fixed;
+            overflow-y: auto;
         }
 
         #iconAndName {
@@ -59,23 +80,22 @@
 
         .conponentMenu {
             width: 100%;
-            border-radius: 10px;
             height: 6%;
             margin-top: 2%;
             font-weight: bold;
             text-align: center;
             display: flex;
-            /* Thay đổi để sử dụng flexbox */
             align-items: center;
-            /* Căn giữa theo chiều dọc */
             justify-content: flex-start;
-            /* Căn giữa theo chiều ngang */
-            border: #D9D9D9;
-            background-color: #D9D9D9;
+            border: #4A4D66;
+            background-color: #4A4D66;
+            color: #FFFFFF;
+            border-bottom:1px solid white ;
+
         }
 
         .conponentMenu:hover {
-            background-color: #ffffff;
+            background-color:burlywood;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
@@ -94,8 +114,8 @@
             margin-left: 0%;
         }
 
-        #tacVuThucThi {
-            background-color: #00CED1;
+        #btnPhieuMuon {
+            background-color: #5A4E9B;
         }
 
         #titleDetail {
@@ -147,7 +167,7 @@
             cursor: pointer;
         }
 
-        #tablePM {
+        .table {
             width: 90%;
             border-collapse: collapse;
             margin-top: 2px;
@@ -162,17 +182,12 @@
 
         .table thead {
             display: table;
-            /* Để hiển thị hàng tiêu đề */
             width: 100%;
             table-layout: fixed;
             position: sticky;
-            /* Cố định vị trí hàng tiêu đề */
             top: 0;
-            /* Gắn hàng tiêu đề ở trên cùng */
             background-color: #D9D9D9;
-            /* Màu nền cho hàng tiêu đề */
             z-index: 1;
-            /* Đảm bảo hàng tiêu đề ở trên các hàng khác */
         }
 
         .table tr {
@@ -193,21 +208,15 @@
             border: 1px solid black;
             text-align: center;
             word-wrap: break-word;
-            /* Ngắt dòng nếu nội dung quá dài */
             white-space: nowrap;
-            /* Không cho phép ngắt dòng nếu cần */
             overflow: hidden;
-            /* Ẩn phần nội dung tràn ra ngoài */
             text-overflow: ellipsis;
-            /* Hiển thị "..." khi nội dung quá dài */
         }
 
         .table td:hover {
             white-space: normal;
-            /* Cho phép ngắt dòng */
             z-index: 1;
             background-color: #f1f1f1;
-            /* Tô màu nền để dễ đọc */
         }
 
         #detailCTPM {
@@ -264,9 +273,9 @@
             overflow-y: auto;
             overflow-x: hidden;
         }
-        #divtableKhach,#divtableSach {
+        .divTT {
             width: 50%;
-            height: 50%;
+            height: 50%; /* Thay vì 50% */
             background-color: azure;
             border: 2px solid black;
             position: absolute;
@@ -274,15 +283,16 @@
             left: 20%;
             display: none;
             z-index: 1000;
+            overflow: hidden; /* Đảm bảo nội dung không tràn */
         }
-
-        #tableSach,#tableKhach {
+        #tableSach, #tableKhach {
             border-collapse: collapse;
             width: 95%;
-            height: 67%;
+            height: 67%; 
             border: 2px solid black;
             margin-left: 20px;
         }
+
         input:focus{
             outline: none;
             border-color: darkturquoise;
@@ -292,40 +302,54 @@
     <body>
         <form id="form">
             <div id="title">
-                Hệ thống quản lí thư viện
+                Hệ thống quản lí thư viện của trường Đại học ABC
             </div>
             <div id="menu">
-                <div class="conponentMenu" id="iconAndName" style="background-color:#99B3A1 ;">
+                <div class="conponentMenu" id="iconAndName" >
                     <img src="img/account.svg" alt="icon">
-                    Nguyễn Trung
-                    Quản lí
+                    ${nv.getHo()}  ${nv.getTen()}<br>
+                    ${nv.getChucVu()} 
                 </div>
-                <button class="conponentMenu">
-                    <img src="img/sach.jpg" alt="icon"> Sách</button>
-                <button class="conponentMenu">
-                    <img src="img/stafff.svg" alt="icon">Nhân viên</button>
-                <button class="conponentMenu">
-                    <img src="img/customerr.svg" alt="icon">Độc giả</button>
-                <button class="conponentMenu">
-                    <img src="img/nhaxuatban.jpg" alt="icon">Nhà xuất bản</button>
-                <button class="conponentMenu">
-                    <img src="img/nhacc.jpg" alt="icon">Nhà cung cấp</button>
-                <button class="conponentMenu">
-                    <img src="img/khuvuc.jpg" alt="icon">Khu vực</button>
-                <button id="tacVuThucThi" class="conponentMenu" >
-                    <img src="img/export.svg" alt="icon">Phiếu mượn</button>
-                <button class="conponentMenu">
-                    <img src="img/phieutra.jpg" alt="icon">Phiếu trả</button>
-                <button class="conponentMenu">
-                    <img src="img/phieuphat.jpg" alt="icon">Phiếu phạt</button>
-                <button class="conponentMenu">
-                    <img src="img/phieunhap.jpg" alt="icon">Phiếu nhập</button>
-                <button  class="conponentMenu">
-                    <img src="img/permission.svg" alt="icon">Phân quyền</button>
-                <button class="conponentMenu">
-                    <img src="img/tinhhieuqua_128px.svg" alt="icon">Thống kê</button>
-                <button class="conponentMenu" >
-                    <img src="img/logout.jpg" alt="icon">Đăng xuất</button>
+                <button id="btnSach" class="conponentMenu" value="sách" onclick="reDirect(this,'/cnpm/sach')">
+                    <img src="img/sach.jpg" alt="icon"> Sách
+                </button>
+                <button id="btnNhanVien" class="conponentMenu" value="nhân viên" onclick="reDirect(this,'/cnpm/nhanvien')">
+                    <img src="img/stafff.svg" alt="icon"> Nhân viên
+                </button>
+                <button id="btnDocGia" class="conponentMenu" value="độc giả" onclick="reDirect(this,'/cnpm/docgia')">
+                    <img src="img/customerr.svg" alt="icon"> Độc giả
+                </button>
+                <button id="btnNhaXuatBan" class="conponentMenu" value="nhà xuất bản" onclick="reDirect(this,'/cnpm/nhaxuatban')">
+                    <img src="img/nhaxuatban.jpg" alt="icon"> Nhà xuất bản
+                </button>
+                <button id="btnNhaCungCap" class="conponentMenu" value="nhà cung cấp" onclick="reDirect(this,'/cnpm/nhacungcap')">
+                    <img src="img/nhacc.jpg" alt="icon"> Nhà cung cấp
+                </button>
+                <button id="btnKhuVuc" class="conponentMenu" value="khu vực" onclick="reDirect(this,'/cnpm/khuvuc')">
+                    <img src="img/khuvuc.jpg" alt="icon"> Khu vực
+                </button>
+                <button id="btnPhieuMuon" class="conponentMenu" value="phiếu mượn" onclick="reDirect(this,'/cnpm/phieumuon')">
+                    <img src="img/export.svg" alt="icon"> Phiếu mượn
+                </button>
+                <button id="btnPhieuTra" class="conponentMenu" value="phiếu trả" onclick="reDirect(this,'/cnpm/phieutra')">
+                    <img src="img/phieutra.jpg" alt="icon"> Phiếu trả
+                </button>
+                <button id="btnPhieuPhat" class="conponentMenu" value="phiếu phạt" onclick="reDirect(this,'/cnpm/phieuphat')">
+                    <img src="img/phieuphat.jpg" alt="icon"> Phiếu phạt
+                </button>
+                <button id="btnPhieuNhap" class="conponentMenu" value="phiếu nhập" onclick="reDirect(this,'/cnpm/phieunhap')">
+                    <img src="img/phieunhap.jpg" alt="icon"> Phiếu nhập
+                </button>
+                <button id="btnPhanQuyen" class="conponentMenu" value="phân quyền" onclick="reDirect(this,'/cnpm/phanquyen')">
+                    <img src="img/permission.svg" alt="icon"> Phân quyền
+                </button>
+                <button id="btnThongKe" class="conponentMenu" value="thống kê" onclick="reDirect(this,'/cnpm/thongke')">
+                    <img src="img/tinhhieuqua_128px.svg" alt="icon"> Thống kê
+                </button>
+                <button id="btnDangXuat" class="conponentMenu">
+                    <img src="img/logout.jpg" alt="icon"> Đăng xuất
+                </button>
+
             </div>
             <div id="detail">
                 <p id="titleDetail">
@@ -337,16 +361,16 @@
                         <input type="text" id="txtMaPhieu" placeholder="Nhập mã phiếu">
                     </div>
                     <div class="input-group">
-                        <label class="nameFeature">Mã khách </label>
-                        <input type="text" id="txtMaKhach" placeholder="Nhập mã khách">
+                        <label class="nameFeature">Mã độc giả </label>
+                        <input type="text" id="txtMaKhach" placeholder="Nhập mã khách" readonly>
                         <img src="img/add.svg"  onclick="hienThiKhach()" style="cursor: pointer;width: 15px;height:auto;" />
                     </div>
 
                     <div class="input-group">
                         <label class="nameFeature">Mã NV </label>
-                        <input type="text" id="txtMaNV" placeholder="Nhập mã NV">
+                        <input type="text" id="txtMaNV" value="${nv.getMaNV()}" placeholder="Nhập mã NV" readonly>
                         <img class="iconChucNang" id="iconThem" src="img/add.svg" title="Thêm PM" onclick="sendData('add')">
-                        <img class="iconChucNang" id="iconXoa" src="img/delete.svg" title="Xóa PM" onclick="sendData('delete')">
+                        <img class="iconChucNang" id="iconXoa" src="img/delete.svg" title="Xóa PM" >
                     </div><br>
                     <div class="input-group">
                         <label class="nameFeature" style="margin-right: 11px;">Ngày lập </label>
@@ -354,12 +378,12 @@
                     </div>
 
                     <div class="input-group" style="margin-right: 13px;">
-                        <label class="nameFeature" style="margin-right: 12px;">Hạn chót </label>
+                        <label class="nameFeature" style="margin-right: 19px;">Hạn chót </label>
                         <input type="date" id="txtHanChot" style="width: 104px;" placeholder="Chọn hạn chót">
                     </div>
 
                     <div class="input-group">
-                        <label class="nameFeature" style="margin-right: 0px">Tổng SL </label>
+                        <label class="nameFeature" style="margin-right: 4px">Tổng SL </label>
                         <input type="text" id="txtTongSL" value="0"  readonly>
                         <img class="iconChucNang" id="iconSua" src="img/edit.svg" title="Sửa PM" onclick="sendData('edit')">
                         <img class="iconChucNang" id="iconClear" title="Clear input"  onclick="clearInputPM()" src="img/clear.png" alt="icon">
@@ -435,7 +459,7 @@
                             </div>
                             <div class="input-groupCTPM">
                                 <label class="nameFeatureCTPM" style="margin-right: 18px;">Mã sách</label>
-                                <input type="text" id="txtSachCTPM" placeholder="Nhập mã sách" style="margin-right: 2px">
+                                <input type="text" id="txtSachCTPM" placeholder="Nhập mã sách" style="margin-right: 2px" readonly>
                                 <img src="img/add.svg" onclick="hienThiSach()"
                                      style="cursor: pointer;width: 12px;height:auto;" />
                             </div>
@@ -450,7 +474,7 @@
                             <div>
                                 <img class="iconChucNangCTPM" id="iconThemCTPM" style="margin-left: 24%;"
                                      src="img/add.svg" title="Thêm CTPM" onclick="sendDataCTPM('addCTPM')">
-                                <img class="iconChucNangCTPM" id="iconXoaCTPM" src="img/delete.svg" title="Xóa CTPM" onclick="sendDataCTPM('deleteCTPM')">
+                                <img class="iconChucNangCTPM" id="iconXoaCTPM" src="img/delete.svg" title="Xóa CTPM" >
                                 <img class="iconChucNangCTPM" id="iconSuaCTPM" src="img/edit.svg" title="Sửa CTPM" onclick="sendDataCTPM('updateCTPM')">
                                 <img class="iconChucNangCTPM" id="iconClearCTPM" onclick="clearInputCTPM()"
                                      src="img/clear.png" title="clear input CTPM">
@@ -507,7 +531,7 @@
                     </div>
                 </section>
 
-                    <div class="divTT" id="divtableKhach" onclick="showListAllKhach()">
+                <div class="divTT" id="divtableKhach" onclick="showListAllKhach()">
                     <img src="img/cancel.svg"  onclick="dongTBTT()"  style="cursor: pointer;width: 20px;height:auto;margin-left: 97%;" />
                     <h3 style="text-align: center;"> Ban chọn mã độc giả ở đây!</h3>
                     <div style="margin-left: 20px;">
@@ -530,22 +554,30 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <c:forEach var="dg" items="${requestScope.listDG}">
+                                <tr>
+                                    <td>${dg.maDG}</td>
+                                    <td>${dg.hoDG}</td>
+                                    <td>${dg.tenDG}</td>
+                                    <td>${dg.diaChi}</td>
+                                    <td>${dg.soDienThoai}</td>
+                                    <td>${dg.ngaySinh}</td>
+                                </tr>
+                            </c:forEach>
+                                <%
+                            for (int i = 1; i <= 10; i++) {
+                            %>
                             <tr>
-                                <td>1234</td>
                                 <td></td>
-                                <td>Huyền</td>
+                                <td></td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                             </tr>
-                            <tr>
-                                <td>1235</td>
-                                <td></td>
-                                <td>kuen</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
+                            <%
+                                }
+                            %>
                         </tbody>
                     </table>
                 </div>
@@ -572,20 +604,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1234</td>
-                                <td>Vật lí</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                             <tr>
-                                <td>1235</td>
-                                <td>Lí hóa</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
+                            <c:forEach var="pm" items="${requestScope.listSach}">
+                                <tr>
+                                    <td>${pm.maSach}</td>
+                                    <td>${pm.tenSach}</td>
+                                    <td>${pm.tacGia}</td>
+                                    <td>${pm.soLuong}</td>
+                                    <td>${pm.moTa}</td>
+                                </tr>
+                            </c:forEach>
                         </tbody>
                     </table>
                 </div>
@@ -598,9 +625,8 @@
             function clickPM(row) {
                 const cells = row.getElementsByTagName('td');
                 document.getElementById('txtMaPhieu').value = cells[0].innerText;
+                document.getElementById('txtMaPhieu').readOnly = true;
                 document.getElementById('txtMaKhach').value = cells[1].innerText;
-                document.getElementById('txtMaNV').value = cells[2].innerText;
-
                 const dateValueNN = cells[3].innerText;
                 document.getElementById('txtNgayLap').value = dateValueNN;
 
@@ -613,7 +639,9 @@
             function clickCTPM(row) {
                 const cells = row.getElementsByTagName('td');
                 document.getElementById('txtMaPhieuCTPM').value = cells[0].innerText;
+                document.getElementById('txtMaPhieuCTPM').readOnly = true;
                 document.getElementById('txtSachCTPM').value = cells[1].innerText;
+                document.getElementById('txtSachCTPM').readOnly = true;
                 document.getElementById('txtSLCTPM').value = cells[2].innerText;
                 document.getElementById('txtTrangThaiCTPM').value = cells[3].innerText;
             }
@@ -672,6 +700,10 @@
                         // Hiển thị cửa sổ chọn file
                         fileInput.click();
                     }
+                    // Lắng nghe sự kiện khi bàn phím để tìm kiếm phiếu mượn
+                    document.getElementById('txtSearchPM').addEventListener('keyup', function(event) {
+                            sendData('search');
+                    });
                     function sendData(action) {
                         const formData = new URLSearchParams({
                             action: action,
@@ -704,8 +736,6 @@
                                             alert(data.thongbao); // Hiển thị thông báo từ server
                                         }
                                         if (data.resultsPM && data.resultsPM.length > 0) {
-                                            alert("PM"+data.resultsPM );
-                                            alert("CTPM"+data.resultsCTPM);
                                             kQTimKiemPM(data.resultsPM); // Xử lý kết quả tìm kiếm
                                             kQTimKiemCTPM(data.resultsCTPM);
                                         }
@@ -730,7 +760,7 @@
                                 })
                                 .catch(error => alert('Đã xảy ra lỗi: ' + error));
                     }
-
+                   
                     function  kQTimKiemPM(results)
                     {
                         const tableBody = document.getElementById('tbodyPM');
@@ -761,9 +791,12 @@
                             tableBody.appendChild(row);
                         });
                     }
+                    // Lắng nghe sự kiện khi bàn phím để tìm kiếm chi tiết phiếu mượn
+                    document.getElementById('txtSearchCTPM').addEventListener('keyup', function(event) {
+                            sendDataCTPM('searchCTPM');
+                    });
                     function sendDataCTPM(action)
                     {
-                        alert("đã click ctpm");
                         const formData = new URLSearchParams({
                             action: action,
                             maPM: document.getElementById('txtMaPhieuCTPM').value,
@@ -823,6 +856,26 @@
                             tableBody.appendChild(row);
                         });
                     }
+                    //hiện thị xác nhận xóa phiếu mượn
+                    document.getElementById('iconXoa').addEventListener('click', function(event) {
+                        // Hiển thị hộp thoại xác nhận
+                        const confirmDelete = confirm("Bạn có chắc muốn xóa không phiếu mượn này không?");
+                        if (!confirmDelete) {
+                            event.preventDefault();
+                        } else {
+                            sendData('delete');
+                        }
+                    });
+                    //hiện thị xác nhận xóa chi tiết phiếu mượn
+                    document.getElementById('iconXoaCTPM').addEventListener('click', function(event) {
+                        // Hiển thị hộp thoại xác nhận
+                        const confirmDelete = confirm("Bạn có chắc muốn xóa không chi tiết phiếu mượn này không?");
+                        if (!confirmDelete) {
+                            event.preventDefault();
+                        } else {
+                            sendDataCTPM('deleteCTPM');
+                        }
+                    });
                     //Đóng các table
                     function dongTBTT() {
                         const divs = document.querySelectorAll('.divTT'); // Chọn tất cả div có class 'popupDiv'
@@ -961,7 +1014,23 @@
                              hienThiSach();
                         }
                     });
-
+                    document.getElementById('btnDangXuat').addEventListener('click', function(event) {
+                        event.preventDefault();  // Ngừng hành động mặc định của nút
+                        window.location.href = '/cnpm/login';  // Chuyển hướng đến trang đăng nhập
+                    });
+                    function reDirect(button,url)
+                    {
+                        event.preventDefault(); 
+                        var tasks = "<%= tasks %>";
+                        if(tasks.includes(button.value))
+                        {
+                            window.location.href =url;
+                        }
+                        else
+                        {
+                            alert("Bạn không có quyền quản lí tác vụ "+ button.value);
+                        }
+                    }
                     // Chặn việc sử dụng tổ hợp phím tắt để phóng to/thu nhỏ
                     document.addEventListener('keydown', function (event) {
                         if (event.ctrlKey && (event.key === '+' || event.key === '-' || event.key === '=')) {
@@ -977,5 +1046,4 @@
                     );
         </script>
     </body>
-
 </html>

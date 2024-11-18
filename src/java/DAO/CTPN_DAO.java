@@ -60,6 +60,7 @@ public class CTPN_DAO{
             preStatement.setFloat(4, ctpn.getDonGia());
 
             int cnt = preStatement.executeUpdate();
+            updatePhieuNhapTotals(ctpn.getMaPN());
             result = cnt > 0; //Kiểm tra số dòng thay đổi
 
         } catch (SQLException e) {
@@ -91,6 +92,7 @@ public class CTPN_DAO{
             preStatement.setInt(4, ctpn.getMaSach());
 
             int cnt = preStatement.executeUpdate();
+            updatePhieuNhapTotals(ctpn.getMaPN());
             result = cnt > 0;
         } catch (SQLException e) {
             System.err.println("SQL Error: " + e.getMessage());
@@ -119,6 +121,7 @@ public class CTPN_DAO{
             preStatement.setInt(2, maSach);
 
             int cnt = preStatement.executeUpdate();
+            updatePhieuNhapTotals(maPN);
             result = cnt > 0;
         } catch (SQLException e) {
             System.err.println("SQL Error: " + e.getMessage());
@@ -146,6 +149,7 @@ public class CTPN_DAO{
             preStatement.setInt(1, maPN);
 
             int cnt = preStatement.executeUpdate();
+            updatePhieuNhapTotals(maPN);
             result = cnt > 0;
         } catch (SQLException e) {
             System.err.println("SQL Error: " + e.getMessage());
@@ -197,5 +201,63 @@ public class CTPN_DAO{
             }
         }
         return listCTPN;
+    }
+
+    public CTPN_DTO searchByMaPN_MaSach(int maPN, int maSach){
+        CTPN_DTO ctpn = new CTPN_DTO();
+        try {
+            String qry = "Select mapn, masach, soluong, dongia from ctpn where mapn = ? and masach = ?";
+            loginDB = new dangNhapDatabase();
+            connect = loginDB.openConnection();
+            preStatement = connect.prepareStatement(qry);
+
+            preStatement.setInt(1, maPN);
+            preStatement.setInt(2, maSach);
+            
+            rs = preStatement.executeQuery();
+            while (rs.next()) {
+                ctpn.setMaPN(rs.getInt("mapn"));
+                ctpn.setMaSach(rs.getInt("masach"));
+                ctpn.setSoLuong(rs.getInt("soluong"));
+                ctpn.setDonGia(rs.getFloat("dongia"));
+            }
+        } catch (SQLException e) {
+            System.err.println("SQL Error: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (preStatement != null) preStatement.close();
+                if (connect != null) loginDB.closeConnection(connect);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return ctpn;
+    }
+
+    private void updatePhieuNhapTotals(int maPN) {
+        try {
+            // Tính lại tổng số lượng và tổng tiền từ các CTPN liên quan đến phiếu nhập này
+            String query = "SELECT SUM(soLuong), SUM(soLuong * donGia) FROM ctpn WHERE maPN = ?";
+            PreparedStatement ps = connect.prepareStatement(query);
+            ps.setInt(1, maPN);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                int tongSL = rs.getInt(1);
+                double tongTien = rs.getDouble(2);
+
+                // Cập nhật lại Phiếu Nhập với tổng số lượng và tổng tiền mới
+                String updatePN = "UPDATE phieunhap SET tongSL = ?, tongTien = ? WHERE maPN = ?";
+                PreparedStatement psUpdate = connect.prepareStatement(updatePN);
+                psUpdate.setInt(1, tongSL);
+                psUpdate.setDouble(2, tongTien);
+                psUpdate.setInt(3, maPN);
+                psUpdate.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -4,7 +4,9 @@
  */
 package Controller;
 
+import BUS.Nhanvien_BUS;
 import BUS.PhanQuyen_BUS;
+import DTO.Nhanvien_DTO;
 import DTO.PhanQuyen_DTO;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
@@ -25,6 +27,7 @@ import java.util.Arrays;
 public class PhanQuyen_Servlet extends HttpServlet {
 
     private PhanQuyen_BUS pq_BUS = new PhanQuyen_BUS();
+    private Nhanvien_BUS nv_BUS=new Nhanvien_BUS();
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -35,7 +38,9 @@ public class PhanQuyen_Servlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         ArrayList<PhanQuyen_DTO> listPQ = pq_BUS.getList();
+        ArrayList<Nhanvien_DTO> listNV=nv_BUS.getList();
         request.setAttribute("listPQ", listPQ);
+        request.setAttribute("listNV", listNV);
         request.getRequestDispatcher("/WEB-INF/gui/phanquyen.jsp").forward(request, response);
     }
 
@@ -46,12 +51,6 @@ public class PhanQuyen_Servlet extends HttpServlet {
         if (maNV == null || maNV.trim().isEmpty()) {
             response.getWriter().write("{\"thongbao\": \"Mã nhân viên không được để trống\", \"hopLe\": false}");
             return false; // Dừng hàm nếu lỗi
-        }
-        try {
-            Integer.parseInt(maNV);
-        } catch (NumberFormatException e) {
-            response.getWriter().write("{\"thongbao\": \"Mã nhân viên phải là số nguyên\", \"hopLe\": false}");
-            return false;
         }
 
         // Kiểm tra mật khẩu
@@ -65,7 +64,6 @@ public class PhanQuyen_Servlet extends HttpServlet {
             response.getWriter().write("{\"thongbao\": \"Danh sách công việc không được để trống\", \"hopLe\": false}");
             return false;
         }
-
         return true; 
     }
 
