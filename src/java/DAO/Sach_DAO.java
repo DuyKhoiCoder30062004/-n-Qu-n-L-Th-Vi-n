@@ -145,8 +145,8 @@ public class Sach_DAO {
             ps.setInt(6, sach.getGia());
             ps.setInt(7, sach.getSoLuong());
             ps.setString(8, sach.getMoTa());
-            ps.setString(9, sach.getAnh());
-            ps.setInt(10, sach.getNamXuatBan());
+            ps.setInt(9, sach.getNamXuatBan());
+            ps.setString(10, sach.getAnh());
             ps.setInt(11, sach.getMaSach());
             result = ps.executeUpdate() > 0;
         } catch (Exception e) {
@@ -239,7 +239,7 @@ public class Sach_DAO {
         try {
             xuLyDB = new dangNhapDatabase();
             connection = xuLyDB.openConnection();
-            String sql = "SELECT * FROM sach WHERE CAST(ma_sach AS CHAR) " + " LIKE '%" + maSach + "%'";
+            String sql = "SELECT * FROM sach WHERE CAST(masach AS CHAR) " + " LIKE '%" + maSach + "%'";
             ps = connection.prepareStatement(sql);
             rs = ps.executeQuery();
             while(rs.next()) {
