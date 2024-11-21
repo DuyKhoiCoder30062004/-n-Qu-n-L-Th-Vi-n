@@ -14,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -38,7 +39,8 @@ public class PhieuMuon_BUS {
     private ArrayList<PhieuMuon_DTO> listPM;
     private PhieuMuon_DAO pm_DAO = new PhieuMuon_DAO();
     private CTPM_BUS ctpm_BUS = new CTPM_BUS();
-
+    private DocGiaBUS dg_BUS=new DocGiaBUS();
+    private Nhanvien_BUS nv_BUS=new Nhanvien_BUS();
     public ArrayList<PhieuMuon_DTO> getList() {
         listPM = pm_DAO.getList();
         return listPM;
@@ -69,7 +71,7 @@ public class PhieuMuon_BUS {
         StringBuilder jsonResult = new StringBuilder("["); // Sử dụng StringBuilder để dễ dàng quản lý chuỗi
         StringBuilder jsonRsCTPM = new StringBuilder("[");
         boolean firstItem = true;
-        boolean fItemCTPM=true;
+        boolean fItemCTPM = true;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         for (PhieuMuon_DTO pm : pm_DAO.getList()) {
             // Kiểm tra điều kiện để thêm vào JSON
@@ -89,27 +91,26 @@ public class PhieuMuon_BUS {
                         + "\"tongSL\": \"" + pm.getTongSL() + "\""
                         + "}");
                 firstItem = false; // Đánh dấu rằng phần tử đầu tiên đã được thêm
-                ArrayList<CTPM_DTO> listCTPM=ctpm_BUS.searchByMaPM(pm.getMaPM());
-                for (CTPM_DTO ctpm: listCTPM)
-                {
-                    if(!fItemCTPM){
+                ArrayList<CTPM_DTO> listCTPM = ctpm_BUS.searchByMaPM(pm.getMaPM());
+                for (CTPM_DTO ctpm : listCTPM) {
+                    if (!fItemCTPM) {
                         jsonRsCTPM.append(",");
                     }
                     jsonRsCTPM.append("{"
-                        + "\"maPM\": \"" + ctpm.getMaPM() + "\","
-                        + "\"maSach\": \"" + ctpm.getMaSach() + "\","
-                        + "\"soLuong\": \"" + ctpm.getSoLuong() + "\","
-                        + "\"trangThai\": \"" + ctpm.getTrangthai() + "\""
-                        + "}");
-                    fItemCTPM = false; 
+                            + "\"maPM\": \"" + ctpm.getMaPM() + "\","
+                            + "\"maSach\": \"" + ctpm.getMaSach() + "\","
+                            + "\"soLuong\": \"" + ctpm.getSoLuong() + "\","
+                            + "\"trangThai\": \"" + ctpm.getTrangthai() + "\""
+                            + "}");
+                    fItemCTPM = false;
                 }
             }
         }
-        jsonResult.append("]"); 
+        jsonResult.append("]");
         jsonRsCTPM.append("]");
-        arrayrs[0]=jsonResult;
-        arrayrs[1]=jsonRsCTPM;
-        return arrayrs; 
+        arrayrs[0] = jsonResult;
+        arrayrs[1] = jsonRsCTPM;
+        return arrayrs;
     }
 
     public String printPM(int mapm) {
@@ -165,62 +166,86 @@ public class PhieuMuon_BUS {
         return pm;
     }
 
-    public boolean checkInfor(String maPhieu, String maKhach, String maNV, String ngayLap, String hanChot, ArrayList<String> listMaSach, ArrayList<String> listSL, ArrayList listTrangThai) {
+    public boolean checkInfor(String maPhieu, String maKhach, String maNV, String ngayLap, String hanChot, 
+            String listMaSach,String listSL, String listTrangThai) {
+        try
+        {
+            LocalDate.parse(ngayLap);
+            LocalDate.parse(hanChot);
+        }catch (DateTimeParseException e) {
+            return false;  // Nếu không thể chuyển thành ngày hợp lệ
+        }
+
         if (maPhieu.isEmpty() || maKhach.isEmpty() || maNV.isEmpty() || ngayLap.isEmpty() || hanChot.isEmpty()
-                || listMaSach.isEmpty() || listSL.isEmpty() || listTrangThai.isEmpty()) {
+                || listMaSach.isEmpty() || listSL.isEmpty() || listTrangThai.isEmpty()
+                ||pm_DAO.searchByMaPM(Integer.parseInt(maPhieu))!=null || dg_BUS.findDocGiaByMaKhach(Integer.parseInt(maKhach))==null
+                ||nv_BUS.timKiemNhanVien(maNV)==null || LocalDate.parse(ngayLap).isAfter(LocalDate.parse(hanChot))) 
+        {
             return false;
         }
         try {
             Integer.parseInt(maPhieu);
             Integer.parseInt(maKhach);
             Integer.parseInt(maNV);
-            for (int i = 0; i < listMaSach.size(); i++) {
-                Integer.parseInt(listMaSach.get(i));
-                Integer.parseInt(listSL.get(i));
+            String[] maSachArray = listMaSach.split(",");
+            String[] slArray = listSL.split(",");
+            if(maSachArray.length!=slArray.length)
+                return false;
+            for (int i = 0; i < maSachArray.length; i++) {
+                Integer.parseInt(maSachArray[i]);
+                Integer.parseInt(slArray[i]);
             }
         } catch (NumberFormatException e) {
             return false;
         }
         return true;
     }
-    public boolean importExcel(String fileName)
-    {
+
+    public boolean importExcel(String fileName) {
         String filePath = "C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/" + fileName;
-        try (FileInputStream file = new FileInputStream(filePath);
-         XSSFWorkbook workbook = new XSSFWorkbook(file)) {
+        try (FileInputStream file = new FileInputStream(filePath); XSSFWorkbook workbook = new XSSFWorkbook(file)) {
             XSSFSheet sheet = workbook.getSheetAt(0);
             Iterator<Row> rowIterator = sheet.iterator();
             // Bỏ qua dòng đầu tiên (tiêu đề)
-            if (rowIterator.hasNext()) rowIterator.next();
+            if (rowIterator.hasNext()) {
+                rowIterator.next();
+            }
             while (rowIterator.hasNext()) {
                 Row row = rowIterator.next();
-                PhieuMuon_DTO pm=new PhieuMuon_DTO();
+                if(!checkInfor(row.getCell(0).getStringCellValue(),row.getCell(1).getStringCellValue(),row.getCell(2).getStringCellValue(),
+                    row.getCell(3).getStringCellValue(),row.getCell(4).getStringCellValue(),row.getCell(5).getStringCellValue(),
+                    row.getCell(6).getStringCellValue(),row.getCell(7).getStringCellValue()))
+                {
+                    continue;
+                }
+                PhieuMuon_DTO pm = new PhieuMuon_DTO();
                 pm.setMaPM(Integer.parseInt(row.getCell(0).getStringCellValue()));
                 pm.setMaKhach(Integer.parseInt(row.getCell(1).getStringCellValue()));
                 pm.setMaNV(Integer.parseInt(row.getCell(2).getStringCellValue()));
                 pm.setNgayLap(LocalDate.parse(row.getCell(3).getStringCellValue()));
                 pm.setHanChot(LocalDate.parse(row.getCell(4).getStringCellValue()));
-                String[] listMS=row.getCell(5).getStringCellValue().split(",");
-                String[] listSL=row.getCell(6).getStringCellValue().split(",");
-                String[] listTT=row.getCell(7).getStringCellValue().split(",");
-                for (int i=0;i<listMS.length;i++)
-                {
-                    CTPM_DTO ct=new CTPM_DTO();
+                String[] listMS = row.getCell(5).getStringCellValue().split(",");
+                String[] listSL = row.getCell(6).getStringCellValue().split(",");
+                String[] listTT = row.getCell(7).getStringCellValue().split(",");
+                int tongsl=0;
+                for (int i = 0; i < listMS.length; i++) {
+                    CTPM_DTO ct = new CTPM_DTO();
                     ct.setMaPM(Integer.parseInt(row.getCell(1).getStringCellValue()));
                     ct.setMaSach(Integer.parseInt(listMS[i]));
                     ct.setSoLuong(Integer.parseInt(listSL[i]));
+                    tongsl+=ct.getSoLuong();
                     ct.setTrangthai(listTT[i]);
                     ctpm_BUS.addCTPM(ct);
                 }
-                pm.setTongSL(Integer.parseInt(row.getCell(8).getStringCellValue()));
+                pm.setTongSL(tongsl);
                 pm_DAO.addPM(pm);
             }
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
         return true;
-        
+
     }
 
     public boolean exportExcel(String fileName) {
@@ -288,7 +313,7 @@ public class PhieuMuon_BUS {
 
             Cell cellMS = row.createCell(5);
             cellMS.setCellValue(listMS);
-            cellMS.setCellStyle(cellStyle); 
+            cellMS.setCellStyle(cellStyle);
 
             Cell cellSL = row.createCell(6);
             cellSL.setCellValue(listSL);
@@ -297,7 +322,7 @@ public class PhieuMuon_BUS {
             Cell cellTT = row.createCell(7);
             cellTT.setCellValue(listTT);
             cellTT.setCellStyle(cellStyle);
- 
+
             row.createCell(8).setCellValue(phieuMuon.getTongSL());
             excelSheet.autoSizeColumn(i);
 

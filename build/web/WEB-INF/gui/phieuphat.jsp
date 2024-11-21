@@ -11,7 +11,7 @@
 <%
     Nhanvien_DTO nv = (Nhanvien_DTO) session.getAttribute("nv");
     String tasks = (String) session.getAttribute("tasks");
-    if (nv == null) {
+    if (nv == null || nv.getChucVu().equals("admin")) {
         response.sendRedirect("/cnpm/login");
         return;
     }
@@ -272,8 +272,8 @@
             <div id="menu">
                 <div class="conponentMenu" id="iconAndName" >
                     <img src="img/account.svg" alt="icon">
-                    ${nv.ho}  ${nv.ten}<br>
-                    ${nv.chucvu}
+                    ${nv.getHo()}  ${nv.getTen()}<br>
+                    ${nv.getChucVu()} 
                 </div>
                 <button id="btnSach" class="conponentMenu" value="sách" onclick="reDirect(this,'/cnpm/sach')">
                     <img src="img/sach.jpg" alt="icon"> Sách
@@ -340,7 +340,7 @@
                             <div class="input-group">
                                 <img class="iconChucNang" id="iconThemLoi" style="margin-top:6px;"  src="img/add.svg"
                                      title="Thêm Lỗi" onclick="sendDataLoi('addLoi')">
-                                <img class="iconChucNang" id="iconXoaLoi" style="margin-top:6px;" src="img/delete.svg" title="Xóa Lỗi" onclick="sendDataLoi('deleteLoi')">
+                                <img class="iconChucNang" id="iconXoaLoi" style="margin-top:6px;" src="img/delete.svg" title="Xóa Lỗi" >
                                 <img class="iconChucNang" id="iconSuaLoi" style="margin-top:6px;" src="img/edit.svg" title="Sửa lỗi" onclick="sendDataLoi('updateLoi')">
                                 <img class="iconChucNang" id="iconClearLoi" style="margin-left: 33%;margin-top:6px;"
                                      onclick="clearInputLoi()" src="img/clear.png" title="Clear input Lỗi">
@@ -397,32 +397,32 @@
                                 <label class="nameFeature" style="margin-right: 8px;">Mã sách</label>
                                 <input type="text" id="txtMaSachCTPP" placeholder="Nhập mã sách">
                                 <img src="img/add.svg" title="mở table Sách" onclick="hienThiSach()"
-                                     style="cursor: pointer;width: 15px;height:auto;" />
+                                     style="cursor: pointer;width: 15px;height:auto;" readonly />
                             </div>
                             <div class="input-group">
                                 <label class="nameFeature" style="margin-right: 7px;">Mã vạch</label>
                                 <input type="text" id="txtMaVachCTPP" placeholder="Nhập mã vạch">
                                 <img src="img/add.svg" title="mở table CT Sách" onclick="hienThiCTSach()"
-                                     style="cursor: pointer;width: 15px;height:auto;" />
+                                     style="cursor: pointer;width: 15px;height:auto;" readonly/>
                             </div>
                             <div class="input-group">
                                 <label class="nameFeature" style="margin-right: 5px;">Ngày lập</label>
-                                <input type="date" id="txtNgayLapCTPP">
+                                <input type="date" id="txtNgayLapCTPP"> 
                             </div>
                             <div class="input-group">
                                 <label class="nameFeature" style="margin-right: 29px;">Lí do</label>
                                 <input type="text" id="txtLiDoCTPP" placeholder="Chọn lí do" readonly>
                                 <img style="width: 15px; height: auto; " id="iconThemLoi" onclick="thongBaoLayLoi()"
-                                     src="img/add.svg" title="Lỗi">
+                                     src="img/add.svg" title="Lỗi" >
                             </div>
                             <div class="input-group">
                                 <label class="nameFeature" style="margin-right: 34px;">Tiền</label>
-                                <input type="text" id="txtTienCTPP" value="0" readonly style="margin-bottom:6px;">
+                                <input type="text" id="txtTienCTPP" value="0" readonly style="margin-bottom:6px;" readonly>
                             </div>
                             <div class="input-group">
                                 <img class="iconChucNang" style="margin-left: 25.2%;" id="iconThemCTPP"
                                      src="img/add.svg" title="Thêm CTPP" onclick="sendDataCTPP('addCTPP')">
-                                <img class="iconChucNang" id="iconXoaCTPP" src="img/delete.svg" title="Xóa CTPP" onclick="sendDataCTPP('deleteCTPP')">
+                                <img class="iconChucNang" id="iconXoaCTPP" src="img/delete.svg" title="Xóa CTPP" >
                                 <img class="iconChucNang" id="iconSuaCTPP" src="img/edit.svg" title="Sửa CTPP" onclick="sendDataCTPP('updateCTPP')">
                                 <img class="iconChucNang" id="iconClearCTPP" onclick="clearInputCTPP()"
                                      src="img/clear.png" title="Clear input CTPP">
@@ -501,7 +501,7 @@
                         </div>
                         <div class="input-groupPP">
                             <label class="nameFeature">Mã NV</label>
-                            <input type="text" id="txtMaNVPP" >
+                            <input type="text" id="txtMaNVPP" value="${nv.getMaNV()}" readonly >
                         </div>
                         <div class="input-groupPP" style="margin-right: 1%;">
                             <label class="nameFeature">Tổng tiền</label>
@@ -511,7 +511,7 @@
                             <img class="iconChucNang" id="iconThemPP"  src="img/add.svg"
                                  title="Thêm PP" onclick="sendDataPP('addPP')">
                             <img class="iconChucNang" id="iconXoaPP"  src="img/delete.svg"
-                                 title="Xóa PP" onclick="sendDataPP('deletePP')">
+                                 title="Xóa PP" >
                             <img class="iconChucNang" id="iconSuaPP" src="img/edit.svg"
                                  title="Sửa PP" onclick="sendDataPP('updatePP')">
                             <img class="iconChucNang" id="iconClearPP" onclick="clearInputPP()"
@@ -629,13 +629,17 @@
                             <tr>
                                 <th>Mã vạch</th>
                                 <th>Mã sách</th>
+                                <th>Tình trạng</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1234</td>
-                                <td></td>
-                            </tr>
+                             <c:forEach var="pm" items="${requestScope.listCTS}">
+                                <tr>
+                                    <td>${pm.maVach}</td>
+                                    <td>${pm.maSach}</td>
+                                    <td>${pm.tinhTrangSach}</td>
+                                </tr>
+                            </c:forEach>
                         </tbody>
                     </table>
                 </div>
@@ -681,6 +685,7 @@
                     function clickLoi(row) {
                         const cells = row.getElementsByTagName('td');
                         document.getElementById('txtLoi').value = cells[0].innerText;
+                        document.getElementById('txtLoi').readOnly = true;
                         document.getElementById('txtPhanTramTien').value = cells[1].innerText;
                         let currentValue = document.getElementById('txtLiDoCTPP').value;
                         if (currentValue.includes(cells[0].innerText)) {
@@ -697,6 +702,7 @@
                     function clickCTPP(row) {
                         const cells = row.getElementsByTagName('td');
                         document.getElementById('txtMaPhieuCTPP').value = cells[0].innerText;
+                        document.getElementById('txtMaPhieuCTPP').readOnly = true;
                         document.getElementById('txtMaSachCTPP').value = cells[1].innerText;
                         document.getElementById('txtMaVachCTPP').value = cells[2].innerText;
                         document.getElementById('txtNgayLapCTPP').value = cells[3].innerText;
@@ -711,8 +717,8 @@
                     function clickPP(row) {
                         const cells = row.getElementsByTagName('td');
                         document.getElementById('txtMaPhieuPP').value = cells[0].innerText;
+                        document.getElementById('txtMaPhieuPP').readOnly = true;
                         document.getElementById('txtMaPTPP').value = cells[1].innerText;
-                        document.getElementById('txtMaNVPP').value = cells[2].innerText;
                         document.getElementById('txtTongTienPP').value = cells[3].innerText;
 
 
@@ -915,6 +921,7 @@
                             maSach: document.getElementById('txtMaSachCTPP').value,
                             maVach: document.getElementById('txtMaVachCTPP').value,
                             ngayLap: document.getElementById('txtNgayLapCTPP').value,
+                            maNV: document.getElementById('txtMaNVPP').value,
                             liDo: document.getElementById('txtLiDoCTPP').value,
                             tien: document.getElementById('txtTienCTPP').value,
                             optionSearch: document.getElementById('comBoBoxSearchCTPP').value,
@@ -978,6 +985,37 @@
                             tableBody.appendChild(row);
                         });
                     }
+                    //hiện thị xác nhận xóa lỗi
+                    document.getElementById('iconXoaLoi').addEventListener('click', function(event) {
+                        // Hiển thị hộp thoại xác nhận
+                        const confirmDelete = confirm("Bạn có chắc muốn xóa lỗi này  không?");
+                        if (!confirmDelete) {
+                            event.preventDefault();
+                        } else {
+                            sendDataLoi('deleteLoi');
+                        }
+                    });
+                    //hiện thị xác nhận xóa chi tiết phiếu phạt
+                    document.getElementById('iconXoaCTPP').addEventListener('click', function(event) {
+                        // Hiển thị hộp thoại xác nhận
+                        const confirmDelete = confirm("Bạn có chắc muốn xóa chi tiết phiếu phạt này không?");
+                        if (!confirmDelete) {
+                            event.preventDefault();
+                        } else {
+                            sendDataCTPP('deleteCTPP');
+                        }
+                    });
+                    //hiện thị xác nhận xóa phiếu phạt
+                    document.getElementById('iconXoaPP').addEventListener('click', function(event) {
+                        // Hiển thị hộp thoại xác nhận
+                        const confirmDelete = confirm("Bạn có chắc muốn xóa phiếu phạt này không?");
+                        if (!confirmDelete) {
+                            event.preventDefault();
+                        } else {
+                            sendDataPP('deletePP');
+                        }
+                    });
+                    //hiện thị thông báo lấy lỗi
                     function thongBaoLayLoi() {
                         alert("Bạn thêm lỗi bằng cách click vào table Lỗi!");
                     }

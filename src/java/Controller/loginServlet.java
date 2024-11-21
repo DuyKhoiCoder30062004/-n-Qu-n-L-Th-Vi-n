@@ -6,6 +6,7 @@ package Controller;
 
 import BUS.Nhanvien_BUS;
 import BUS.PhanQuyen_BUS;
+import DTO.Nhanvien_DTO;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -69,30 +70,35 @@ public class loginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Trả về JSON bao gồm thông báo và URL để điều hướng
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+        String actor= request.getParameter("actor");
         String username = request.getParameter("username");
         String pass = request.getParameter("pass");
         if (!check(request, response, username, pass)) {
             return;
         }
-
-
+        //mặc định người thông tin tài khoản là độc giả
+        Nhanvien_DTO nv=new Nhanvien_DTO();
+        nv.setChucVu("Độc giả");
+        String redirectUrl="/cnpm/sach";
+        if(actor.equals("NV"))
+        {
+            nv=nv_BUS.timKiemNhanVien(username).get(0);
+            if (nv_BUS.timKiemNhanVien(username).get(0).getChucVu().equals("admin")) {
+                redirectUrl = "/cnpm/phanquyen";
+            } else {
+                redirectUrl = "/cnpm/phieumuon";
+            }   
+        }
+        //System.out.print("nv" + nv_BUS.timKiemNhanVien(username).get(0).getMaNV());
         HttpSession session = request.getSession();
-        session.setAttribute("nv", nv_BUS.timKiemNhanVien(username).get(0)); 
-        //session.setAttribute("tasks",pq_BUS.searchByMaNV(Integer.parseInt(username)).getTacVu()); 
+        session.setAttribute("nv",nv);  
         String tasks=String.join(",",pq_BUS.searchByMaNV(Integer.parseInt(username)).getTacVu());
         session.setAttribute("tasks",tasks); 
-        // Kiểm tra quyền để chuyển hướng
-        String redirectUrl;
-        if (nv_BUS.timKiemNhanVien(username).get(0).getChucvu().equals("admin")) {
-            redirectUrl = "/cnpm/phanquyen";
-        } else {
-            redirectUrl = "/cnpm/phieumuon";
-        }
-
-        // Trả về JSON bao gồm thông báo và URL để điều hướng
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
         response.getWriter().write("{\"thongbao\": \"Đăng nhập thành công\", \"hopLe\": true, \"redirectUrl\": \"" + redirectUrl + "\"}");
+       
     }
 
     @Override
