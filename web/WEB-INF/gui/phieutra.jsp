@@ -358,9 +358,9 @@
                     </div><br>
                     <div class="input-group" style="margin-top: 10px;">
                         <select id="comBoBoxSearch" name="options">
-                            <option value="Mã phi?u">Mã phi?u</option>
+                            <option value="Mã phi?u">Mã phi?uu</option>
                             <option value="Mã NV">Mã NV</option>
-                            <option value="Ngày l?p">Ngày l?p</option>
+                            <option value="Ngày l?p">Ngày tr?</option>
                         </select>
                         <input type="text" id="txtSearchPT" placeholder="Nh?p thông tin">
                         <img class="iconChucNang" id="iconSearch" title="Tìm ki?m PT" style="margin-left: 0px;" src="img/search1.png" alt="icon"
@@ -380,8 +380,7 @@
                             <tr>
                                 <th>Mã phi?u</th>
                                 <th>Mã NV</th>
-                                <th>Ngày l?p</th>
-                                <th>H?n chót</th>
+                                <th>Ngày tr?</th>
                                 <th>T?ng s? l??ng</th>
                             </tr>
                         </thead>
