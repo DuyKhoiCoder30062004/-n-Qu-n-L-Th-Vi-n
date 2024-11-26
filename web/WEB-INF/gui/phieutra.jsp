@@ -388,10 +388,8 @@
                             <c:forEach var="pm" items="${requestScope.listPT}">
                                 <tr>
                                     <td>${pm.maPT}</td>
-                                    <td>${pm.maKhach}</td>
                                     <td>${pm.maNV}</td>
                                     <td>${pm.ngayTra}</td>
-                                    <td>${pm.hanChot}</td>
                                     <td>${pm.tongSL}</td>
                                 </tr>
                             </c:forEach>
@@ -399,8 +397,6 @@
                             for (int i = 1; i <= 10; i++) {
                             %>
                             <tr>
-                                <td></td>
-                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -582,7 +578,6 @@
                 const cells = row.getElementsByTagName('td');
                 document.getElementById('txtMaPhieu').value = cells[0].innerText;
                 document.getElementById('txtMaPhieu').readOnly = true;
-                document.getElementById('txtMaKhach').value = cells[1].innerText;
                 const dateValueNN = cells[3].innerText;
                 document.getElementById('txtNgayTra').value = dateValueNN;
 
@@ -632,7 +627,6 @@
                         document.getElementById('txtMaKhach').value = "";
                         document.getElementById('txtMaNV').value = "";
                         document.getElementById('txtNgayTra').value = formatDate(new Date());
-                        document.getElementById('txtHanChot').value = formatDate(currentDate);
                         document.getElementById('txtTongSL').value = "0";
                     }
                     function clearInputCTPT() {
