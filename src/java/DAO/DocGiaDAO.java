@@ -128,12 +128,13 @@ public class DocGiaDAO {
     }
 
     public DocGiaDTO findDocGiaByMaKhach(int maKhach) throws SQLException {
-        String query = "SELECT * FROM DocGia WHERE MaKhach = ?";
-        PreparedStatement statement = conn.prepareStatement(query);
-        statement.setInt(1, maKhach);
-        ResultSet resultSet = statement.executeQuery();
-
-        if (resultSet.next()) {
+        String query = "SELECT * FROM DocGia WHERE madg = ?";
+        xuLyDB = new dangNhapDatabase();
+        conn = xuLyDB.openConnection();
+        ps = conn.prepareStatement(query);
+        ps.setInt(1,maKhach);
+        rs = ps.executeQuery();
+        if (rs.next()) {
             DocGiaDTO docGia = new DocGiaDTO();
             docGia.setMaDG(Integer.parseInt(rs.getString(1)));
             docGia.setHoDG(rs.getString(2));

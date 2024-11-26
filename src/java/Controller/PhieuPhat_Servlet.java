@@ -73,18 +73,24 @@ public class PhieuPhat_Servlet extends HttpServlet {
     {
         for(CTPT_DTO i:ctpt_BUS.searchByMaPT(maPT))
         {
-            if(i.getMaVachLoi().length()>0)
+            if(i.getMaVachLoi()!=null)
                 return true;
         }
         return false;
     }
-    
+    private boolean checkMaPT_CuaPP(int maPT)
+    {
+        for(PhieuPhat_DTO i:pp_BUS.getList())
+            if(i.getMaPT()==maPT)
+                return true;
+        return false;
+    }
     private ArrayList<PhieuTra_DTO> listPT_BiPhat()
     {
         ArrayList<PhieuTra_DTO> listPT=new ArrayList<PhieuTra_DTO>();
         for(PhieuTra_DTO i:pt_BUS.getListPhieuTra())
         {
-            if(checkCoLoi(i.getMaPT())==true)
+            if(checkCoLoi(i.getMaPT()) && !checkMaPT_CuaPP(i.getMaPT()) )
             {
                 listPT.add(i);
             }
@@ -100,7 +106,6 @@ public class PhieuPhat_Servlet extends HttpServlet {
         ArrayList<PhieuTra_DTO> listPT=listPT_BiPhat();
         ArrayList<Sach_DTO> listSach=sach_BUS.getListSach();
         ArrayList<CTSach_DTO> listCTS=cts_BUS.getList();
-        System.out.print("list CTS"+ listCTS);
         request.setAttribute("listLoi", listLoi);
         request.setAttribute("listCTPP", listCTPP);
         request.setAttribute("listPP", listPP);
@@ -128,14 +133,7 @@ public class PhieuPhat_Servlet extends HttpServlet {
             response.getWriter().write("{\"thongbao\": \"Vui lòng chọn mã phiếu trả\", \"hopLe\": false}");
             return false;
         }
-        for(PhieuPhat_DTO i:pp_BUS.getList())
-        {
-            if(i.getMaPT()==Integer.parseInt(maPT))
-            {
-                response.getWriter().write("{\"thongbao\": \"Mã phiếu trả này đã có phiếu phạt vui lòng chỉnh sửa ở phiếu phạt này\", \"hopLe\": false}");
-                return false;
-            }
-        }
+        
         return true;
     }
     private boolean checkDelete(HttpServletRequest request, HttpServletResponse response,

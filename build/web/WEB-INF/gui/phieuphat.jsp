@@ -411,7 +411,7 @@
                             </div>
                             <div class="input-group">
                                 <label class="nameFeature" style="margin-right: 29px;">Lí do</label>
-                                <input type="text" id="txtLiDoCTPP" placeholder="Chọn lí do" readonly>
+                                <input type="text" id="txtLiDoCTPP" placeholder="Chọn lí do">
                                 <img style="width: 15px; height: auto; " id="iconThemLoi" onclick="thongBaoLayLoi()"
                                      src="img/add.svg" title="Lỗi" >
                             </div>
@@ -430,7 +430,7 @@
                         </div>
                         <div id="divtableCTPP" style="width: 75%; margin-right: 2%;">
                             <div style="display: flex; align-items: center;justify-content: flex-start;">
-                                <select id="comBoBoxSearchCTPP" name="options">
+                                <select id="comBoBoxSearchCTPP" name="options" style="margin-right: 5px">
                                     <option value="Mã phiếu">Mã phiếu</option>
                                     <option value="Mã sách">Mã sách</option>
                                     <option value="Mã vạch">Mã Vạch</option>
@@ -647,7 +647,7 @@
                 <div class="divTT" id="divtablePT" onclick="showListAllPT()">
                     <img src="img/cancel.svg" alt="Đóng table" onclick="dongTBTT()"
                          style="cursor: pointer;width: 20px;height:auto;margin-left: 97%;" />
-                    <h3 style="text-align: center;"> Ban chọn mã phiếu trả ở đây!</h3>
+                    <h3 style="text-align: center;"> Những mã phiếu trả có lỗi chưa có phiếu phạt mời bạn chọn!</h3>
                     <div style="margin-left: 20px;">
                         <select id="comBoBoxSearchPT" name="options">
                             <option value="Mã phiếu trả">Mã phiếu trả</option>
@@ -705,6 +705,7 @@
                         document.getElementById('txtMaPhieuCTPP').readOnly = true;
                         document.getElementById('txtMaSachCTPP').value = cells[1].innerText;
                         document.getElementById('txtMaVachCTPP').value = cells[2].innerText;
+                        document.getElementById('txtMaVachCTPP').readOnly = true;
                         document.getElementById('txtNgayLapCTPP').value = cells[3].innerText;
                         document.getElementById('txtLiDoCTPP').value = cells[4].innerText;
                         document.getElementById('txtTienCTPP').value = cells[5].innerText;
@@ -727,19 +728,20 @@
                     rowsPP.forEach(row => {
                         row.addEventListener('click', () => clickPP(row));
                     });
-                    function formatDate(date) {
-                        const year = date.getFullYear();
-                        const month = String(date.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
-                        const day = String(date.getDate()).padStart(2, '0');
-                        return `${year}-${month}-${day}`;
-                    }
-
-                    // Lấy ngày hiện tại và gán vào input
-                    document.getElementById('txtNgayLapCTPP').value = formatDate(new Date());
+//                    function formatDate(date) {
+//                        const year = date.getFullYear();
+//                        const month = String(date.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
+//                        const day = String(date.getDate()).padStart(2, '0');
+//                        return `${year}-${month}-${day}`;
+//                    }
+//
+//                    // Lấy ngày hiện tại và gán vào input
+//                    document.getElementById('txtNgayLapCTPP').value = formatDate(new Date());
 
                     /*clear dữ liệu*/
                     function clearInputLoi() {
                         document.getElementById('txtLoi').value = "";
+                        document.getElementById('txtLoi').readOnly = false;
                         document.getElementById('txtPhanTramTien').value = "";
                     }
 
@@ -750,9 +752,12 @@
                         document.getElementById('txtNgayLapCTPP').value = formatDate(new Date());
                         document.getElementById('txtLiDoCTPP').value = "";
                         document.getElementById('txtTienCTPP').value = "0";
+                        document.getElementById('txtMaPhieuCTPP').readOnly = false;
+                        document.getElementById('txtMaVachCTPP').readOnly = false;
                     }
                     function clearInputPP() {
                         document.getElementById('txtMaPhieuPP').value = "";
+                        document.getElementById('txtMaPhieuPP').readOnly = false;
                         document.getElementById('txtMaPTPP').value = "";
                         document.getElementById('txtMaNVPP').value = "";
                         document.getElementById('txtTongTienPP').value = "0";

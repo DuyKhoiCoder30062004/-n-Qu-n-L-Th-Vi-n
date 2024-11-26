@@ -239,7 +239,7 @@ public class Sach_DAO {
         try {
             xuLyDB = new dangNhapDatabase();
             connection = xuLyDB.openConnection();
-            String sql = "SELECT * FROM sach WHERE CAST(ma_sach AS CHAR) " + " LIKE '%" + maSach + "%'";
+            String sql = "SELECT * FROM sach WHERE CAST(masach AS CHAR) " + " LIKE '%" + maSach + "%'";
             ps = connection.prepareStatement(sql);
             rs = ps.executeQuery();
             while(rs.next()) {

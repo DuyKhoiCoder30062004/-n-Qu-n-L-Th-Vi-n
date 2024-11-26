@@ -12,6 +12,7 @@ import BUS.PhieuPhat_BUS;
 import BUS.PhieuTra_BUS;
 import BUS.Sach_BUS;
 import DTO.CTPP_DTO;
+import DTO.CTPT_DTO;
 import DTO.CTSach_DTO;
 import DTO.Loi_DTO;
 import DTO.PhieuPhat_DTO;
@@ -45,14 +46,41 @@ public class Loi_Servlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
     }
-
+    private boolean checkCoLoi(int maPT)
+    {
+        for(CTPT_DTO i:ctpt_BUS.searchByMaPT(maPT))
+        {
+            if(i.getMaVachLoi()!=null)
+                return true;
+        }
+        return false;
+    }
+    private boolean checkMaPT_CuaPP(int maPT)
+    {
+        for(PhieuPhat_DTO i:pp_BUS.getList())
+            if(i.getMaPT()==maPT)
+                return true;
+        return false;
+    }
+    private ArrayList<PhieuTra_DTO> listPT_BiPhat()
+    {
+        ArrayList<PhieuTra_DTO> listPT=new ArrayList<PhieuTra_DTO>();
+        for(PhieuTra_DTO i:pt_BUS.getListPhieuTra())
+        {
+            if(checkCoLoi(i.getMaPT()) && !checkMaPT_CuaPP(i.getMaPT()) )
+            {
+                listPT.add(i);
+            }
+        }
+        return listPT;
+    }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         ArrayList<PhieuPhat_DTO> listPP = pp_BUS.getList();
         ArrayList<CTPP_DTO> listCTPP = ctpp_BUS.getList();
         ArrayList<Loi_DTO> listLoi = loi_BUS.getList();
-        ArrayList<PhieuTra_DTO> listPT=pt_BUS.getListPhieuTra();
+        ArrayList<PhieuTra_DTO> listPT=listPT_BiPhat();
         ArrayList<Sach_DTO> listSach=sach_BUS.getListSach();
         ArrayList<CTSach_DTO> listCTS=cts_BUS.getList();
         System.out.print("list CTS"+ listCTS);
@@ -119,10 +147,13 @@ public class Loi_Servlet extends HttpServlet {
                 if (!checkInfor(request, response, tenLoi, phanTramTien)) {
                     return;
                 }
+                if (loi_BUS.searchByTenLoi(tenLoi) == null) {
+                    response.getWriter().write("{\"thongbao\": \"Lỗi này chưa có trong hệ thống không thể sửa vui lòng kiểm tra lại tên lỗi\", \"hopLe\": false}");
+                    return;
+                }
                 Loi_DTO loiup = new Loi_DTO();
                 loiup.setTenLoi(tenLoi);
                 loiup.setPhamTramTien(Float.parseFloat(phanTramTien));
-                System.out.println("phần trăm tiền"+ loiup.getPhamTramTien());
                 if (loi_BUS.updateLoi(loiup)) {
                     response.getWriter().write("{\"thongbao\": \"Sửa lỗi thành công\", \"hopLe\": true}");
                 } else {

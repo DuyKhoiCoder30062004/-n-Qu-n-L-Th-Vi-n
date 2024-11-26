@@ -82,7 +82,6 @@ public class Loi_DAO {
         try {
             dnDB = new dangNhapDatabase();
             connection = dnDB.openConnection();
-            st = connection.createStatement();
             String qry = "Update loi Set ";
             qry += "phantramtien=" + loi.getPhamTramTien() + " WHERE tenloi='" + loi.getTenLoi() + "'";
             st = connection.createStatement();

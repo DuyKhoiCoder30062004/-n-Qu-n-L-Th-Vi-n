@@ -4,22 +4,12 @@
 <%
     Nhanvien_DTO nv = (Nhanvien_DTO) session.getAttribute("nv");
     String tasks = (String) session.getAttribute("tasks");
-//    ArrayList<String> tasks = (ArrayList<String>) session.getAttribute("tasks");
-//    StringBuilder jsonString = new StringBuilder();
-//    jsonString.append("[");
-//
-//    for (int i = 0; i < tasks.size(); i++) {
-//        jsonString.append("\"").append(tasks.get(i)).append("\"");
-//        if (i < tasks.size() - 1) {
-//            jsonString.append(",");
-//        }
-//    }
-//    jsonString.append("]");
     if (nv == null || nv.getChucVu().equals("admin")) {
         response.sendRedirect("/cnpm/login");
         return;
     }
 %>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -469,7 +459,7 @@
                             </div>
                             <div class="input-groupCTPM">
                                 <label class="nameFeatureCTPM" style="margin-right: 5px;">Trạng thái</label>
-                                <input type="text" id="txtTrangThaiCTPM" value="Đang mượn" readonly>
+                                <input type="text" id="txtTrangThaiCTPM" value="đang mượn" readonly>
                             </div>
                             <div>
                                 <img class="iconChucNangCTPM" id="iconThemCTPM" style="margin-left: 24%;"
@@ -482,7 +472,7 @@
                         </div>
                         <div id="sectionTableCTPM">
                             <div class="input-groupCTPM">
-                                <select id="comBoBoxSearchCTPM" name="options">
+                                <select id="comBoBoxSearchCTPM" name="options" style="margin-left: 25px;" >
                                     <option value="Mã phiếu">Mã phiếu</option>
                                     <option value="Mã sách">Mã sách</option>
                                     <option value="Số lượng">Số lượng</option>

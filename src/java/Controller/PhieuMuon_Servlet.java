@@ -113,6 +113,11 @@ public class PhieuMuon_Servlet extends HttpServlet {
             response.getWriter().write("{\"thongbao\": \"Hạn chót không được để trống\", \"hopLe\": false}");
             return false;
         }
+        if(LocalDate.parse(ngayLap).isAfter(LocalDate.parse(hanChot)))
+        {
+            response.getWriter().write("{\"thongbao\": \"Vui lòng nhập lại ngày mượn phải trước ngày hạn chót\", \"hopLe\": false}");
+            return false;
+        }
         return true;
     }
 
@@ -178,9 +183,9 @@ public class PhieuMuon_Servlet extends HttpServlet {
                     return;
                 }
                 if (addPM(maPhieu, maKhach, maNV, ngayLap, hanChot)) {
-                    response.getWriter().write("{\"thongbao\": \"Thêm thành công\", \"hopLe\": true}");
+                    response.getWriter().write("{\"thongbao\": \"Thêm phiếu mượn thành công\", \"hopLe\": true}");
                 } else {
-                    response.getWriter().write("{\"thongbao\": \"Thêm thất bại\", \"hopLe\": false}");
+                    response.getWriter().write("{\"thongbao\": \"Thêm phiếu mượn thất bại\", \"hopLe\": false}");
                 }
                 break;
             case "edit":

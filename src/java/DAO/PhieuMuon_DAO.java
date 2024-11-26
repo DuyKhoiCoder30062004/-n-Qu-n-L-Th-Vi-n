@@ -107,7 +107,7 @@ public class PhieuMuon_DAO {
             dnDB = new dangNhapDatabase();
             conn = dnDB.openConnection();
             String qry = "update pheumuon set ";
-            qry += "makh=" + pm.getMaKhach() + ",manv=" + pm.getMaNV() + ",ngaylap='" + pm.getNgayLap() + "',hanchot='" + pm.getHanChot()+ "' where mapm=" + pm.getMaPM();
+            qry += "makh=" + pm.getMaKhach() + ",manv=" + pm.getMaNV() + ",ngaylap='" + java.sql.Date.valueOf(pm.getNgayLap()) + "',hanchot='" + java.sql.Date.valueOf(pm.getHanChot())+ "' where mapm=" + pm.getMaPM();
             st = conn.createStatement();
             st.executeUpdate(qry);
         } catch (Exception e) {

@@ -7,7 +7,10 @@ package BUS;
 import DAO.CTPM_DAO;
 import DAO.PhieuMuon_DAO;
 import DTO.CTPM_DTO;
+import DTO.DocGiaDTO;
+import DTO.Nhanvien_DTO;
 import DTO.PhieuMuon_DTO;
+import DTO.Sach_DTO;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -23,6 +26,7 @@ import javax.swing.JOptionPane;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -39,8 +43,10 @@ public class PhieuMuon_BUS {
     private ArrayList<PhieuMuon_DTO> listPM;
     private PhieuMuon_DAO pm_DAO = new PhieuMuon_DAO();
     private CTPM_BUS ctpm_BUS = new CTPM_BUS();
-    private DocGiaBUS dg_BUS=new DocGiaBUS();
-    private Nhanvien_BUS nv_BUS=new Nhanvien_BUS();
+    private DocGiaBUS dg_BUS = new DocGiaBUS();
+    private Nhanvien_BUS nv_BUS = new Nhanvien_BUS();
+    private Sach_BUS sach_BUS = new Sach_BUS();
+
     public ArrayList<PhieuMuon_DTO> getList() {
         listPM = pm_DAO.getList();
         return listPM;
@@ -113,28 +119,60 @@ public class PhieuMuon_BUS {
         return arrayrs;
     }
 
+    private Sach_DTO searchSach(int maSach) {
+        for (Sach_DTO i : sach_BUS.getListSach()) {
+            if (i.getMaSach() == maSach) {
+                return i;
+            }
+        }
+        return null;
+    }
+
+    private Nhanvien_DTO searchNV(int maNV) {
+        for (Nhanvien_DTO i : nv_BUS.getList()) {
+            if (i.getMaNV() == maNV) {
+                return i;
+            }
+        }
+        return null;
+    }
+
     public String printPM(int mapm) {
         // Khởi tạo chuỗi HTML cho phiếu mượn
-        String pm = "<h1 style='text-align:center;'>PHIẾU MƯỢN SÁCH TỪ THƯ VIÊN TRƯỜNG ĐẠI HỌC ABC</h1>";
+        String pm = "<h2 style='text-align:center;'>PHIẾU MƯỢN SÁCH TỪ THƯ VIÊN TRƯỜNG ĐẠI HỌC ABC</h2>";
 
         PhieuMuon_DTO phieu = pm_DAO.searchByMaPM(mapm);
-
-        // Kiểm tra xem phiếu có tồn tại không
         if (phieu == null) {
             return "<p>Không tìm thấy phiếu mượn.</p>";
         }
+        Nhanvien_DTO nv = searchNV(phieu.getMaNV());
+        DocGiaDTO dg = dg_BUS.findDocGiaByMaKhach(phieu.getMaKhach());
 
-        // Thêm thông tin vào chuỗi
-        pm += "Mã phiếu mượn: " + phieu.getMaPM() + "<br/>"
-                + "Mã nhân viên: " + phieu.getMaNV() + "  "
-                + "Tên nhân viên: " + "hii" + "<br/>" // Thêm tên nhân viên
-                + "Mã độc giả: " + phieu.getMaKhach() + "  "
-                + "Tên độc giả: " + "tạm" + "<br/>" // Thêm tên độc giả
-                + "SĐT độc giả: " + "000" + "<br/>" // Thêm số điện thoại độc giả
-                + "Ngày mượn: " + phieu.getNgayLap() + "  "
-                + "Ngày dự đoán trả: " + phieu.getHanChot() + "<br/>"
-                + "<div style='text-align:center;'>DANH SÁCH SÁCH ĐÃ MƯỢN</div><br/>";
-
+        // Kiểm tra null cho nhân viên và độc giả
+        if (nv == null || dg == null) {
+            return "<p>Không tìm thấy thông tin nhân viên hoặc độc giả.</p>";
+        }
+        pm += "<table style='width:100%; border-spacing:10px 5px;'>"
+                + "<tr>"
+                + "<td style='text-align:left; font-weight:bold;'>Mã phiếu mượn:</td>"
+                + "<td style='text-align:left;'>" + phieu.getMaPM() + "</td>"
+                + "</tr>"
+                + "<tr>"
+                + "<td style='text-align:left; font-weight:bold;'>Mã nhân viên:</td>"
+                + "<td style='text-align:left;'>" + phieu.getMaNV() + "</td>"
+                + "<td style='text-align:left; font-weight:bold;'>Họ & tên NV:</td>"
+                + "<td style='text-align:left;'>" + nv.getHo() + " " + nv.getTen() + "</td>"
+                + "</tr>"
+                + "<tr>"
+                + "<td style='text-align:left; font-weight:bold;'>Mã độc giả:</td>"
+                + "<td style='text-align:left;'>" + phieu.getMaKhach() + "</td>"
+                + "<td style='text-align:left; font-weight:bold;'>Họ & tên ĐG:</td>"
+                + "<td style='text-align:left;'>" + dg.getHoDG() + " " + dg.getTenDG() + "</td>"
+                + "<td style='text-align:left; font-weight:bold;'>SĐT:</td>"
+                + "<td style='text-align:left;'>" + dg.getSoDienThoai() + "</td>"
+                + "</tr>"
+                + "</table>"
+                + "<div style='text-align:center;margin-top:20px;'>DANH SÁCH SÁCH ĐÃ MƯỢN</div><br/>";
         // Tạo bảng sách mượn
         pm += "<table style='width:100%; border-collapse:collapse;'>"
                 + "<tr>"
@@ -148,104 +186,158 @@ public class PhieuMuon_BUS {
         // Duyệt danh sách chi tiết phiếu mượn
         if (listCTPM != null && listCTPM.size() > 0) {
             for (CTPM_DTO ct : listCTPM) {
-                //String tenSach = ctpm_BUS.getTenSach(ct.getMaSach()); // Lấy tên sách từ DAO
+                String tenSach = searchSach(ct.getMaSach()).getTenSach();
                 pm += "<tr>"
                         + "<td style='border:1px solid; text-align:center;'>" + ct.getMaSach() + "</td>"
-                        + "<td style='border:1px solid; text-align:center;'>" + "tam" + "</td>"
+                        + "<td style='border:1px solid; text-align:center;'>" + tenSach + "</td>"
                         + "<td style='border:1px solid; text-align:center;'>" + ct.getSoLuong() + "</td>"
                         + "</tr>";
             }
         }
 
-        pm += "</table><br/>";
-
-        // Tổng số lượng
-        pm += "Tổng số lượng: " + phieu.getTongSL() + "</br>";
-        pm += "<div style='text-align:center;'>XIN CẢM ƠN!</div>";
-
+        pm += "</table><br/>"
+                + "<table style='width:100%;'>"
+                + "<tr>"
+                + "<td style='text-align:left;width:71%; font-weight:bold;'>Tổng số lượng:</td>"
+                + "<td style='width:29%; text-align:center; font-weight:bold;'>" + phieu.getTongSL() + "</td>"
+                + "</tr>"
+                + "</table>";
+        pm += "<div style='text-align:center;margin-top:20px;'>XIN CẢM ƠN!</div>";
         return pm;
     }
 
-    public boolean checkInfor(String maPhieu, String maKhach, String maNV, String ngayLap, String hanChot, 
-            String listMaSach,String listSL, String listTrangThai) {
-        try
-        {
-            LocalDate.parse(ngayLap);
-            LocalDate.parse(hanChot);
-        }catch (DateTimeParseException e) {
-            return false;  // Nếu không thể chuyển thành ngày hợp lệ
-        }
+    public boolean checkInfor(String maPhieu, String maKhach, String maNV, String ngayLap, String hanChot,
+            String listMaSach, String listSL, String listTrangThai) {
 
-        if (maPhieu.isEmpty() || maKhach.isEmpty() || maNV.isEmpty() || ngayLap.isEmpty() || hanChot.isEmpty()
-                || listMaSach.isEmpty() || listSL.isEmpty() || listTrangThai.isEmpty()
-                ||pm_DAO.searchByMaPM(Integer.parseInt(maPhieu))!=null || dg_BUS.findDocGiaByMaKhach(Integer.parseInt(maKhach))==null
-                ||nv_BUS.timKiemNhanVien(maNV)==null || LocalDate.parse(ngayLap).isAfter(LocalDate.parse(hanChot))) 
-        {
+        try {
+            // Kiểm tra ngày
+            LocalDate ngayLapDate = LocalDate.parse(ngayLap.trim());
+            LocalDate hanChotDate = LocalDate.parse(hanChot.trim());
+            if (ngayLapDate.isAfter(hanChotDate)) {
+                return false;
+            }
+        } catch (DateTimeParseException e) {
+            System.out.println("Kiểm tra ngay that bai");
             return false;
         }
+
+        // Kiểm tra chuỗi rỗng hoặc null
+        if (maPhieu.trim().isEmpty() || maKhach.trim().isEmpty() || maNV.trim().isEmpty()
+                || listMaSach.trim().isEmpty() || listSL.trim().isEmpty() || listTrangThai.trim().isEmpty()) {
+            System.out.println("Kiểm tra du lieu rong that bai");
+            return false;
+        }
+
+        // Kiểm tra các thông tin liên quan trong CSDL
         try {
-            Integer.parseInt(maPhieu);
-            Integer.parseInt(maKhach);
-            Integer.parseInt(maNV);
-            String[] maSachArray = listMaSach.split(",");
-            String[] slArray = listSL.split(",");
-            if(maSachArray.length!=slArray.length)
+            int maPhieuInt = Integer.parseInt(maPhieu.trim());
+            int maKhachInt = Integer.parseInt(maKhach.trim());
+            // Kiểm tra mã phiếu mượn
+            if (pm_DAO.searchByMaPM(maPhieuInt) != null || dg_BUS.findDocGiaByMaKhach(maKhachInt) == null || nv_BUS.timKiemNhanVien(maNV.trim()) == null) {
+                System.out.println("Tìm tồn tại có lỗi");
                 return false;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Kiểm tra ma phieu kieu int that bai");
+            return false;
+        }
+
+        // Kiểm tra danh sách sách
+        String[] maSachArray = listMaSach.split(",");
+        String[] slArray = listSL.split(",");
+        if (maSachArray.length != slArray.length) {
+            System.out.println("Độ dài các list có lỗi");
+            return false;
+        }
+        for (int i = 0; i < maSachArray.length; i++) {
+            if (maSachArray[i].trim().isEmpty()
+                    || slArray[i].trim().isEmpty()
+                    || sach_BUS.timSachTheoMaSach(maSachArray[i]).isEmpty()) {
+                System.out.println("các ô rỗng hoặc tìm mã sách k ra");
+                return false;
+            }
+        }
+        try {
             for (int i = 0; i < maSachArray.length; i++) {
                 Integer.parseInt(maSachArray[i]);
                 Integer.parseInt(slArray[i]);
             }
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
+            System.out.println("Kiểm tra danh sach that bai");
             return false;
         }
+
         return true;
     }
 
     public boolean importExcel(String fileName) {
         String filePath = "C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/" + fileName;
         try (FileInputStream file = new FileInputStream(filePath); XSSFWorkbook workbook = new XSSFWorkbook(file)) {
+            System.out.println("Đã mở file Excel thành công.");
             XSSFSheet sheet = workbook.getSheetAt(0);
             Iterator<Row> rowIterator = sheet.iterator();
-            // Bỏ qua dòng đầu tiên (tiêu đề)
             if (rowIterator.hasNext()) {
-                rowIterator.next();
+                rowIterator.next(); // Bỏ qua dòng tiêu đề
             }
+
             while (rowIterator.hasNext()) {
                 Row row = rowIterator.next();
-                if(!checkInfor(row.getCell(0).getStringCellValue(),row.getCell(1).getStringCellValue(),row.getCell(2).getStringCellValue(),
-                    row.getCell(3).getStringCellValue(),row.getCell(4).getStringCellValue(),row.getCell(5).getStringCellValue(),
-                    row.getCell(6).getStringCellValue(),row.getCell(7).getStringCellValue()))
-                {
+                System.out.println("Dữ liệu dòng:");
+                for (int i = 0; i <= 7; i++) {
+                    System.out.println("Cột " + i + ": " + getCellValue(row.getCell(i)));
+                }
+
+                if (!checkInfor(getCellValue(row.getCell(0)), getCellValue(row.getCell(1)), getCellValue(row.getCell(2)),
+                        getCellValue(row.getCell(3)), getCellValue(row.getCell(4)), getCellValue(row.getCell(5)),
+                        getCellValue(row.getCell(6)), getCellValue(row.getCell(7)))) {
+                    System.out.println("Dữ liệu không hợp lệ. Bỏ qua dòng.");
                     continue;
                 }
+
                 PhieuMuon_DTO pm = new PhieuMuon_DTO();
-                pm.setMaPM(Integer.parseInt(row.getCell(0).getStringCellValue()));
-                pm.setMaKhach(Integer.parseInt(row.getCell(1).getStringCellValue()));
-                pm.setMaNV(Integer.parseInt(row.getCell(2).getStringCellValue()));
-                pm.setNgayLap(LocalDate.parse(row.getCell(3).getStringCellValue()));
-                pm.setHanChot(LocalDate.parse(row.getCell(4).getStringCellValue()));
-                String[] listMS = row.getCell(5).getStringCellValue().split(",");
-                String[] listSL = row.getCell(6).getStringCellValue().split(",");
-                String[] listTT = row.getCell(7).getStringCellValue().split(",");
-                int tongsl=0;
+                pm.setMaPM(Integer.parseInt(getCellValue(row.getCell(0))));
+                pm.setMaKhach(Integer.parseInt(getCellValue(row.getCell(1))));
+                pm.setMaNV(Integer.parseInt(getCellValue(row.getCell(2))));
+                pm.setNgayLap(LocalDate.parse(getCellValue(row.getCell(3))));
+                pm.setHanChot(LocalDate.parse(getCellValue(row.getCell(4))));
+
+                String[] listMS = getCellValue(row.getCell(5)).split(",");
+                String[] listSL = getCellValue(row.getCell(6)).split(",");
+                String[] listTT = getCellValue(row.getCell(7)).split(",");
+                pm.setTongSL(0);
+                pm_DAO.addPM(pm);
+                int tongsl = 0;
+                
                 for (int i = 0; i < listMS.length; i++) {
                     CTPM_DTO ct = new CTPM_DTO();
-                    ct.setMaPM(Integer.parseInt(row.getCell(1).getStringCellValue()));
+                    ct.setMaPM(pm.getMaPM());
                     ct.setMaSach(Integer.parseInt(listMS[i]));
                     ct.setSoLuong(Integer.parseInt(listSL[i]));
-                    tongsl+=ct.getSoLuong();
+                    tongsl += ct.getSoLuong();
                     ct.setTrangthai(listTT[i]);
                     ctpm_BUS.addCTPM(ct);
                 }
-                pm.setTongSL(tongsl);
-                pm_DAO.addPM(pm);
+                pm_DAO.updateSL(pm.getMaPM(), tongsl);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Lỗi đọc file Excel: " + e.getMessage());
             return false;
         }
         return true;
+    }
 
+    private String getCellValue(Cell cell) {
+        switch (cell.getCellType()) {
+            case STRING:
+                return cell.getStringCellValue().trim();
+            case NUMERIC:
+                if (DateUtil.isCellDateFormatted(cell)) {
+                    return cell.getLocalDateTimeCellValue().toLocalDate().toString(); // Nếu là ngày
+                }
+                return String.valueOf((int) cell.getNumericCellValue());
+            default:
+                return "";
+        }
     }
 
     public boolean exportExcel(String fileName) {

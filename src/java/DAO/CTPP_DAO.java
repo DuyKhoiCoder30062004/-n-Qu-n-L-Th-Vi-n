@@ -75,12 +75,13 @@ public class CTPP_DAO {
             conn = dnDB.openConnection();
             String tam = String.join(",", pq.getLiDo());
             String qry = "Insert into ctpp values (";
-            qry += pq.getMaPP() + "," + pq.getMaSach() + ",'" + pq.getMaVach() + "'," + pq.getNgayLap() + ",'" + tam + "'," + pq.getTien() + ")";
+            qry += pq.getMaPP() + "," + pq.getMaSach() + ",'" + pq.getMaVach() + "','" + java.sql.Date.valueOf(pq.getNgayLap()) + "','" + tam + "'," + pq.getTien() + ")";
             st = conn.createStatement();
             st.executeUpdate(qry);
         } catch (Exception e) {
+            System.out.println("Lỗi thêm ctpp " + e.getMessage());
             result = false;
-            e.printStackTrace();
+
         } finally {
             try {
                 if (rs != null) {
@@ -106,7 +107,7 @@ public class CTPP_DAO {
             conn = dnDB.openConnection();
             String tam = String.join(",", pq.getLiDo());
             String qry = "update ctpp set ";
-            qry += "masach=" + pq.getMaSach() + ",ngaylap=" + pq.getNgayLap() + ",lido='" + tam + "',tien=" + pq.getTien() + "' Where mapp=" + pq.getMaPP() + " and mavachloi='" + pq.getMaVach() + "'";
+            qry += "masach=" + pq.getMaSach() + ",ngaylap='" + java.sql.Date.valueOf(pq.getNgayLap()) + "',lido='" + tam + "',tien=" + pq.getTien() + " Where mapp=" + pq.getMaPP() + " and mavachloi='" + pq.getMaVach() + "'";
             st = conn.createStatement();
             st.executeUpdate(qry);
         } catch (Exception e) {
@@ -132,18 +133,19 @@ public class CTPP_DAO {
     public boolean deleteCTPP(int mapp, String mavach) {
         boolean result = true;
         try {
+            // Mở kết nối
             dnDB = new dangNhapDatabase();
             conn = dnDB.openConnection();
-            st = conn.createStatement();
-            String qry = "Delete from ctpp where mapp=" + mapp + ",mavach='" + mavach + "'";
-            st.executeUpdate(qry);
-        } catch (Exception e) {
-            result = false;
+            String qry = "DELETE FROM ctpp WHERE mapp = ? AND mavachloi = ?";
+            ps = conn.prepareStatement(qry);
+            ps.setInt(1, mapp);
+            ps.setString(2, mavach);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            result= false;
+            e.printStackTrace(); 
         } finally {
             try {
-                if (rs != null) {
-                    rs.close();
-                }
                 if (ps != null) {
                     ps.close();
                 }
@@ -156,6 +158,7 @@ public class CTPP_DAO {
         }
         return result;
     }
+
     public boolean deleteByMaPP(int mapp) {
         boolean result = true;
         try {
@@ -184,11 +187,10 @@ public class CTPP_DAO {
         return result;
     }
 
-
     public ArrayList<CTPP_DTO> searchByMaPP(int mapp) {
         ArrayList<CTPP_DTO> listPQ = new ArrayList<>();;
         try {
-            String qry = "select mapp,masach,mavachloi,ngaylap,lido,tien from ctpp where mapp = ?";
+            String qry = "select * from ctpp where mapp = ?";
             dnDB = new dangNhapDatabase();
             conn = dnDB.openConnection();
             ps = conn.prepareStatement(qry);
@@ -226,10 +228,11 @@ public class CTPP_DAO {
         }
         return listPQ;
     }
-    public CTPP_DTO searchByMaPP_MaVach(int mapp,String maVach) {
-        CTPP_DTO ctpp=null;
+
+    public CTPP_DTO searchByMaPP_MaVach(int mapp, String maVach) {
+        CTPP_DTO ctpp = null;
         try {
-            String qry = "select mapp,masach,mavachloi,ngaylap,lido,tien from ctpp where mapp = ? and mavach = ?";
+            String qry = "select * from ctpp where mapp = ? and mavachloi = ?";
             dnDB = new dangNhapDatabase();
             conn = dnDB.openConnection();
             ps = conn.prepareStatement(qry);

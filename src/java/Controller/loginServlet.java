@@ -71,11 +71,12 @@ public class loginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Trả về JSON bao gồm thông báo và URL để điều hướng
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
         String actor= request.getParameter("actor");
         String username = request.getParameter("username");
         String pass = request.getParameter("pass");
+        System.out.print("actor "+ actor);
         if (!check(request, response, username, pass)) {
             return;
         }
@@ -83,7 +84,7 @@ public class loginServlet extends HttpServlet {
         Nhanvien_DTO nv=new Nhanvien_DTO();
         nv.setChucVu("Độc giả");
         String redirectUrl="/cnpm/sach";
-        if(actor.equals("NV"))
+        if(actor.equals("nv"))
         {
             nv=nv_BUS.timKiemNhanVien(username).get(0);
             if (nv_BUS.timKiemNhanVien(username).get(0).getChucVu().equals("admin")) {

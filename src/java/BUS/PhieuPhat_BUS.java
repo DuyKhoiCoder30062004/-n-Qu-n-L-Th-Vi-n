@@ -8,8 +8,15 @@ import DAO.CTPP_DAO;
 import DAO.PhieuPhat_DAO;
 import DTO.CTPM_DTO;
 import DTO.CTPP_DTO;
+import DTO.CTPT_DTO;
+import DTO.CTSach_DTO;
+import DTO.DocGiaDTO;
+import DTO.Loi_DTO;
+import DTO.Nhanvien_DTO;
 import DTO.PhieuMuon_DTO;
 import DTO.PhieuPhat_DTO;
+import DTO.PhieuTra_DTO;
+import DTO.Sach_DTO;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -22,12 +29,14 @@ import java.util.Iterator;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import static org.apache.tomcat.jakartaee.commons.lang3.ArrayUtils.contains;
 
 /**
  *
@@ -36,13 +45,17 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class PhieuPhat_BUS {
 
     private PhieuPhat_DAO pp_DAO = new PhieuPhat_DAO();
-    private CTPP_BUS ctpp_BUS=new CTPP_BUS();
-    private PhieuTra_BUS pt_BUS=new PhieuTra_BUS();
-    private CTPT_BUS ctpt_BUS=new CTPT_BUS();
-    private Nhanvien_BUS nv_BUS=new Nhanvien_BUS();
-    private Sach_BUS sach_BUS=new Sach_BUS();
-    private CTSach_BUS cts_BUS=new CTSach_BUS();
-    private Loi_BUS loi_BUS=new Loi_BUS();
+    private CTPP_BUS ctpp_BUS = new CTPP_BUS();
+    private PhieuTra_BUS pt_BUS = new PhieuTra_BUS();
+    private CTPT_BUS ctpt_BUS = new CTPT_BUS();
+    private Nhanvien_BUS nv_BUS = new Nhanvien_BUS();
+    private Sach_BUS sach_BUS = new Sach_BUS();
+    private CTSach_BUS cts_BUS = new CTSach_BUS();
+    private Loi_BUS loi_BUS = new Loi_BUS();
+    private PhieuMuon_BUS pm_BUS = new PhieuMuon_BUS();
+    private DocGiaBUS dg_BUS = new DocGiaBUS();
+    private PhieuPhat_BUS pp_BUS = new PhieuPhat_BUS();
+
     public ArrayList<PhieuPhat_DTO> getList() {
         return pp_DAO.getList();
     }
@@ -69,10 +82,10 @@ public class PhieuPhat_BUS {
 
     public StringBuilder[] searchPP(String option, String value) {
         StringBuilder[] arrayrs = new StringBuilder[2];
-        StringBuilder jsonResult = new StringBuilder("["); 
+        StringBuilder jsonResult = new StringBuilder("[");
         StringBuilder jsonRsCTPP = new StringBuilder("[");
         boolean firstItem = true;
-        boolean fItemCTPP=true;
+        boolean fItemCTPP = true;
 
         for (PhieuPhat_DTO pq : pp_DAO.getList()) {
             // Kiểm tra điều kiện để thêm vào JSON
@@ -89,181 +102,364 @@ public class PhieuPhat_BUS {
                         + "\"maNV\": \"" + pq.getMaNV() + "\","
                         + "\"tongTien\": \"" + pq.getTongTien() + "\""
                         + "}");
-                firstItem = false; 
-                ArrayList<CTPP_DTO> listCTPP=ctpp_BUS.searchByMaPP(pq.getMaPP());
-                for (CTPP_DTO ctpp:listCTPP)
-                {
-                    if(!fItemCTPP){
+                firstItem = false;
+                ArrayList<CTPP_DTO> listCTPP = ctpp_BUS.searchByMaPP(pq.getMaPP());
+                for (CTPP_DTO ctpp : listCTPP) {
+                    if (!fItemCTPP) {
                         jsonRsCTPP.append(",");
                     }
                     jsonRsCTPP.append("{"
-                        + "\"maPhieu\": \"" + ctpp.getMaPP() + "\","
-                        + "\"maSach\": \"" + ctpp.getMaSach()+ "\","
-                        + "\"maVach\": \"" + ctpp.getMaVach()+ "\","
-                        + "\"ngayLap\": \"" + ctpp.getNgayLap()+ "\","
-                        + "\"liDo\": \"" + ctpp.getLiDo()+ "\","
-                        + "\"tien\": \"" + ctpp.getTien()+ "\""
-                        + "}");
+                            + "\"maPhieu\": \"" + ctpp.getMaPP() + "\","
+                            + "\"maSach\": \"" + ctpp.getMaSach() + "\","
+                            + "\"maVach\": \"" + ctpp.getMaVach() + "\","
+                            + "\"ngayLap\": \"" + ctpp.getNgayLap() + "\","
+                            + "\"liDo\": \"" + ctpp.getLiDo() + "\","
+                            + "\"tien\": \"" + ctpp.getTien() + "\""
+                            + "}");
                     fItemCTPP = false;
                 }
             }
         }
-        jsonResult.append("]"); 
+        jsonResult.append("]");
         jsonRsCTPP.append("]");
-        arrayrs[0]=jsonResult;
-        arrayrs[1]=jsonRsCTPP;
-        return arrayrs; 
+        arrayrs[0] = jsonResult;
+        arrayrs[1] = jsonRsCTPP;
+        return arrayrs;
     }
-    public String printPP(int maPP)
-    {
-        // Khởi tạo chuỗi HTML cho phiếu mượn
-        String pp = "<h1 style='text-align:center;'>PHIẾU PHẠT TỪ THƯ VIÊN TRƯỜNG ĐẠI HỌC ABC</h1>";
+
+    public String printPP(int maPP) {
+        // Khởi tạo chuỗi HTML cho phiếu phạt
+        String pp = "<h2 style='text-align:center;'>PHIẾU PHẠT TỪ THƯ VIỆN TRƯỜNG ĐẠI HỌC ABC</h2>";
 
         PhieuPhat_DTO phieu = pp_DAO.searchByMaPP(maPP);
 
         // Kiểm tra xem phiếu có tồn tại không
         if (phieu == null) {
-            return "<p>Không tìm thấy phiếu mượn.</p>";
+            return "<p>Không tìm thấy phiếu phạt.</p>";
         }
 
+        PhieuTra_DTO pt = pt_BUS.searchByMaPT(phieu.getMaPT());
+        PhieuMuon_DTO pm = pm_BUS.searchByMaPM(pt.getMaPM());
+        Nhanvien_DTO nv = nv_BUS.timKiemNhanVien(String.valueOf(phieu.getMaNV())).get(0);
+        DocGiaDTO dg = dg_BUS.findDocGiaByMaKhach(pm.getMaKhach());
+
         // Thêm thông tin vào chuỗi
-        pp += "Mã phiếu phạt: " + phieu.getMaPP()+ "<br/>"
-                + "Mã nhân viên: " + phieu.getMaNV() + "  "
-                + "Tên nhân viên: " + "hii" + "<br/>" // Thêm tên nhân viên
-                + "Mã độc giả: " + " " + "  "
-                + "Tên độc giả: " + "tạm" + "<br/>" // Thêm tên độc giả
-                + "SĐT độc giả: " + "000" + "<br/>" // Thêm số điện thoại độc giả
-                + "<div style='text-align:center;'>DANH SÁCH SÁCH LÀM HƯ</div><br/>";
+        pp += "<table style='width:100%; border-spacing:10px 5px;'>"
+                + "<tr>"
+                + "<td style='text-align:left; font-weight:bold;'>Mã phiếu phạt:</td>"
+                + "<td style='text-align:left;'>" + phieu.getMaPP() + "</td>"
+                + "</tr>"
+                + "<tr>"
+                + "<td style='text-align:left; font-weight:bold;'>Mã nhân viên:</td>"
+                + "<td style='text-align:left;'>" + phieu.getMaNV() + "</td>"
+                + "<td style='text-align:left; font-weight:bold;'>Họ & tên NV:</td>"
+                + "<td style='text-align:left;'>" + nv.getHo() + " " + nv.getTen() + "</td>"
+                + "</tr>"
+                + "<tr>"
+                + "<td style='text-align:left; font-weight:bold;'>Mã độc giả:</td>"
+                + "<td style='text-align:left;'>" + pm.getMaKhach() + "</td>"
+                + "<td style='text-align:left; font-weight:bold;'>Họ & tên ĐG:</td>"
+                + "<td style='text-align:left;'>" + dg.getHoDG() + " " + dg.getTenDG() + "</td>"
+                + "<td style='text-align:left; font-weight:bold;'>SĐT:</td>"
+                + "<td style='text-align:left;'>" + dg.getSoDienThoai() + "</td>"
+                + "</tr>"
+                + "</table>"
+                + "<div style='text-align:center; font-weight:bold; margin-top:20px;'>DANH SÁCH SÁCH LÀM HƯ</div><br/>";
 
         // Tạo bảng sách mượn
-        pp += "<table style='width:100%; border-collapse:collapse;'>"
+        pp += "<table style='width:100%; border-collapse:collapse; margin-bottom:20px;'>"
                 + "<tr>"
-                + "<th style='border:1px solid; padding:5px;'>Mã Sách</th>"
-                + "<th style='border:1px solid; padding:5px;'>Mã vạch</th>"
-                + "<th style='border:1px solid; padding:5px;'>Lí do</th>"
-                + "<th style='border:1px solid; padding:5px;'>Tiền</th>"
+                + "<th style='border:1px solid; padding:10px; text-align:center;'>Mã Sách</th>"
+                + "<th style='border:1px solid; padding:10px; text-align:center;'>Mã vạch</th>"
+                + "<th style='border:1px solid; padding:10px; text-align:center;'>Lí do</th>"
+                + "<th style='border:1px solid; padding:10px; text-align:center;'>Tiền</th>"
                 + "</tr>";
 
         ArrayList<CTPP_DTO> listCTPP = ctpp_BUS.searchByMaPP(maPP);
 
-        // Duyệt danh sách chi tiết phiếu mượn
+        // Duyệt danh sách chi tiết phiếu phạt
         if (listCTPP != null && listCTPP.size() > 0) {
             for (CTPP_DTO ct : listCTPP) {
-                //String tenSach = ctpm_DAO.getTenSach(ct.getMaSach()); // Lấy tên sách từ DAO
-                String tam=String.join(",", ct.getLiDo());
+                String lyDo = String.join(",", ct.getLiDo());
                 pp += "<tr>"
-                        + "<td style='border:1px solid; text-align:center;'>" + ct.getMaSach() + "</td>"
-                        + "<td style='border:1px solid; text-align:center;'>" + ct.getMaSach() + "</td>"
-                        + "<td style='border:1px solid; text-align:center;'>" + tam + "</td>"
-                        + "<td style='border:1px solid; text-align:center;'>" + ct.getTien() + "</td>"
+                        + "<td style='border:1px solid; padding:10px; text-align:center;'>" + ct.getMaSach() + "</td>"
+                        + "<td style='border:1px solid; padding:10px; text-align:center;'>" + ct.getMaSach() + "</td>"
+                        + "<td style='border:1px solid; padding:10px; text-align:center;'>" + lyDo + "</td>"
+                        + "<td style='border:1px solid; padding:10px; text-align:center;'>" + ct.getTien() + "</td>"
                         + "</tr>";
             }
         }
-
-        pp += "</table><br/>";
-
-        // Tổng số lượng
-        pp += "Tổng Tiền: " + phieu.getTongTien()+ "</br>";
-        pp += "<div style='text-align:center;'>XIN CẢM ƠN!</div>";
+        pp += "</table><br/>"
+                + "<table style='width:100%;'>"
+                + "<tr>"
+                + "<td style='text-align:left; font-weight:bold;'>Tổng Tiền:</td>"
+                + "<td style='text-align:right; font-weight:bold;'>" + phieu.getTongTien() + " VND</td>"
+                + "</tr>"
+                + "</table>";
 
         return pp;
     }
-    private boolean checkInfor(String maPP,String maNV,String maPT,String listMS,String listMV,String listNL,
-            String listLiDo,String listT)
-    {
-        if(maPP.isEmpty() || maNV.isEmpty() || maPT.isEmpty() || listMS.isEmpty() || listMV.isEmpty()
-                || listNL.isEmpty() || listLiDo.isEmpty() || listT.isEmpty()
-                ||pp_DAO.searchByMaPP(Integer.parseInt(maPP))!=null || pt_BUS.searchByMaPT(Integer.parseInt(maPT))==null
-                ||nv_BUS.timKiemNhanVien(maNV)==null) 
-        {
-            return false;
-        }
-        String[] list1 = listMS.split("\n");
-        String[] list2 = listMV.split("\n");
-        String[] list3 = listNL.split("\n");
-        String[] list4 = listLiDo.split("\n");
-        String[] list5 = listT.split("\n");
-        boolean areLengthsEqual = (list1.length == list2.length) && 
-                                   (list2.length == list3.length) && 
-                                   (list3.length == list4.length) && 
-                                   (list4.length == list5.length);
-        if(!areLengthsEqual)
-            return false;
-        for(int i=0;i<list1.length;i++)
-        {
-            if(sach_BUS.timSachTheoMaSach(list1[i])==null 
-               || !cts_BUS.searchCTSachByMaSach(list1[i]).contains(list2[i])
-                ||loi_BUS.searchByTenLoi(list4[i])!=null)
-                return false;
-        }
-        try
-        {
-            for (int i = 0; i < list1.length; i++) {
-                LocalDate.parse(list3[i]);
+
+    //Kiểm tra mã vạch xem mã vạch này đúng có lỗi không
+    private boolean checkMaVach(int maPT, int maSach, String maVach) {
+        for (CTPT_DTO i : ctpt_BUS.searchByMaPT(maPT)) {
+            System.out.println("PT " + i.getMaSach() + "   " + i.getMaVachLoi());
+            //System.out.println("kiểm tra mã vạch"+ i.getMaVachLoi())
+            if (i.getMaSach() == maSach && i.getMaVachLoi() != null && i.getMaVachLoi().contains(maVach.trim())) {
+                System.out.println("PT kiểm tra đúng " + i.getMaSach() + "   " + i.getMaVachLoi());
+                return true;
             }
-        }catch (DateTimeParseException e) {
-            return false;  
         }
+        return false;
+    }
+
+    //Kiểm tra mã sách này có trong phiếu  trả k
+    private boolean checkMaSach_PT_Co_Khong(int maPT, int maSach) {
+        for (CTPT_DTO i : ctpt_BUS.searchByMaPT(maPT)) {
+            if (i.getMaSach() == maSach) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //kiểm tra mã sách này có mã vạch lỗi k
+    private boolean checkMaSach(int maPT, int maSach) {
+        for (CTPT_DTO i : ctpt_BUS.searchByMaPT(maPT)) {
+            if (i.getMaSach() == maSach && i.getMaVachLoi() != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //kiểm tra sách này có nộp trễ hạn không
+    private boolean checkTreHan(int maPT, int maSach) {
+        for (CTPT_DTO i : ctpt_BUS.searchByMaPT(maPT)) {
+            if (i.getMaSach() == maSach && i.getMaVachLoi() != null) {
+                PhieuMuon_BUS pm_BUS = new PhieuMuon_BUS();
+                PhieuMuon_DTO pm = pm_BUS.searchByMaPM(pt_BUS.searchByMaPT(maPT).getMaPM());
+                if (i.getNgayTra().isAfter(pm.getHanChot())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    //kiểm tra lỗi này có trong listTT không
+    private boolean checkLoi(String listTT, String loi) {
+        if (listTT.contains(loi)) {
+            return true;
+        }
+        return false;
+    }
+
+    //Tính tiền
+    private float tinhTien(String maSach, String liDo) {
+        float tien = 0;
+        String[] listLiDo = liDo.split(",");
+        Sach_DTO sach = sach_BUS.timSachTheoMaSach(maSach).get(0);
+        for (String i : listLiDo) {
+            System.out.println("%tiền" + loi_BUS.searchByTenLoi(i).getPhamTramTien());
+            tien += sach.getGia() * loi_BUS.searchByTenLoi(i).getPhamTramTien();
+        }
+        return tien;
+    }
+
+    //Tìm những lí do trùng với tình trạng của sách
+    private String checkLiDo(String TTSach, String liDo) {
+        if (TTSach != null) {
+            String[] listLiDo = liDo.split(",");
+            String tam = "";
+            for (String i : listLiDo) {
+                if (!i.equals("trả trễ") && TTSach.contains(i)) {
+                    tam += i + " ";
+                }
+            }
+            if (!tam.equals("")) {
+                return tam;
+            }
+        }
+        return "";
+    }
+
+    //Kiểm tra xem mã vạch này có của sách này không
+    private boolean checkMaVachCuaSach(String maSach, String maVach) {
+        for (CTSach_DTO i : cts_BUS.searchCTSachByMaSach(maSach)) {
+            if (i.getMaVach().equals(maVach)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //Tìm kiếm ct sách
+    private CTSach_DTO searchCTS(String maVach) {
+        for (CTSach_DTO i : cts_BUS.getList()) {
+            if (i.getMaVach().equals(maVach)) {
+                return i;
+            }
+        }
+        return null;
+    }
+
+    private boolean checkInfor(String maPP, String maNV, String maPT, String listMS, String listMV, String listNL,
+            String listLiDo, String listT) {
+        // Kiểm tra null và rỗng
+        if (maPP == null || maNV == null || maPT == null || listMS == null || listMV == null
+                || listNL == null || listLiDo == null || listT == null
+                || maPP.isEmpty() || maNV.isEmpty() || maPT.isEmpty()
+                || listMS.isEmpty() || listMV.isEmpty() || listNL.isEmpty()
+                || listLiDo.isEmpty() || listT.isEmpty()
+                || pp_DAO.searchByMaPP(Integer.parseInt(maPP)) != null
+                || pt_BUS.searchByMaPT(Integer.parseInt(maPT)) == null
+                || nv_BUS.timKiemNhanVien(maNV) == null) {
+            return false;
+        }
+
+        String[] listMSach = listMS.split("\n");
+        String[] listMVach = listMV.split("\n");
+        String[] listNLap = listNL.split("\n");
+        String[] listLDo = listLiDo.split("\n");
+        String[] listTien = listT.split("\n");
+
+        if (listMSach.length != listMVach.length || listMSach.length != listNLap.length
+                || listMSach.length != listLDo.length || listMSach.length != listTien.length) {
+            return false;
+        }
+
         try {
-            for (int i = 0; i < list1.length; i++) {
-                Float.parseFloat(list5[i]);
+            for (int i = 0; i < listMSach.length; i++) {
+                // Kiểm tra dữ liệu mã sách, mã vạch, tiền
+                if (sach_BUS.timSachTheoMaSach(listMSach[i]) == null) {
+                    return false;
+                }
+
+                CTSach_DTO cts = searchCTS(listMVach[i]);
+                if (cts == null || cts.getMaSach() != Integer.parseInt(listMSach[i])) {
+                    return false;
+                }
+
+                if (!checkMaVach(Integer.parseInt(maPT), Integer.parseInt(listMSach[i]), listMVach[i])) {
+                    return false;
+                }
+                if(!checkLiDo(cts.getTinhTrangSach(),listLDo[i]).equals(""))
+                    return false;
+                // Kiểm tra lỗi
+                String[] listLD_Tung_Ma = listLDo[i].split(",");
+                for (int j = 0; j < listLD_Tung_Ma.length; j++) {
+                    listLD_Tung_Ma[j] = listLD_Tung_Ma[j].trim();
+                    if (loi_BUS.searchByTenLoi(listLD_Tung_Ma[j]) == null) {
+                        return false;
+                    }
+                }
+
+                // Kiểm tra trả trễ
+                boolean traTre = contains(listLD_Tung_Ma, "trả trễ");
+                boolean treHan = checkTreHan(Integer.parseInt(maPP), Integer.parseInt(listMSach[i]));
+                if ((traTre && !treHan) || (!traTre && treHan)) {
+                    return false;
+                }
+
+                // Kiểm tra tiền
+                float expectedTien = tinhTien(listMSach[i], listLDo[i]);
+                if (Math.abs(Float.parseFloat(listTien[i]) - expectedTien) > 1e-6) {
+                    return false;
+                }
             }
-        } catch (NumberFormatException e) {
+
+            // Kiểm tra ngày
+            for (String date : listNLap) {
+                LocalDate.parse(date);
+            }
+        } catch (NumberFormatException | DateTimeParseException e) {
             return false;
         }
+
         return true;
     }
-    public boolean importExcel(String fileName)
-    {
+
+    public boolean importExcel(String fileName) {
         String filePath = "C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/" + fileName;
-        try (FileInputStream file = new FileInputStream(filePath);
-         XSSFWorkbook workbook = new XSSFWorkbook(file)) {
+        try (FileInputStream file = new FileInputStream(filePath); XSSFWorkbook workbook = new XSSFWorkbook(file)) {
             XSSFSheet sheet = workbook.getSheetAt(0);
             Iterator<Row> rowIterator = sheet.iterator();
+
             // Bỏ qua dòng đầu tiên (tiêu đề)
-            if (rowIterator.hasNext()) rowIterator.next();
+            if (rowIterator.hasNext()) {
+                rowIterator.next();
+            }
+
             while (rowIterator.hasNext()) {
                 Row row = rowIterator.next();
-                if(!checkInfor(row.getCell(0).getStringCellValue(),row.getCell(1).getStringCellValue(),row.getCell(2).getStringCellValue(),
-                        row.getCell(3).getStringCellValue(),row.getCell(4).getStringCellValue(),row.getCell(5).getStringCellValue(),
-                        row.getCell(6).getStringCellValue(),row.getCell(7).getStringCellValue()))
-                {
+
+                // Kiểm tra dữ liệu hợp lệ
+                if (!checkInfor(
+                        getCellValue(row.getCell(0)), getCellValue(row.getCell(1)), getCellValue(row.getCell(2)),
+                        getCellValue(row.getCell(3)), getCellValue(row.getCell(4)), getCellValue(row.getCell(5)),
+                        getCellValue(row.getCell(6)), getCellValue(row.getCell(7)))) {
                     continue;
                 }
-                PhieuPhat_DTO pp=new PhieuPhat_DTO();
-                pp.setMaPP(Integer.parseInt(row.getCell(0).getStringCellValue()));
-                pp.setMaNV(Integer.parseInt(row.getCell(1).getStringCellValue()));
-                pp.setMaPT(Integer.parseInt(row.getCell(2).getStringCellValue()));
-                ArrayList<String> listMS = new ArrayList<>(Arrays.asList(row.getCell(3).getStringCellValue().split("\n")));
-                ArrayList<String> listMV = new ArrayList<>(Arrays.asList(row.getCell(4).getStringCellValue().split("\n")));
-                ArrayList<String> listNL = new ArrayList<>(Arrays.asList(row.getCell(5).getStringCellValue().split("\n")));
-                ArrayList<String> listLiDo = new ArrayList<>(Arrays.asList(row.getCell(6).getStringCellValue().split("\n")));
-                ArrayList<String> listT = new ArrayList<>(Arrays.asList(row.getCell(7).getStringCellValue().split("\n")));
-                double tt=0;
-                for (int i=0;i<listMS.size();i++)
-                {
-                    CTPP_DTO ct=new CTPP_DTO();
-                    ct.setMaPP(Integer.parseInt(row.getCell(1).getStringCellValue()));
+
+                // Tạo đối tượng Phiếu Phạt DTO
+                PhieuPhat_DTO pp = new PhieuPhat_DTO();
+                pp.setMaPP(Integer.parseInt(getCellValue(row.getCell(0))));
+                pp.setMaNV(Integer.parseInt(getCellValue(row.getCell(1))));
+                pp.setMaPT(Integer.parseInt(getCellValue(row.getCell(2))));
+
+                // Tách chuỗi và chuyển thành ArrayList
+                ArrayList<String> listMS = new ArrayList<>(Arrays.asList(getCellValue(row.getCell(3)).split("\n")));
+                ArrayList<String> listMV = new ArrayList<>(Arrays.asList(getCellValue(row.getCell(4)).split("\n")));
+                ArrayList<String> listNL = new ArrayList<>(Arrays.asList(getCellValue(row.getCell(5)).split("\n")));
+                ArrayList<String> listLiDo = new ArrayList<>(Arrays.asList(getCellValue(row.getCell(6)).split("\n")));
+                ArrayList<String> listT = new ArrayList<>(Arrays.asList(getCellValue(row.getCell(7)).split("\n")));
+                pp.setTongTien(0);
+                pp_DAO.addPP(pp);
+                double tt = 0;
+
+                // Duyệt qua từng phần tử và thêm Chi Tiết Phiếu Phạt
+                for (int i = 0; i < listMS.size(); i++) {
+                    CTPP_DTO ct = new CTPP_DTO();
+                    ct.setMaPP(Integer.parseInt(getCellValue(row.getCell(0))));
                     ct.setMaSach(Integer.parseInt(listMS.get(i)));
-                    ct.setMaSach(Integer.parseInt(listMV.get(i)));
+                    ct.setMaSach(Integer.parseInt(listMV.get(i))); // Lỗi ở đây, không nên set 2 lần MaSach
                     ct.setNgayLap(LocalDate.parse(listNL.get(i)));
                     ct.setLiDo(new ArrayList<>(Arrays.asList(listLiDo.get(i).split(","))));
                     ct.setTien(Float.parseFloat(listT.get(i)));
-                    tt+=ct.getTien();
+                    tt += ct.getTien();
                     ctpp_BUS.addCTPP(ct);
                 }
-                pp.setTongTien(tt);
-                pp_DAO.addPP(pp);
+                pp_DAO.updateTT(pp.getMaPP(), tt);
             }
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
         return true;
-        
     }
-    public boolean exportExcel(String fileName)
-    {
+
+// Hàm chuyển đổi giá trị ô trong Excel thành chuỗi
+    private String getCellValue(Cell cell) {
+        if (cell == null) {
+            return "";
+        }
+
+        switch (cell.getCellType()) {
+            case STRING:
+                return cell.getStringCellValue();
+            case NUMERIC:
+                if (DateUtil.isCellDateFormatted(cell)) {
+                    return cell.getDateCellValue().toString();
+                } else {
+                    return String.valueOf(cell.getNumericCellValue());
+                }
+            default:
+                return "";
+        }
+    }
+
+    public boolean exportExcel(String fileName) {
         String filePath = "C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/" + fileName;
         File file = new File(filePath);
         File parentDir = file.getParentFile();
@@ -271,9 +467,9 @@ public class PhieuPhat_BUS {
             parentDir.mkdirs();  // Tạo thư mục nếu chưa tồn tại
         }
         XSSFWorkbook excelWorkbook = new XSSFWorkbook();
-        
+
         XSSFSheet excelSheet = (XSSFSheet) excelWorkbook.createSheet("Danh sách phiếu mượn của thư viện");
-       
+
         XSSFRow row = null;
         Cell cell = null;
         // Merge các cột thành một và căn giữa tiêu đề
@@ -285,18 +481,18 @@ public class PhieuPhat_BUS {
         CellStyle centerStyle = excelWorkbook.createCellStyle();
         centerStyle.setAlignment(HorizontalAlignment.CENTER);
         cell.setCellStyle(centerStyle);
-        
+
         // Ghi tiêu đề cột
         row = excelSheet.createRow(3);
-        String[] headers = {"Mã phiếu phạt", "Mã nhân viên", "Mã phiếu trả","Danh sách mã sách","Danh sách mã vạch lỗi",
-            "Danh sách ngày lập","Danh sách lí do","Danh sách tiền","Tồng tiền"};
+        String[] headers = {"Mã phiếu phạt", "Mã nhân viên", "Mã phiếu trả", "Danh sách mã sách", "Danh sách mã vạch lỗi",
+            "Danh sách ngày lập", "Danh sách lí do", "Danh sách tiền", "Tồng tiền"};
         for (int i = 0; i < headers.length; i++) {
             row.createCell(i).setCellValue(headers[i]);
             excelSheet.autoSizeColumn(i);
         }
         CellStyle cellStyle = excelWorkbook.createCellStyle();
         cellStyle.setWrapText(true);
-        for (int i = 0; i <pp_DAO.getList().size(); i++) {
+        for (int i = 0; i < pp_DAO.getList().size(); i++) {
             PhieuPhat_DTO pp = pp_DAO.getList().get(i);
             row = excelSheet.createRow(4 + i);
             row.createCell(0).setCellValue(pp.getMaPP());
@@ -306,8 +502,8 @@ public class PhieuPhat_BUS {
             String listMS = "";
             String listMV = "";
             String listNL = "";
-            String listLiDo="";
-            String listT="";
+            String listLiDo = "";
+            String listT = "";
 
             for (CTPP_DTO ctpp : ctpp_BUS.searchByMaPP(pp.getMaPP())) {
                 listMS += ctpp.getMaSach() + "\n";
@@ -315,7 +511,7 @@ public class PhieuPhat_BUS {
                 listNL += ctpp.getNgayLap() + "\n";
                 String tam = String.join(", ", ctpp.getLiDo());
                 listLiDo += tam;
-                listT +=ctpp.getTien() + "\n";
+                listT += ctpp.getTien() + "\n";
             }
 
             if (!listMS.isEmpty()) {
@@ -328,7 +524,7 @@ public class PhieuPhat_BUS {
 
             Cell cellMS = row.createCell(3);
             cellMS.setCellValue(listMS);
-            cellMS.setCellStyle(cellStyle); 
+            cellMS.setCellStyle(cellStyle);
 
             Cell cellSL = row.createCell(4);
             cellSL.setCellValue(listMV);
@@ -337,10 +533,10 @@ public class PhieuPhat_BUS {
             Cell cellTT = row.createCell(5);
             cellTT.setCellValue(listNL);
             cellTT.setCellStyle(cellStyle);
-            
+
             Cell cellLD = row.createCell(6);
             cellLD.setCellValue(listLiDo);
-            cellLD.setCellStyle(cellStyle); 
+            cellLD.setCellStyle(cellStyle);
 
             Cell cellT = row.createCell(7);
             cellT.setCellValue(listT);
@@ -350,11 +546,11 @@ public class PhieuPhat_BUS {
             excelSheet.autoSizeColumn(i);
 
         }
-        
+
         try (FileOutputStream fileOutputStream = new FileOutputStream(filePath)) {
-            
+
             excelWorkbook.write(fileOutputStream);
-            
+
             excelWorkbook.close();
         } catch (IOException e) {
             System.err.println("Lỗi khi ghi file: " + e.getMessage());

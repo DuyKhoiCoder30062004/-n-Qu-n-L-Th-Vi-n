@@ -101,8 +101,8 @@
                 <span class="icon">🔒|</span>
                 <input id="pass" type="password" placeholder="Password">
             </div>
-            <button type="submit" onclick="sendData('NV')">ĐĂNG NHẬP</button>
-            <a href="javascript:void(0);" onclick="sendData('DG')">Tôi là độc giả</a>
+            <button type="submit" onclick="sendData('nv')">ĐĂNG NHẬP</button>
+            <a href="javascript:void(0);" onclick="sendData('dg')">Tôi là độc giả</a>
         </div>
     </body>
     <script>
@@ -145,7 +145,7 @@
         document.getElementById('pass').addEventListener('keydown', function (event) {
             if (event.key === "Enter") {
                 event.preventDefault();
-                sendData();
+                sendData('nv');
             }
         });
 

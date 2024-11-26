@@ -36,7 +36,6 @@ public class dangNhapDatabase {
                 return conn;
             }
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Kết nối DB thất bại!");
             System.out.println("Kết nối DB thất bại!");
             ex.printStackTrace();
         } catch (ClassNotFoundException ex) {
@@ -50,7 +49,7 @@ public class dangNhapDatabase {
             if(conn!=null)
             {
                 conn.close();
-                System.out.print("Đóng kết nối DB thành công");
+                System.out.println("Đóng kết nối DB thành công");
             }
         }catch(SQLException ex){
             System.out.println("Đóng kết nối DB thất bại");
