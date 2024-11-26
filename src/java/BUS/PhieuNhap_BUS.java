@@ -42,12 +42,47 @@ public class PhieuNhap_BUS {
         StringBuilder jsonResult = new StringBuilder("["); // Sử dụng StringBuilder để dễ dàng quản lý chuỗi
         StringBuilder jsonRsCTPN = new StringBuilder("[");
         boolean firstItem = true;
-        boolean fItemCTPM=true;
+        boolean fItemCTPN = true;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        for(PhieuNhap_DTO pn : pn_DAO.getList()){
-            if(option.equals("Mã phiếu") && String.valueOf(pn.getMaPN().contain(value))|| option.equals("Mã NCC"))
+        for (PhieuNhap_DTO pn : pn_DAO.getList()) {
+            // Kiểm tra điều kiện để thêm vào JSON
+            if (option.equals("Mã phiếu") && String.valueOf(pn.getMaPN()).contains(value)
+                    || option.equals("Mã NCC") && String.valueOf(pn.getMaNCC()).contains(value)
+                    || option.equals("Mã NV") && String.valueOf(pn.getMaNV()).contains(value)
+                    || option.equals("Ngày lập") && pn.getNgayLap().format(formatter).contains(value)) {
+                if (!firstItem) {
+                    jsonResult.append(","); // Thêm dấu phẩy trước mỗi phần tử sau phần tử đầu tiên
+                }
+                jsonResult.append("{"
+                        + "\"maPhieu\": \"" + pn.getMaPN() + "\","
+                        + "\"maKhach\": \"" + pn.getMaNCC() + "\","
+                        + "\"maNV\": \"" + pn.getMaNV() + "\","
+                        + "\"ngayLap\": \"" + pn.getNgayLap() + "\","
+                        + "\"tongSL\": \"" + pn.getTongSL() + "\""
+                        + "\"tongTien\": \"" + pn.getTongTien() + "\","
+                        + "}");
+                firstItem = false; // Đánh dấu rằng phần tử đầu tiên đã được thêm
+                ArrayList<CTPN_DTO> listCTPN= ctpn_BUS.searchByMaPN(pn.getMaPN());
+                for (CTPN_DTO ctpn: listCTPN)
+                {
+                    if(!fItemCTPN){
+                        jsonRsCTPN.append(",");
+                    }
+                    jsonRsCTPN.append("{"
+                        + "\"mapn\": \"" + ctpn.getMaPN() + "\","
+                        + "\"maSach\": \"" + ctpn.getMaSach() + "\","
+                        + "\"soLuong\": \"" + ctpn.getSoLuong() + "\","
+                        + "\"donGia\": \"" + ctpn.getDonGia() + "\""
+                        + "}");
+                    fItemCTPN = false; 
+                }
+            }
         }
-        return arrayrs;
+        jsonResult.append("]"); 
+        jsonRsCTPN.append("]");
+        arrayrs[0]=jsonResult;
+        arrayrs[1]=jsonRsCTPN;
+        return arrayrs; 
     }
 
     public String printPN(int maPN) { 

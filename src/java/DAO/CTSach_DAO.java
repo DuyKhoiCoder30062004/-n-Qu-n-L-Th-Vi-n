@@ -22,8 +22,8 @@ public class CTSach_DAO {
             rs = ps.executeQuery();
             while (rs.next()) {
                 CTSach_DTO ctSach = new CTSach_DTO();
-                ctSach.setMaSach(rs.getInt(2));
                 ctSach.setMaVach(rs.getString(1));
+                ctSach.setMaSach(rs.getInt(2));
                 ctSach.setTinhTrangSach(rs.getString(3));
                 listCTSach.add(ctSach);
             }
@@ -53,8 +53,8 @@ public class CTSach_DAO {
             rs = ps.executeQuery();
             while (rs.next()) {
                 CTSach_DTO ctSach = new CTSach_DTO();
-                ctSach.setMaSach(rs.getInt(2));
                 ctSach.setMaVach(rs.getString(1));
+                ctSach.setMaSach(rs.getInt(2));
                 ctSach.setTinhTrangSach(rs.getString(3));
                 listCTSach.add(ctSach);
             }
@@ -79,10 +79,10 @@ public class CTSach_DAO {
         try {
             xuLyDB = new dangNhapDatabase();
             connection = xuLyDB.openConnection();
-            String sql = "INSERT INTO ctsach(masach, mavach, trangthai) VALUES (?,?,?)";
+            String sql = "INSERT INTO ctsach(mavach, masach, trangthai) VALUES (?,?,?)";
             ps = connection.prepareStatement(sql);
-            ps.setInt(2, ctSach.getMaSach());
             ps.setString(1, ctSach.getMaVach());
+            ps.setInt(2, ctSach.getMaSach());
             ps.setString(3, ctSach.getTinhTrangSach());
             result = ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -164,8 +164,8 @@ public class CTSach_DAO {
             rs = ps.executeQuery();
             while (rs.next()) {
                 CTSach_DTO ctSach = new CTSach_DTO();
-                ctSach.setMaSach(rs.getInt(2));
                 ctSach.setMaVach(rs.getString(1));
+                ctSach.setMaSach(rs.getInt(2));
                 ctSach.setTinhTrangSach(rs.getString(3));
                 listCTSach.add(ctSach);
             }

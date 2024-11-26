@@ -6,23 +6,27 @@
             <name>cnpm</name>
             <minimum-ant-version>1.6.5</minimum-ant-version>
             <web-module-libraries>
-                <library dirs="200">
+                <!-- <library dirs="200">
                     <file>${file.reference.jakarta.servlet.jsp.jstl-2.0.0.jar}</file>
-                    <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
                     <file>${file.reference.mysql-connector-j-8.3.0.jar}</file>
-                    <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
                     <file>${file.reference.mssql-jdbc-12.6.1.jre11.jar}</file>
-                    <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
                     <file>${file.reference.jakarta.servlet.jsp.jstl-api-3.0.2.jar}</file>
+                </library>
+                <library dirs="200">
+                    <file>${&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD}</file>
+                </library>
+                <library dirs="200">
+                    <file>${file.reference.poi-5.2.3.jar-1}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
+                    <file>${file.reference.poi-examples-5.2.3.jar-1}</file>
                     <file>${&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD}</file>
                 </library>
                 <library dirs="200">
@@ -50,34 +54,35 @@
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
-                    <file>${file.reference.poi-examples-5.2.3.jar}</file>
+                    <file>${file.reference.poi-excelant-5.2.3.jar-1}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
-                    <file>${file.reference.poi-excelant-5.2.3.jar}</file>
+                    <file>${file.reference.poi-javadoc-5.2.3.jar-1}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
-                    <file>${file.reference.poi-javadoc-5.2.3.jar}</file>
+                    <file>${file.reference.poi-ooxml-5.2.3.jar-1}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
-                    <file>${file.reference.poi-ooxml-5.2.3.jar}</file>
+                    <file>${file.reference.poi-ooxml-full-5.2.3.jar-1}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
-                    <file>${file.reference.poi-ooxml-full-5.2.3.jar}</file>
+                    <file>${file.reference.poi-ooxml-lite-5.2.3.jar-1}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
-                    <file>${file.reference.poi-ooxml-lite-5.2.3.jar}</file>
+                    <file>${file.reference.poi-scratchpad-5.2.3.jar-1}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
-                    <file>${file.reference.poi-scratchpad-5.2.3.jar}</file>
+                    <file>${file.reference.gson-2.11.0.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
+                    <file>${file.reference.jakarta.servlet.jsp.jstl-2.0.0.jar-1}</file>
                     <file>${file.reference.poi-5.2.3.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
@@ -86,10 +91,11 @@
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
-                    <file>${file.reference.commons-logging-1.2.jar}</file>
+                    <file>${file.reference.jakarta.servlet.jsp.jstl-api-3.0.2.jar-1}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
+                    <file>${file.reference.mssql-jdbc-12.6.1.jre11.jar-1}</file>
                     <file>${file.reference.curvesapi-1.07.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
@@ -108,7 +114,7 @@
                 <library dirs="200">
                     <file>${file.reference.xmlbeans-5.1.1.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
-                </library>
+                </library> -->
             </web-module-libraries>
             <web-module-additional-libraries/>
             <source-roots>
