@@ -65,4 +65,15 @@ public class CTPT_DTO {
     public void setSoLuong(int soLuong) {
         this.soLuong = soLuong;
     }
+
+    @Override
+    public String toString() {
+        return "CTPT_DTO{" +
+                "maPT=" + maPT +
+                ", maSach=" + maSach +
+                ", maVachLoi='" + maVachLoi + '\'' +
+                ", ngayTra=" + ngayTra +
+                ", soLuong=" + soLuong +
+                '}';
+    }
 }
