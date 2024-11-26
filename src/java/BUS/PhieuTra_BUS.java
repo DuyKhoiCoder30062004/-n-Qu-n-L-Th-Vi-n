@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package BUS;
 
 import DAO.PhieuTra_DAO;
@@ -9,6 +5,7 @@ import DTO.PhieuTra_DTO;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.poi.ss.usermodel.*;
@@ -56,6 +53,7 @@ public class PhieuTra_BUS {
             headerRow.createCell(1).setCellValue("MaPM");
             headerRow.createCell(2).setCellValue("MaNV");
             headerRow.createCell(3).setCellValue("TongSL");
+            headerRow.createCell(4).setCellValue("NgayTra");
 
             // Populate data rows
             int rowIdx = 1;
@@ -65,6 +63,7 @@ public class PhieuTra_BUS {
                 row.createCell(1).setCellValue(pt.getMaPM());
                 row.createCell(2).setCellValue(pt.getMaNV());
                 row.createCell(3).setCellValue(pt.getTongSL());
+                row.createCell(4).setCellValue(pt.getNgayTra().toString());
             }
 
             // Write to file
@@ -92,8 +91,10 @@ public class PhieuTra_BUS {
                     int maPM = (int) row.getCell(1).getNumericCellValue();
                     int maNV = (int) row.getCell(2).getNumericCellValue();
                     int tongSL = (int) row.getCell(3).getNumericCellValue();
+                    String ngayTraStr = row.getCell(4).getStringCellValue();
+                    LocalDate ngayTra = LocalDate.parse(ngayTraStr);
 
-                    PhieuTra_DTO phieuTra = new PhieuTra_DTO(maPT, maPM, maNV, tongSL);
+                    PhieuTra_DTO phieuTra = new PhieuTra_DTO(maPT, maPM, maNV, tongSL, ngayTra);
                     phieuTraList.add(phieuTra);
                 }
             }
