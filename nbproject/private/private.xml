@@ -2,15 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/src/java/Controller/CTPMServlet.java</file>
-            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/src/java/BUS/PhieuNhap_BUS.java</file>
-            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/src/java/DAO/CTPP_DAO.java</file>
-            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/src/java/DAO/DocGiaDAO.java</file>
-            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/src/java/DAO/CTSach_DAO.java</file>
-            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/src/java/DAO/PhieuMuon_DAO.java</file>
-            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/src/java/DAO/Sach_DAO.java</file>
-            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/src/java/DAO/Loi_DAO.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>
