@@ -17,9 +17,11 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 
-  @WebServlet(name = "PhieuMuon_Servlet", urlPatterns = {"/phieunhap"})
+  @WebServlet(name = "PhieuNhap_Servlet", urlPatterns = {"/phieunhap"})
   public class PhieuNhap_Servlet extends HttpServlet{
 
     private PhieuNhap_BUS pn_BUS = new PhieuNhap_BUS();
@@ -38,7 +40,7 @@ import jakarta.servlet.http.HttpServletResponse;
     ArrayList<CTPN_DTO> listCTPN = ctpn_BUS.getList();
     request.setAttribute("listCTPN", listCTPN);
     request.setAttribute("listPN", listPN);
-    request.getRequestDispatcher("/WEB-INF/gui/phieunhap.jsp").forward(request.response);
+    request.getRequestDispatcher("/WEB-INF/gui/phieunhap.jsp").forward(request,response);
   }
 
   private boolean checkInfor(HttpServletRequest request, HttpServletResponse response, String maPhieu, String ngayNhap)
@@ -60,21 +62,6 @@ import jakarta.servlet.http.HttpServletResponse;
       return false;
     }
     return true;
-  }
-
-  @Override
-  protected void doPost(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException {
-    response.setCharacterEncoding("UTF-8");
-
-    String action = request.getParameter("action");
-    String maPhieu = request.getParameter("maPhieu");
-    String maNCC = request.getParameter("maNCC");
-    String maNV = request.getParameter("maNV");
-    String ngayNhap = request.getParameter("ngayNhap");
-    String tongSL = request.getParameter("tongSL");
-    String tongTien = request.getParameter("tongTien");
-
-    
   }
 
   private boolean addPN(String maPhieu, String maNCC, String maNV, String ngayNhap, String tongSL, String tongTien) {

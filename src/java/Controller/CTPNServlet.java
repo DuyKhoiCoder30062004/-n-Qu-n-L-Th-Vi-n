@@ -37,7 +37,7 @@ public class CTPNServlet extends HttpServlet{
   }
 
   public boolean checkInfor(HttpServletRequest request, HttpServletResponse response, String maPN, String maSach, String soLuong) throws IOException{
-    if(maPN.isEmty()|| maPN == null ){
+    if( maPN == null ){
       response.getWriter().write("{\"thongbao\": \"Mã phiếu mượn không được để trống vui lòng nhập\", \"hopLe\": false}");
       return false;
     }

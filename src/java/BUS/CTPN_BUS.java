@@ -6,13 +6,8 @@ import DTO.CTPN_DTO;
 import java.util.ArrayList;
 
 public class CTPN_BUS {
-    private CTPN_DAO ctpn_DAO; 
-    private PhieuNhap_DAO phieuNhap_DAO;
-
-    public CTPN_BUS() {
-        ctpn_DAO = new CTPN_DAO();
-        phieuNhap_DAO = new PhieuNhap_DAO();
-    }
+    private ArrayList<CTPN_DTO> listCTPN;
+    private CTPN_DAO ctpn_DAO = new CTPN_DAO();
 
     public boolean addCTPN(CTPN_DTO ctpn){
         return ctpn_DAO.addCTPN(ctpn);
@@ -59,6 +54,11 @@ public class CTPN_BUS {
         }
         result.append("]");
         return result;
+    }
+
+    public ArrayList<CTPN_DTO> getList() {
+        listCTPN = ctpn_DAO.getList();
+        return listCTPN;
     }
 
 }
