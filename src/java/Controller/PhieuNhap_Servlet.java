@@ -71,7 +71,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
     pn.setMaNV(Integer.parseInt(maNV));
     pn.setNgayLap(LocalDate.parse(ngayNhap));
     pn.setTongSL(Integer.parseInt(tongSL));
-    pn.setTongTien(Float.parseFloat(tongTien));
+    pn.setTongTien(Double.parseDouble(tongTien));
     return pn_BUS.addPN(pn);
   }
 
@@ -83,7 +83,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
     pn.setMaNV(Integer.parseInt(maNV));
     pn.setNgayLap(LocalDate.parse(ngayLap));
     pn.setTongSL(Integer.parseInt(tongSL));
-    pn.setTongTien(Float.parseFloat(tongTien));
+    pn.setTongTien(Double.parseDouble(tongTien));
     return pn_BUS.updatePN(pn);
   }
 

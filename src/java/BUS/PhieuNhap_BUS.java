@@ -155,7 +155,7 @@ public class PhieuNhap_BUS {
                 pn.setMaNCC(Integer.parseInt(row.getCell(1).getStringCellValue()));
                 pn.setMaNV(Integer.parseInt(row.getCell(2).getStringCellValue()));
                 pn.setTongSL(Integer.parseInt(row.getCell(3).getStringCellValue()));
-                pn.setTongTien(Float.parseFloat(row.getCell(4).getStringCellValue()));
+                pn.setTongTien(Double.parseDouble(row.getCell(4).getStringCellValue()));
 
                 String[] listMaSach = row.getCell(5).getStringCellValue().split(",");
                 String[] listSL = row.getCell(6).getStringCellValue().split(",");

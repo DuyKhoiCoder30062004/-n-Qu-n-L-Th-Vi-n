@@ -268,39 +268,39 @@
         Nhân viên
       </div>
       <button id="btnSach" class="componentMenu">
-        <img src="img/sach.jpg" alt="icon"> Sách
+        <img src="img/sach.jpg" alt="icon" onclick="reDirect(this,'/cnpm/sach')"> Sách
       </button>
-      <button id="btnNhanVien" class="componentMenu">
+      <button id="btnNhanVien" class="componentMenu" onclick="reDirect(this,'/cnpm/nhanvien')">
         <img src="img/stafff.svg" alt="icon"> Nhân viên
       </button>
-      <button id="btnDocGia" class="componentMenu">
+      <button id="btnDocGia" class="componentMenu" onclick="reDirect(this,'/cnpm/docgia')">
         <img src="img/customerr.svg" alt="icon"> Độc giả
       </button>
-      <button id="btnNhaXuatBan" class="componentMenu">
+      <button id="btnNhaXuatBan" class="componentMenu" onclick="reDirect(this,'/cnpm/nhaxuatban')">
         <img src="img/nhaxuatban.jpg" alt="icon"> Nhà xuất bản
       </button>
-      <button id="btnNhaCungCap" class="componentMenu">
+      <button id="btnNhaCungCap" class="componentMenu" onclick="reDirect(this,'/cnpm/nhacungcap')">
         <img src="img/nhacc.jpg" alt="icon"> Nhà cung cấp
       </button>
-      <button id="btnKhuVuc" class="componentMenu">
+      <button id="btnKhuVuc" class="componentMenu" onclick="reDirect(this,'/cnpm/khuvuc')">
         <img src="img/khuvuc.jpg" alt="icon"> Khu vực
       </button>
-      <button id="btnPhieuMuon" class="componentMenu">
+      <button id="btnPhieuMuon" class="componentMenu" onclick="reDirect(this,'/cnpm/phieumuon')">
         <img src="img/export.svg" alt="icon"> Phiếu mượn
       </button>
-      <button id="btnPhieuTra" class="componentMenu">
+      <button id="btnPhieuTra" class="componentMenu" onclick="reDirect(this,'/cnpm/phieutra')">
         <img src="img/phieutra.jpg" alt="icon"> Phiếu trả
       </button>
-      <button id="btnPhieuPhat" class="componentMenu">
+      <button id="btnPhieuPhat" class="componentMenu" onclick="reDirect(this,'/cnpm/phieuphat')">
         <img src="img/phieuphat.jpg" alt="icon"> Phiếu phạt
       </button>
-      <button id="btnPhieuNhap" class="componentMenu">
+      <button id="btnPhieuNhap" class="componentMenu" onclick="reDirect(this,'/cnpm/phieunhap')">
         <img src="img/phieunhap.jpg" alt="icon"> Phiếu nhập
       </button>
-      <button id="btnPhanQuyen" class="componentMenu">
+      <button id="btnPhanQuyen" class="componentMenu" onclick="reDirect(this,'/cnpm/phanquyen')">
         <img src="img/permission.svg" alt="icon"> Phân quyền
       </button>
-      <button id="btnThongKe" class="componentMenu">
+      <button id="btnThongKe" class="componentMenu" onclick="reDirect(this,'/cnpm/thongke')">
         <img src="img/tinhhieuqua_128px.svg" alt="icon"> Thống kê
       </button>
       <button id="btnDangXuat" class="componentMenu">

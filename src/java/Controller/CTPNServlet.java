@@ -76,12 +76,12 @@ public class CTPNServlet extends HttpServlet{
     ctpn.setMaPN(Integer.parseInt(maPN));
     ctpn.setMaSach(Integer.parseInt(maSach));
     ctpn.setSoLuong(Integer.parseInt(soLuong));
-    ctpn.setDonGia(Float.parseFloat(donGia));
+    ctpn.setDonGia(Integer.parseInt(donGia));
     return ctpn_BUS.addCTPN(ctpn);
   }
 
   private boolean updateCTPN(String maPN, String maSach, String soLuong, String donGia){
-    CTPN_DTO ctpn = new CTPN_DTO(Integer.parseInt(maPN),Integer.parseInt(maSach), Integer.parseInt(soLuong), Float.parseFloat(donGia));
+    CTPN_DTO ctpn = new CTPN_DTO(Integer.parseInt(maPN),Integer.parseInt(maSach), Integer.parseInt(soLuong), Integer.parseInt(donGia));
     return ctpn_BUS.updateCTPN(ctpn);
   }
 

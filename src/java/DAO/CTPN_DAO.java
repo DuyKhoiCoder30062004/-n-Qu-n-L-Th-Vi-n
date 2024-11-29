@@ -1,13 +1,12 @@
 package DAO;
 
+import ConnectDB.dangNhapDatabase;
+import DTO.CTPN_DTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import ConnectDB.dangNhapDatabase;
-import DTO.CTPN_DTO;
 
 public class CTPN_DAO{
     private dangNhapDatabase loginDB = null;
@@ -57,7 +56,7 @@ public class CTPN_DAO{
             preStatement.setInt(1, ctpn.getMaPN());
             preStatement.setInt(2, ctpn.getMaSach());
             preStatement.setInt(3, ctpn.getSoLuong());
-            preStatement.setFloat(4, ctpn.getDonGia());
+            preStatement.setInt(4, ctpn.getDonGia());
 
             int cnt = preStatement.executeUpdate();
             updatePhieuNhapTotals(ctpn.getMaPN());
@@ -87,7 +86,7 @@ public class CTPN_DAO{
             preStatement = connect.prepareStatement(query);
 
             preStatement.setInt(1, ctpn.getSoLuong());
-            preStatement.setFloat(2, ctpn.getDonGia());
+            preStatement.setInt(2, ctpn.getDonGia());
             preStatement.setInt(3, ctpn.getMaPN());
             preStatement.setInt(4, ctpn.getMaSach());
 
@@ -183,7 +182,7 @@ public class CTPN_DAO{
                 ctpn.setMaPN(rs.getInt("mapn"));
                 ctpn.setMaSach(rs.getInt("masach"));
                 ctpn.setSoLuong(rs.getInt("soluong"));
-                ctpn.setDonGia(rs.getFloat("dongia"));
+                ctpn.setDonGia(rs.getInt("dongia"));
 
                 listCTPN.add(ctpn);
             }
@@ -219,7 +218,7 @@ public class CTPN_DAO{
                 ctpn.setMaPN(rs.getInt("mapn"));
                 ctpn.setMaSach(rs.getInt("masach"));
                 ctpn.setSoLuong(rs.getInt("soluong"));
-                ctpn.setDonGia(rs.getFloat("dongia"));
+                ctpn.setDonGia(rs.getInt("dongia"));
             }
         } catch (SQLException e) {
             System.err.println("SQL Error: " + e.getMessage());

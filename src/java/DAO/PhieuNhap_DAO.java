@@ -32,7 +32,7 @@ public class PhieuNhap_DAO {
                 pn.setMaNV(rs.getInt("manv"));
                 pn.setNgayLap(rs.getDate("ngaylap").toLocalDate());
                 pn.setTongSL(rs.getInt("tongsl"));
-                pn.setTongTien(rs.getFloat("tongtien"));
+                pn.setTongTien(rs.getDouble("tongtien"));
                 
                 resultList.add(pn);
             }
@@ -64,7 +64,7 @@ public class PhieuNhap_DAO {
             preStatement.setInt(3, pn.getMaNV());
             preStatement.setDate(4, java.sql.Date.valueOf(pn.getNgayLap()));
             preStatement.setInt(5, pn.getTongSL());
-            preStatement.setFloat(6, pn.getTongTien());
+            preStatement.setDouble(6, pn.getTongTien());
 
             int cnt = preStatement.executeUpdate();
             result = cnt > 0; //Kiểm tra số dòng thay đổi

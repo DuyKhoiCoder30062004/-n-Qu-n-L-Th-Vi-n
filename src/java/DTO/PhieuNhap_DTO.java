@@ -9,13 +9,13 @@ public class PhieuNhap_DTO {
     private int maNV;
     private LocalDate ngayLap;
     private int tongSL;
-    private float tongTien;
+    private double tongTien;
     private ArrayList<CTPN_DTO> list;
 
     public PhieuNhap_DTO() {
     }
 
-    public PhieuNhap_DTO(int maPN, int maNCC, int maNV, LocalDate ngayLap, int tongSL, float tongTien) {
+    public PhieuNhap_DTO(int maPN, int maNCC, int maNV, LocalDate ngayLap, int tongSL, double tongTien) {
         this.maPN = maPN;
         this.maNCC = maNCC;
         this.maNV = maNV;
@@ -64,11 +64,11 @@ public class PhieuNhap_DTO {
         this.tongSL = tongSL;
     }
 
-    public float getTongTien() {
+    public double getTongTien() {
         return tongTien;
     }
 
-    public void setTongTien(float tongTien) {
+    public void setTongTien(double tongTien) {
         this.tongTien = tongTien;
     }
 

@@ -41,7 +41,7 @@ public class CTPN_BUS {
             if( option.equals("Mã phiếu") && String.valueOf(pn.getMaPN()).contains(value)
                 || option.equals("Mã sách") && String.valueOf(pn.getMaSach()).contains(value)
                 || option.equals("Số lượng") && pn.getSoLuong() == Integer.parseInt(value) 
-                || option.equals("Đơn giá") && pn.getDonGia() == Float.parseFloat(value) ){
+                || option.equals("Đơn giá") && pn.getDonGia() == Integer.parseInt(value) ){
                     if(!firstItem) result.append(",");
                     result.append("{"
                         + "\"maPN\": \"" + pn.getMaPN() + "\","
