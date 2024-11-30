@@ -124,6 +124,10 @@
             font-size: 20px;
             margin-right: 15px;
         }
+        .icon1 {
+            font-size: 43px;
+            
+        }
 
         .text-container {
             display: flex;
@@ -317,6 +321,11 @@
                     <div class="price">456</div>
                 </div>
             </div>
+            
+            
+            
+            
+            
             <div class="child-div">
     <div class="icon">💰</div> <!-- Icon for money/fines -->
     <div class="text-container">
@@ -330,8 +339,12 @@
         </div>
         <form>
         <div>
-        <input type="datetime-local" style="width: 300px; height: 40px;"/>Hello &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <input type="password" style="width: 300px; height: 40px;"/>Password
+        <br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+        <input type="datetime-local" style="width: 300px; height: 40px;"/>&nbsp;&nbsp;&nbsp;<input type="button" value="Thống kê" onclick="alert('Button clicked!')" style="width: 200px; height: 40px;"/>
+
+        
         </div>
         </form>
         <br/>
