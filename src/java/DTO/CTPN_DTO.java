@@ -1,19 +1,23 @@
 package DTO;
 
+import java.util.ArrayList;
+
 public class CTPN_DTO {
     private int maPN;
     private int maSach;
     private int soLuong;
     private int donGia;
-    
+    private ArrayList<String> maVach;
+
     public CTPN_DTO() {
     }
 
-    public CTPN_DTO(int maPN, int maSach, int soLuong, int donGia) {
+    public CTPN_DTO(int maPN, int maSach, int soLuong, int donGia, ArrayList<String> maVach) {
         this.maPN = maPN;
         this.maSach = maSach;
         this.soLuong = soLuong;
         this.donGia = donGia;
+        this.maVach = maVach;
     }
 
     public int getMaPN() {
@@ -48,6 +52,14 @@ public class CTPN_DTO {
         this.donGia = donGia;
     }
 
+    public ArrayList<String> getMaVach() {
+        return maVach;
+    }
+
+    public void setMaVach(ArrayList<String> maVach) {
+        this.maVach = maVach;
+    }
+    
     public int calculate(int soLuong, int donGia ){
         return soLuong * donGia;
     }

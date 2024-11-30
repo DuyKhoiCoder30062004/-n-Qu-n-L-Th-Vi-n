@@ -1,5 +1,14 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="DTO.Nhanvien_DTO" %>
+<%
+    Nhanvien_DTO nv = (Nhanvien_DTO) session.getAttribute("nv");
+    String tasks = (String) session.getAttribute("tasks");
+    if (nv == null || nv.getChucVu().equals("admin")) {
+        response.sendRedirect("/cnpm/login");
+        return;
+    }
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -264,43 +273,43 @@
     <div id="menu">
       <div class="componentMenu" id="iconAndName">
         <img src="img/account.svg" alt="icon">
-        Thành
-        Nhân viên
+        ${nv.getHo()}  ${nv.getTen()}<br>
+        ${nv.getChucVu()}
       </div>
       <button id="btnSach" class="componentMenu">
-        <img src="img/sach.jpg" alt="icon" onclick="reDirect(this,'/cnpm/sach')"> Sách
+        <img src="img/sach.jpg" alt="icon" value="sách" onclick="reDirect(this,'/cnpm/sach')"> Sách
       </button>
-      <button id="btnNhanVien" class="componentMenu" onclick="reDirect(this,'/cnpm/nhanvien')">
+      <button id="btnNhanVien" class="componentMenu" value="nhân viên" onclick="reDirect(this,'/cnpm/nhanvien')">
         <img src="img/stafff.svg" alt="icon"> Nhân viên
       </button>
-      <button id="btnDocGia" class="componentMenu" onclick="reDirect(this,'/cnpm/docgia')">
+      <button id="btnDocGia" class="componentMenu" value="độc giả" onclick="reDirect(this,'/cnpm/docgia')">
         <img src="img/customerr.svg" alt="icon"> Độc giả
       </button>
-      <button id="btnNhaXuatBan" class="componentMenu" onclick="reDirect(this,'/cnpm/nhaxuatban')">
+      <button id="btnNhaXuatBan" class="componentMenu" value="nhà xuất bản" onclick="reDirect(this,'/cnpm/nhaxuatban')">
         <img src="img/nhaxuatban.jpg" alt="icon"> Nhà xuất bản
       </button>
-      <button id="btnNhaCungCap" class="componentMenu" onclick="reDirect(this,'/cnpm/nhacungcap')">
+      <button id="btnNhaCungCap" class="componentMenu" value="nhà cung cấp" onclick="reDirect(this,'/cnpm/nhacungcap')">
         <img src="img/nhacc.jpg" alt="icon"> Nhà cung cấp
       </button>
-      <button id="btnKhuVuc" class="componentMenu" onclick="reDirect(this,'/cnpm/khuvuc')">
+      <button id="btnKhuVuc" class="componentMenu" value="khu vực" onclick="reDirect(this,'/cnpm/khuvuc')">
         <img src="img/khuvuc.jpg" alt="icon"> Khu vực
       </button>
-      <button id="btnPhieuMuon" class="componentMenu" onclick="reDirect(this,'/cnpm/phieumuon')">
+      <button id="btnPhieuMuon" class="componentMenu" value="phiếu mượn" onclick="reDirect(this,'/cnpm/phieumuon')">
         <img src="img/export.svg" alt="icon"> Phiếu mượn
       </button>
-      <button id="btnPhieuTra" class="componentMenu" onclick="reDirect(this,'/cnpm/phieutra')">
+      <button id="btnPhieuTra" class="componentMenu" value="phiếu trả" onclick="reDirect(this,'/cnpm/phieutra')">
         <img src="img/phieutra.jpg" alt="icon"> Phiếu trả
       </button>
-      <button id="btnPhieuPhat" class="componentMenu" onclick="reDirect(this,'/cnpm/phieuphat')">
+      <button id="btnPhieuPhat" class="componentMenu" value="phiếu phạt" onclick="reDirect(this,'/cnpm/phieuphat')">
         <img src="img/phieuphat.jpg" alt="icon"> Phiếu phạt
       </button>
-      <button id="btnPhieuNhap" class="componentMenu" onclick="reDirect(this,'/cnpm/phieunhap')">
+      <button id="btnPhieuNhap" class="componentMenu" value="phiếu nhập" onclick="reDirect(this,'/cnpm/phieunhap')">
         <img src="img/phieunhap.jpg" alt="icon"> Phiếu nhập
       </button>
-      <button id="btnPhanQuyen" class="componentMenu" onclick="reDirect(this,'/cnpm/phanquyen')">
+      <button id="btnPhanQuyen" class="componentMenu" value="phân quyền" onclick="reDirect(this,'/cnpm/phanquyen')">
         <img src="img/permission.svg" alt="icon"> Phân quyền
       </button>
-      <button id="btnThongKe" class="componentMenu" onclick="reDirect(this,'/cnpm/thongke')">
+      <button id="btnThongKe" class="componentMenu" value="thống kê" onclick="reDirect(this,'/cnpm/thongke')">
         <img src="img/tinhhieuqua_128px.svg" alt="icon"> Thống kê
       </button>
       <button id="btnDangXuat" class="componentMenu">
@@ -314,12 +323,11 @@
       <section id="detailPN">
         <div class="input-group">
           <label class="nameFeature">Mã phiếu </label>
-          <input type="text" id="txtMaPhieu" placeholder="Nhập mã phiếu">
+          <input type="text" id="txtmaPN" placeholder="Nhập mã phiếu">
         </div>
         <div class="input-group">
           <label class="nameFeature">Mã Nhà Cung Cấp </label>
           <input type="text" id="txtMaNCC" placeholder="Nhập mã khách">
-          <img src="img/add.svg" style="cursor: pointer;width: 15px;height:auto;" />
         </div>
         <div class="input-group">
           <label class="nameFeature">Mã NV </label>
@@ -346,7 +354,6 @@
                 <option value="Mã phiếu">Mã phiếu</option>
                 <option value="Mã NCC">Mã NCC</option>
                 <option value="Mã NV">Mã NV</option>
-                <option value="Ngày lập">Ngày lập</option>
             </select>
             <input type="text" id="txtSearchPN" placeholder="Nhập thông tin">
             <img class="iconChucNang" id="iconSearch" title="Tìm kiếm PN" style="margin-left: 0px;" src="img/search1.png" alt="icon" onclick="sendDataPN('search')">
@@ -370,7 +377,7 @@
             <tbody id="tbodyPN">
                 <c:forEach var="pn" items="${requestScope.listPN}">
                     <tr>
-                        <td>${pn.maPn}</td>
+                        <td>${pn.maPN}</td>
                         <td>${pn.maNCC}</td>
                         <td>${pn.maNV}</td>
                         <td>${pn.ngayLap}</td>
@@ -403,7 +410,7 @@
           <div id="sectionImportImformationCTPN">
               <div class="input-groupCTPN" style="margin-top: 40px;">
                   <label class="nameFeatureCTPN" style="margin-right: 10px;">Mã phiếu</label>
-                  <input type="text" id="txtMaPhieuCTPN" placeholder="Nhập mã phiếu">
+                  <input type="text" id="txtmaPNCTPN" placeholder="Nhập mã phiếu">
               </div>
               <div class="input-groupCTPN">
                   <label class="nameFeatureCTPN" style="margin-right: 18px;">Mã sách</label>
@@ -487,7 +494,7 @@
   const cells = row.getElementsByTagName('td');
 
   // Lấy giá trị từ từng ô của dòng được click và gán cho các trường tương ứng
-  document.getElementById('txtMaPhieu').value = cells[0].innerText.trim();
+  document.getElementById('txtmaPN').value = cells[0].innerText.trim();
   document.getElementById('txtMaNCC').value = cells[1].innerText.trim();
   document.getElementById('txtMaNV').value = cells[2].innerText.trim();
 
@@ -505,7 +512,7 @@
   const cells = row.getElementsByTagName('td');
 
   // Lấy giá trị từ từng ô của dòng được click và gán cho các trường tương ứng
-  document.getElementById('txtMaPhieuCTPN').value = cells[0].innerText.trim();
+  document.getElementById('txtmaPNCTPN').value = cells[0].innerText.trim();
   document.getElementById('txtSachCTPN').value = cells[1].innerText.trim();
   document.getElementById('txtSLCTPN').value = cells[2].innerText.trim();
   document.getElementById('txtDonGiaCTPN').value = cells[3].innerText.trim();
@@ -541,7 +548,7 @@
 }
 
     function clearInputPN() {
-  document.getElementById('txtMaPhieu').value = '';
+  document.getElementById('txtmaPN').value = '';
   document.getElementById('txtMaNCC').value = '';
   document.getElementById('txtMaNV').value = '';
   document.getElementById('txtTongSL').value = '0';
@@ -550,7 +557,7 @@
 }
 
     function clearInputCTPN() {
-  document.getElementById('txtMaPhieuCTPN').value = '';
+  document.getElementById('txtmaPNCTPN').value = '';
   document.getElementById('txtSachCTPN').value = '';
   document.getElementById('txtSLCTPN').value = '';
   document.getElementById('txtDonGiaCTPN').value = '';
@@ -559,7 +566,7 @@
 function sendDataPN(action) {
     const formData = new URLSearchParams({
         action: action,
-        maPN: document.getElementById('txtMaPhieu').value,
+        maPN: document.getElementById('txtmaPN').value,
         maNCC: document.getElementById('txtMaNCC').value,
         maNV: document.getElementById('txtMaNV').value,
         ngayLap: document.getElementById('txtNgayLap').value,
@@ -618,7 +625,7 @@ function sendDataPN(action) {
 function sendDataCTPN(action) {
   const formData = new URLSearchParams({
     action: action,
-    maPN: document.getElementById('txtMaPhieuCTPN').value,
+    maPN: document.getElementById('txtmaPNCTPN').value,
     maSach: document.getElementById('txtSachCTPN').value,
     soLuong: document.getElementById('txtSLCTPN').value,
     donGia: document.getElementById('txtDonGiaCTPN').value,
@@ -649,7 +656,7 @@ function kQTimKiemPN(results) {
   results.forEach(item => {
     const row = document.createElement('tr');
     row.innerHTML = `
-      <td>${item.maPhieu || ''}</td>
+      <td>${item.maPN || ''}</td>
       <td>${item.maNCC || ''}</td>
       <td>${item.maNV || ''}</td>
       <td>${item.ngayLap || ''}</td>
@@ -696,7 +703,19 @@ document.addEventListener('DOMContentLoaded', function () {
         sendDataPN();
     });
 });
-
+function reDirect(button,url)
+                    {
+                        event.preventDefault(); 
+                        var tasks = "<%= tasks %>";
+                        if(tasks.includes(button.value))
+                        {
+                            window.location.href =url;
+                        }
+                        else
+                        {
+                            alert("Bạn không có quyền quản lí tác vụ "+ button.value);
+                        }
+                    }
   </script>
 </body>
 </html>

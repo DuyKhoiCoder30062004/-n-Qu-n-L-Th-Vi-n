@@ -25,6 +25,10 @@ public class CTPT_DTO {
         this.soLuong = soLuong;
     }
 
+    public CTPT_DTO(int parseInt, int parseInt0, int parseInt1) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
     // Getters and setters
     public int getMaPT() {
         return maPT;
