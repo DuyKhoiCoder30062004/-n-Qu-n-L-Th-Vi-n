@@ -294,7 +294,7 @@
         <button class="conponentMenu" value="phân quyền" onclick="reDirect(this, '/cnpm/thongke')">
             <img src="img/phanquyen.jpg" alt="icon"> Phân quyền
         </button>
-        <button id="btnThongKe" class="conponentMenu" value="thống kê" onclick="reDirect(this, '/cnpm/thongke')">
+        <button id="btnThongKe" class="conponentMenu" value="thống kê" onclick="reDirect(this, '/cnpm/thongke.jsp')">
             <img src="img/thongke.jpg" alt="icon"> Thống kê
         </button>
         <button class="conponentMenu" value="đăng xuất" onclick="reDirect(this, '/cnpm/thongke')">
