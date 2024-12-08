@@ -44,6 +44,7 @@ public class PhieuNhap_Servlet extends HttpServlet {
         request.setAttribute("listCTPN", listCTPN);
         request.setAttribute("listPN", listPN);
         request.getRequestDispatcher("/WEB-INF/gui/phieunhap.jsp").forward(request, response);
+    }
 
     private boolean checkInfor(HttpServletRequest request, HttpServletResponse response, 
             String maPhieu, String ngayNhap,String maNCC)

@@ -1,20 +1,22 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<<<<<<< HEAD
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="java.util.List, Model.CTPM, Model.CTPP" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.util.Map.Entry" %>
+<%@ page import="DTO.Nhanvien_DTO" %>
+<%@ page import="DTO.PhieuMuon_DTO" %>
+<%@ page import="DTO.CTPP_DTO" %>
 <%
     // Retrieve the 'soLuongAndYear' attribute from the request
-    List<CTPM> soLuongAndYear = (List<CTPM>) request.getAttribute("soLuongAndYear");
+    List<PhiMuon_DTO> soLuongAndYear = (List<PhieuMuon_DTO>) request.getAttribute("soLuongAndYear");
 
     // Use a map to aggregate the sum of 'soLuong' by year
     Map<Integer, Integer> yearToSumMap = new HashMap<>();
     
-    for (CTPM ctpm : soLuongAndYear) {
-        int year = Integer.parseInt(new java.text.SimpleDateFormat("yyyy").format(ctpm.getNgayMuon()));
-        int soLuong = ctpm.getSoLuong();
+    for (PhieuMuon_DTO pm : soLuongAndYear) {
+        int year = Integer.parseInt(new java.text.SimpleDateFormat("yyyy").format(pm.getNgayLap()));
+        int soLuong = ctpm.getTongSL();
         
         // Accumulate the 'soLuong' for the same year
         yearToSumMap.put(year, yearToSumMap.getOrDefault(year, 0) + soLuong);
@@ -34,9 +36,9 @@
     
     
     
-List<CTPP> soTien_NamPhat = (List<CTPP>) request.getAttribute("soTien_NamPhat");
+List<CTPP_DTO> soTien_NamPhat = (List<CTPP_DTO>) request.getAttribute("soTien_NamPhat");
 Map<Integer, Integer> yearToSumMap1 = new HashMap<>();
-for(CTPP ctpp : soTien_NamPhat){
+for(CTPP_DTO ctpp : soTien_NamPhat){
 int year = Integer.parseInt(new java.text.SimpleDateFormat("yyyy").format(ctpp.getNgayLap()));
 int tien = ctpp.getTien();
 
@@ -53,7 +55,6 @@ yearToSumMap1.put(year, yearToSumMap1.getOrDefault(year, 0) + tien);
         chartData1.setLength(chartData1.length() - 2);
     }
 %>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -148,6 +149,7 @@ yearToSumMap1.put(year, yearToSumMap1.getOrDefault(year, 0) + tien);
         .thongke {
             font-size: 25px;
             margin-left: -50px;
+            text-align: center;
             color: #064BFB;
             font-weight: bolder;
             text-shadow: 2px 2px 5px rgba(9, 9, 9, 0.5);
@@ -356,11 +358,11 @@ yearToSumMap1.put(year, yearToSumMap1.getOrDefault(year, 0) + tien);
         <button class="conponentMenu" value="phân quyền" onclick="reDirect(this, '/cnpm/phanquyen')">
             <img src="img/phanquyen.jpg" alt="icon"> Phân quyền
         </button>
-        <button id="btnThongKe" class="conponentMenu" value="thống kê" onclick="reDirect(this, '#')">
+        <button id="btnThongKe" class="conponentMenu" value="thống kê" onclick="reDirect(this, '/cnpm/thongke')">
             <img src="img/thongke.jpg" alt="icon"> Thống kê
         </button>
         <button class="conponentMenu" value="đăng xuất" onclick="reDirect(this, '/cnpm/dangxuat)">
-            <img src="img/dangxuat.jpg" alt="icon"> Đăng xuất
+            <img src="imgdangxuat.jpg" alt="icon"> Đăng xuất
         </button>
     </div>
 
@@ -369,7 +371,6 @@ yearToSumMap1.put(year, yearToSumMap1.getOrDefault(year, 0) + tien);
             <h2 class="thongke">Statistics Panel</h2>
         </div>
         <div class="parent-container">
-
     <div class="child-div">
         <div class="icon">📊</div>
         <div class="text-container">
@@ -411,3 +412,6 @@ yearToSumMap1.put(year, yearToSumMap1.getOrDefault(year, 0) + tien);
 
 </body>
 </html>
+
+
+
