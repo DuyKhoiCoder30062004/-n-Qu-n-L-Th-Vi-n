@@ -6,7 +6,14 @@
 <%@ page import="DTO.PhieuMuon_DTO" %>
 <%@ page import="DTO.CTPP_DTO" %>
 <%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="DTO.Nhanvien_DTO" %>
 <%
+    Nhanvien_DTO nv = (Nhanvien_DTO) session.getAttribute("nv");
+    String tasks = (String) session.getAttribute("tasks");
+    if (nv == null || nv.getChucVu().equals("admin")) {
+        response.sendRedirect("/cnpm/login");
+        return;
+    }
     List<PhieuMuon_DTO> soLuongAndYear = (List<PhieuMuon_DTO>) request.getAttribute("soLuongAndYear");
     Map<Integer, Integer> yearToSumMap = new HashMap<>();
     for (PhieuMuon_DTO pm : soLuongAndYear) {
@@ -253,7 +260,7 @@
                 data.addRows([
             <%= chartData.toString() %>
                 ]);
-                
+
                 var options = {
                     title: 'Số sách mượn qua các năm',
                     vAxis: {title: 'Năm'},
@@ -290,7 +297,7 @@
                 data.addRows([
             <%= chartData1.toString() %>
                 ]);
-                
+
                 var options = {
                     title: 'Số tiền phạt qua các năm',
                     vAxis: {title: 'Năm'},
@@ -307,13 +314,19 @@
                 chart1.draw(data, options);
             }
 
-            // Redirect function
-            function reDirect(button, url) {
+            document.getElementById('btnDangXuat').addEventListener('click', function (event) {
+                event.preventDefault();  // Ngừng hành động mặc định của nút
+                window.location.href = '/cnpm/login';  // Chuyển hướng đến trang đăng nhập
+            });
+            function reDirect(button, url)
+            {
                 event.preventDefault();
-                var tasks = ["sách", "nhân viên", "độc giả", "nhà xuất bản", "nhà cung cấp", "khu vực", "phiếu mượn", "phiếu trả", "phiếu phạt", "phiếu nhập", "phân quyền", "thống kê"];
-                if (tasks.includes(button.value)) {
+                var tasks = "<%= tasks %>";
+                if (tasks.includes(button.value))
+                {
                     window.location.href = url;
-                } else {
+                } else
+                {
                     alert("Bạn không có quyền quản lí tác vụ " + button.value);
                 }
             }
@@ -322,49 +335,52 @@
     <body>
 
         <div id="menu">
-            <div class="conponentMenu" id="iconAndName">
-                <img src="img/sach.jpg" alt="icon"> Sách
+           <div class="conponentMenu" id="iconAndName" >
+                    <img src="img/account.svg" alt="icon">
+                    ${nv.getHo()}  ${nv.getTen()}<br>
+                    ${nv.getChucVu()} 
+                </div>
+                <button id="btnSach" class="conponentMenu" value="sách" onclick="reDirect(this,'/cnpm/sach')">
+                    <img src="img/sach.jpg" alt="icon"> Sách
+                </button>
+                <button id="btnNhanVien" class="conponentMenu" value="nhân viên" onclick="reDirect(this,'/cnpm/nhanvien')">
+                    <img src="img/stafff.svg" alt="icon"> Nhân viên
+                </button>
+                <button id="btnDocGia" class="conponentMenu" value="độc giả" onclick="reDirect(this,'/cnpm/docgia')">
+                    <img src="img/customerr.svg" alt="icon"> Độc giả
+                </button>
+                <button id="btnNhaXuatBan" class="conponentMenu" value="nhà xuất bản" onclick="reDirect(this,'/cnpm/nxb')">
+                    <img src="img/nhaxuatban.jpg" alt="icon"> Nhà xuất bản
+                </button>
+                <button id="btnNhaCungCap" class="conponentMenu" value="nhà cung cấp" onclick="reDirect(this,'/cnpm/ncc')">
+                    <img src="img/nhacc.jpg" alt="icon"> Nhà cung cấp
+                </button>
+                <button id="btnKhuVuc" class="conponentMenu" value="khu vực" onclick="reDirect(this,'/cnpm/kv')">
+                    <img src="img/khuvuc.jpg" alt="icon"> Khu vực
+                </button>
+                <button id="btnPhieuMuon" class="conponentMenu" value="phiếu mượn" onclick="reDirect(this,'/cnpm/phieumuon')">
+                    <img src="img/export.svg" alt="icon"> Phiếu mượn
+                </button>
+                <button id="btnPhieuTra" class="conponentMenu" value="phiếu trả" onclick="reDirect(this,'/cnpm/phieutra')">
+                    <img src="img/phieutra.jpg" alt="icon"> Phiếu trả
+                </button>
+                <button id="btnPhieuPhat" class="conponentMenu" value="phiếu phạt" onclick="reDirect(this,'/cnpm/phieuphat')">
+                    <img src="img/phieuphat.jpg" alt="icon"> Phiếu phạt
+                </button>
+                <button id="btnPhieuNhap" class="conponentMenu" value="phiếu nhập" onclick="reDirect(this,'/cnpm/phieunhap')">
+                    <img src="img/phieunhap.jpg" alt="icon"> Phiếu nhập
+                </button>
+                <button id="btnPhanQuyen" class="conponentMenu" value="phân quyền" onclick="reDirect(this,'/cnpm/phanquyen')">
+                    <img src="img/permission.svg" alt="icon"> Phân quyền
+                </button>
+                <button id="btnThongKe" class="conponentMenu" value="thống kê" onclick="reDirect(this,'/cnpm/thongke')">
+                    <img src="img/tinhhieuqua_128px.svg" alt="icon"> Thống kê
+                </button>
+                <button id="btnDangXuat" class="conponentMenu">
+                    <img src="img/logout.jpg" alt="icon"> Đăng xuất
+                </button>
+
             </div>
-            <button class="conponentMenu" value="sách" onclick="reDirect(this, '/cnpm/sach')">
-                <img src="img/background_menu.png" alt="icon"> Sách
-            </button>
-            <button class="conponentMenu" value="nhân viên" onclick="reDirect(this, '/cnpm/nhanvien')">
-                <img src="img/stafff.svg" alt="icon"> Nhân viên
-            </button>
-            <button class="conponentMenu" value="độc giả" onclick="reDirect(this, '/cnpm/docgia')">
-                <img src="img/background_menu.png" alt="icon"> Độc giả
-            </button>
-            <button class="conponentMenu" value="nhà xuất bản" onclick="reDirect(this, '/cnpm/nxb')">
-                <img src="img/nhaxuatban.jpg" alt="icon"> Nhà xuất bản
-            </button>
-            <button class="conponentMenu" value="nhà cung cấp" onclick="reDirect(this, '/cnpm/ncc')">
-                <img src="img/nhacc.jpg" alt="icon"> Nhà cung cấp
-            </button>
-            <button class="conponentMenu" value="khu vực" onclick="reDirect(this, '/cnpm/kv')">
-                <img src="img/khuvuc.jpg" alt="icon"> Khu vực
-            </button>
-            <button class="conponentMenu" value="phiếu mượn" onclick="reDirect(this, '/cnpm/phieumuon')">
-                <img src="img/phieumuon.jpg" alt="icon"> Phiếu mượn
-            </button>
-            <button class="conponentMenu" value="phiếu trả" onclick="reDirect(this, '/cnpm/phieutra')">
-                <img src="img/phieutra.jpg" alt="icon"> Phiếu trả
-            </button>
-            <button class="conponentMenu" value="phiếu phạt" onclick="reDirect(this, '/cnpm/phieuphat')">
-                <img src="img/phieuphat.jpg" alt="icon"> Phiếu phạt
-            </button>
-            <button class="conponentMenu" value="phiếu nhập" onclick="reDirect(this, '/cnpm/phieunhap')">
-                <img src="img/phieunhap.jpg" alt="icon"> Phiếu nhập
-            </button>
-            <button class="conponentMenu" value="phân quyền" onclick="reDirect(this, '/cnpm/phanquyen')">
-                <img src="img/phanquyen.jpg" alt="icon"> Phân quyền
-            </button>
-            <button id="btnThongKe" class="conponentMenu" value="thống kê" onclick="reDirect(this, '/cnpm/thongke')">
-                <img src="img/thongke.jpg" alt="icon"> Thống kê
-            </button>
-            <button class="conponentMenu" value="đăng xuất" onclick="reDirect(this, '/cnpm/dangxuat)">
-                <img src="imgdangxuat.jpg" alt="icon"> Đăng xuất
-            </button>
-        </div>
 
         <div id="form">
             <div id="title">
