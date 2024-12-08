@@ -1,14 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 
 package controller;
 
-import DAO.CTPM_DAO;
-import DAO.CTPP_DAO;
-import DAO.PhieuPhat_DAO;
-import DAO.Sach_DAO;
+
 import DAO.ThongkeDAO;
 import DTO.CTPM_DTO;
 import DTO.CTPP_DTO;
@@ -26,33 +19,14 @@ import java.util.List;
 
 @WebServlet(name="thongkeServlet", urlPatterns={"/thongke"})
 public class thongkeServlet extends HttpServlet {
-   
+   private ThongkeDAO tk_DAO=new ThongkeDAO();
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet thongkeServlet</title>");  
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet thongkeServlet at " + request.getContextPath () + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
     } 
-    @Override
+     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-
-
-        Sach_DAO Dao = new Sach_DAO();
-        CTPM_DAO pmDao = new CTPM_DAO();
-        PhieuPhat_DAO pphatDao = new PhieuPhat_DAO();
-        CTPP_DAO ppDao = new CTPP_DAO();
-        ThongkeDAO tk_DAO=new ThongkeDAO();
+            throws ServletException, IOException {
 //        List<Sach> l = dao.getAllSach_Information();
         int totalSoLuong = tk_DAO.getTotalSoLuong();
         request.setAttribute("soLuongTotal",totalSoLuong);
