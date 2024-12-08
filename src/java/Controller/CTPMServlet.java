@@ -5,13 +5,19 @@
 package Controller;
 
 import BUS.CTPM_BUS;
+import BUS.CTPP_BUS;
+import BUS.CTPT_BUS;
+import BUS.CTSach_BUS;
 import BUS.DocGiaBUS;
 import BUS.PhieuMuon_BUS;
 import BUS.PhieuPhat_BUS;
 import BUS.PhieuTra_BUS;
 import BUS.Sach_BUS;
 import DTO.CTPM_DTO;
-import DTO.DocGiaDTO;
+import DTO.CTPP_DTO;
+import DTO.CTPT_DTO;
+import DTO.CTSach_DTO;
+import DTO.DocGia_DTO;
 import DTO.PhieuMuon_DTO;
 import DTO.PhieuPhat_DTO;
 import DTO.PhieuTra_DTO;
@@ -23,6 +29,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -36,7 +43,11 @@ public class CTPMServlet extends HttpServlet {
     private CTPM_BUS ctpm_BUS = new CTPM_BUS();
     private DocGiaBUS dg_BUS = new DocGiaBUS();
     private Sach_BUS sach_BUS = new Sach_BUS();
-
+    private CTSach_BUS cts_BUS=new CTSach_BUS();
+    private PhieuTra_BUS pt_BUS =new PhieuTra_BUS();
+    private PhieuPhat_BUS pp_BUS=new PhieuPhat_BUS();
+    private  CTPT_BUS ctpt_BUS=new CTPT_BUS();
+    private    CTPP_BUS ctpp_BUS=new CTPP_BUS();
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -47,7 +58,7 @@ public class CTPMServlet extends HttpServlet {
             throws ServletException, IOException {
         ArrayList<PhieuMuon_DTO> listPM = pm_BUS.getList();
         ArrayList<CTPM_DTO> listCTPM = ctpm_BUS.getList();
-        ArrayList<DocGiaDTO> listDG = dg_BUS.getList();
+        ArrayList<DocGia_DTO> listDG = dg_BUS.getListDG();
         ArrayList<Sach_DTO> listSach = sach_BUS.getListSach();
         request.setAttribute("listCTPM", listCTPM);
         request.setAttribute("listPM", listPM);
@@ -122,7 +133,73 @@ public class CTPMServlet extends HttpServlet {
         }
         return true;
     }
-
+    private ArrayList<CTPT_DTO> searchListCTPT(int maPT,int maSach)
+    {
+        ArrayList<CTPT_DTO> list=new ArrayList<CTPT_DTO>();
+        for(CTPT_DTO i:ctpt_BUS.searchByMaPT(maPT))
+            if(i.getMaSach()==maSach)
+                list.add(i);
+        return list;
+        
+    }
+    private PhieuTra_DTO searchPT(int maPM)
+    {
+        for(PhieuTra_DTO i:pt_BUS.getListPhieuTra())
+            if(i.getMaPM()==maPM)
+                return i;
+        return null;
+    }
+    private PhieuPhat_DTO searchPP(int maPT)
+    {
+        for(PhieuPhat_DTO i:pp_BUS.getList())
+            if(i.getMaPT()==maPT)
+                return i;
+        return null;
+    }
+    private boolean Update_When_Delete(int maPM,int maSach)
+    {
+        
+        PhieuTra_DTO pt=searchPT(maPM);
+        if(pt!=null)
+        {
+            ArrayList<CTPT_DTO> listCTPT=searchListCTPT(pt.getMaPT(),maSach);
+            if(!listCTPT.isEmpty())
+            {
+                PhieuPhat_DTO pp=searchPP(pt.getMaPT());
+                if(pp!=null)
+                {
+                    for(CTPT_DTO i:listCTPT)
+                    {
+                        for(String j:i.getMaVachLoi().split(","))
+                        {
+                            CTPP_DTO ctpp=ctpp_BUS.searchByMaPP_MaVach(pp.getMaPP(), j);
+                            if(ctpp!=null)
+                            {
+                                CTSach_DTO ctsUpdate = cts_BUS.searchCTSachByMaVach(j).get(0);
+                                String tts = ctsUpdate.getTinhTrangSach();
+                                for (String k :ctpp.getLiDo()) {
+                                    tts = tts.replace(k, "").replaceAll(",\\s*,", ",").trim();
+                                }
+                                tts = tts.substring(0, tts.length());
+                                ctsUpdate.setTinhTrangSach(tts);
+                                if(!cts_BUS.updateCTSach(ctsUpdate)
+                                   ||pp_BUS.updateTT(pp.getMaPP(),pp.getTongTien()-ctpp.getTien())
+                                   ||!ctpp_BUS.deleteCTPP(ctpp.getMaPP(),ctpp.getMaVach()))
+                                        return false;
+                            }
+                        }
+                        pt.setTongSL(pt.getTongSL()-i.getSoLuong());
+                        if(!ctpt_BUS.deleteCTPT(i.getMaPT(),i.getMaSach(),i.getNgayTra())
+                            ||!pt_BUS.updatePhieuTra(pt))
+                            return false;
+                    }
+                }
+                
+            }
+        }
+        return true;
+        
+    }
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -150,7 +227,6 @@ public class CTPMServlet extends HttpServlet {
                 if (addCTPM(maPM, maSach, soLuong, trangThai)
                         && pm_BUS.updateTongSL(Integer.parseInt(maPM), pm_BUS.searchByMaPM(Integer.parseInt(maPM)).getTongSL() + Integer.parseInt(soLuong))
                         &&sach_BUS.suaSach(sachAdd)) {
-
                     response.getWriter().write("{\"thongbao\": \"Thêm CTPM thành công\", \"hopLe\": true}");
                 } else {
                     response.getWriter().write("{\"thongbao\": \"Thêm CTPM thất bại\", \"hopLe\": false}");
@@ -183,9 +259,10 @@ public class CTPMServlet extends HttpServlet {
                 int sl = ctpm_BUS.searchByMaPM_MaSach(Integer.parseInt(maPM), Integer.parseInt(maSach)).getSoLuong();
                 Sach_DTO sachDe=sach_BUS.timSachTheoMaSach(maSach).get(0);
                 sachDe.setSoLuong(sachDe.getSoLuong()+sl);
-                if (ctpm_BUS.deleteCTPM(Integer.parseInt(maPM), Integer.parseInt(maSach))
-                        && pm_BUS.updateTongSL(Integer.parseInt(maPM), pm_BUS.searchByMaPM(Integer.parseInt(maPM)).getTongSL() - sl)
-                        &&sach_BUS.suaSach(sachDe)) {
+                if (Update_When_Delete(Integer.parseInt(maPM), Integer.parseInt(maSach))
+                    &&ctpm_BUS.deleteCTPM(Integer.parseInt(maPM), Integer.parseInt(maSach))
+                    && pm_BUS.updateTongSL(Integer.parseInt(maPM), pm_BUS.searchByMaPM(Integer.parseInt(maPM)).getTongSL() - sl)
+                    &&sach_BUS.suaSach(sachDe)) {
 
                     response.getWriter().write("{\"thongbao\": \"Xóa thành công\", \"hopLe\": true}");
                 } else {
@@ -200,7 +277,7 @@ public class CTPMServlet extends HttpServlet {
                 StringBuilder result = ctpm_BUS.searchCTPM(optionSearch, valueSearch);
                 if (result.length() > 2) {
                     // Có dữ liệu
-                    response.getWriter().write("{\"thongbao\": \"\", \"hopLe\": false, \"results\": " + result.toString() + "}");
+                    response.getWriter().write("{\"thongbao\": \"tìm kiếm thành công\", \"hopLe\": false, \"results\": " + result.toString() + "}");
                 } else {
                     // Không có dữ liệu
                     response.getWriter().write("{\"thongbao\": \"Không có phiếu mượn bạn cần tìm\", \"hopLe\": false}");

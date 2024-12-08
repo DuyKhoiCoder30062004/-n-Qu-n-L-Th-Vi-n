@@ -52,10 +52,10 @@ public class Sach_DTO {
     public void setMaKhuVuc(int maKhuVuc) {
         this.maKhuVuc = maKhuVuc;
     }
-    public int getGia() {
+    public int getGiaTien() {
         return giaTien;
     }
-    public void setGia(int gia) {
+    public void setGiaTien(int gia) {
         this.giaTien = gia;
     }
     public int getSoLuong() {

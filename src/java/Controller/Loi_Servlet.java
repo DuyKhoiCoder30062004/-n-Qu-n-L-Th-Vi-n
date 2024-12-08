@@ -79,7 +79,7 @@ public class Loi_Servlet extends HttpServlet {
             throws ServletException, IOException {
         ArrayList<PhieuPhat_DTO> listPP = pp_BUS.getList();
         ArrayList<CTPP_DTO> listCTPP = ctpp_BUS.getList();
-        ArrayList<Loi_DTO> listLoi = loi_BUS.getList();
+        ArrayList<Loi_DTO> listLoi = loi_BUS.getListTonTai();
         ArrayList<PhieuTra_DTO> listPT=listPT_BiPhat();
         ArrayList<Sach_DTO> listSach=sach_BUS.getListSach();
         ArrayList<CTSach_DTO> listCTS=cts_BUS.getList();
@@ -130,7 +130,7 @@ public class Loi_Servlet extends HttpServlet {
                 if (!checkInfor(request, response, tenLoi, phanTramTien)) {
                     return;
                 }
-                if (loi_BUS.searchByTenLoi(tenLoi) != null) {
+                if (loi_BUS.searchByTenLoi(tenLoi) != null || loi_BUS.searchByTenLoi("#"+tenLoi)!=null) {
                     response.getWriter().write("{\"thongbao\": \"Lỗi này đã có trong hệ thống vui lòng kiểm tra lại tên lỗi\", \"hopLe\": false}");
                     return;
                 }

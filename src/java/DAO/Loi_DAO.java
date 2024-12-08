@@ -13,7 +13,6 @@ import java.sql.Connection;
 import ConnectDB.dangNhapDatabase;
 import DTO.Loi_DTO;
 
-
 public class Loi_DAO {
 
     private dangNhapDatabase dnDB = null;
@@ -106,16 +105,39 @@ public class Loi_DAO {
             dnDB = new dangNhapDatabase();
             connection = dnDB.openConnection();
             st = connection.createStatement();
-            String qry = "Delete from loi where tenloi='" + tenLoi + "'";
+
+            // Thay đổi tên lỗi bằng cách thêm ký tự '#' trước tên lỗi
+            String qry = "UPDATE loi SET tenloi = CONCAT('#', tenloi) WHERE tenloi = '" + tenLoi + "'";
             st.executeUpdate(qry);
+            String updateCTPPQuery = """
+            UPDATE ctpp 
+            SET lido = TRIM(BOTH ',' FROM REPLACE(
+                CONCAT(',', lido, ','),
+                CONCAT(',', ?, ','),
+                CONCAT(',#', ?, ',')
+            ))
+            WHERE lido LIKE CONCAT('%', ?, '%')
+        """;
+            ps = connection.prepareStatement(updateCTPPQuery);
+            ps.setString(1, tenLoi);
+            ps.setString(2, tenLoi);
+            ps.setString(3, tenLoi);
+            ps.executeUpdate();
 
         } catch (Exception e) {
             result = false;
+            e.printStackTrace();
         } finally {
             try {
-                dnDB.closeConnection(connection);
-                ps.close();
-                rs.close();
+                if (connection != null) {
+                    dnDB.closeConnection(connection);
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (rs != null) {
+                    rs.close();
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -130,14 +152,14 @@ public class Loi_DAO {
             dnDB = new dangNhapDatabase();
             connection = dnDB.openConnection();
             ps = connection.prepareStatement(qry);
-            ps.setString(1,tenLoi);
+            ps.setString(1, tenLoi);
             rs = ps.executeQuery();
-            if(rs.next()){
-                loi=new Loi_DTO();
+            if (rs.next()) {
+                loi = new Loi_DTO();
                 loi.setTenLoi(rs.getString(1));
                 loi.setPhamTramTien(rs.getFloat(2));
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
         } finally {
             try {
                 dnDB.closeConnection(connection);

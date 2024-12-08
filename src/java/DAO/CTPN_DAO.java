@@ -1,13 +1,14 @@
+
 package DAO;
 
+import ConnectDB.dangNhapDatabase;
+import DTO.CTPN_DTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import ConnectDB.dangNhapDatabase;
-import DTO.CTPN_DTO;
+import java.util.Arrays;
 
 public class CTPN_DAO{
     private dangNhapDatabase loginDB = null;
@@ -29,6 +30,13 @@ public class CTPN_DAO{
                 ctpn.setMaSach(rs.getInt("masach"));
                 ctpn.setSoLuong(rs.getInt("soluong"));
                 ctpn.setDonGia(rs.getInt("dongia"));
+                
+                String maVach = rs.getString("mavachsach");
+                if (maVach != null && !maVach.isEmpty()) {
+                    ctpn.setMaVach(new ArrayList<>(Arrays.asList(maVach.split(","))));
+                } else {
+                    ctpn.setMaVach(new ArrayList<>()); // Nếu không có mã vạch, trả về danh sách rỗng
+                }
                 resultList.add(ctpn);
             }
         } catch (Exception e) {
@@ -49,7 +57,7 @@ public class CTPN_DAO{
     public boolean addCTPN(CTPN_DTO ctpn){
         boolean result = false;
         try {
-            String query = "Insert into ctpn(mapn, masach, soluong, dongia) Values (?,?,?,?)";
+            String query = "Insert into ctpn(mapn, masach, soluong, dongia, mavachsach) Values (?,?,?,?,?)";
             loginDB = new dangNhapDatabase();
             connect = loginDB.openConnection();
             preStatement = connect.prepareStatement(query);
@@ -57,7 +65,9 @@ public class CTPN_DAO{
             preStatement.setInt(1, ctpn.getMaPN());
             preStatement.setInt(2, ctpn.getMaSach());
             preStatement.setInt(3, ctpn.getSoLuong());
-            preStatement.setFloat(4, ctpn.getDonGia());
+            preStatement.setInt(4, ctpn.getDonGia());
+            String maVachString = String.join(",", ctpn.getMaVach());
+            preStatement.setString(5, maVachString);
 
             int cnt = preStatement.executeUpdate();
             updatePhieuNhapTotals(ctpn.getMaPN());
@@ -81,15 +91,17 @@ public class CTPN_DAO{
     public boolean updateCTPN(CTPN_DTO ctpn){
         boolean result = false;
         try {
-            String query = "Update ctpn set soluong = ?, dongia = ? where mapn = ? and masach = ?";
+            String query = "Update ctpn set soluong = ?, dongia = ?, mavachsach = ? where mapn = ? and masach = ?";
             loginDB = new dangNhapDatabase();
             connect = loginDB.openConnection();
             preStatement = connect.prepareStatement(query);
 
             preStatement.setInt(1, ctpn.getSoLuong());
-            preStatement.setFloat(2, ctpn.getDonGia());
-            preStatement.setInt(3, ctpn.getMaPN());
-            preStatement.setInt(4, ctpn.getMaSach());
+            preStatement.setInt(2, ctpn.getDonGia());
+            String maVachString = String.join(",", ctpn.getMaVach());
+            preStatement.setString(3, maVachString);
+            preStatement.setInt(4, ctpn.getMaPN());
+            preStatement.setInt(5, ctpn.getMaSach());
 
             int cnt = preStatement.executeUpdate();
             updatePhieuNhapTotals(ctpn.getMaPN());
@@ -169,7 +181,7 @@ public class CTPN_DAO{
     public ArrayList<CTPN_DTO> searchByMaPN(int maPN) {
         ArrayList<CTPN_DTO> listCTPN = new ArrayList<>();;
         try {
-            String qry = "Select mapn, masach, soluong, dongia from ctpn where mapn = ?";
+            String qry = "Select * from ctpn where mapn = ?";
             loginDB = new dangNhapDatabase();
             connect = loginDB.openConnection();
             preStatement = connect.prepareStatement(qry);
@@ -183,8 +195,10 @@ public class CTPN_DAO{
                 ctpn.setMaPN(rs.getInt("mapn"));
                 ctpn.setMaSach(rs.getInt("masach"));
                 ctpn.setSoLuong(rs.getInt("soluong"));
-                ctpn.setDonGia(rs.getFloat("dongia"));
-
+                ctpn.setDonGia(rs.getInt("dongia"));
+                String maVach = rs.getString("mavachsach");
+                ctpn.setMaVach(new ArrayList<>(Arrays.asList(maVach.split(",")))); // Tách danh sách mã vạch nếu có
+                
                 listCTPN.add(ctpn);
             }
         } catch (SQLException e) {
@@ -206,7 +220,7 @@ public class CTPN_DAO{
     public CTPN_DTO searchByMaPN_MaSach(int maPN, int maSach){
         CTPN_DTO ctpn = new CTPN_DTO();
         try {
-            String qry = "Select mapn, masach, soluong, dongia from ctpn where mapn = ? and masach = ?";
+            String qry = "Select mapn, masach, soluong, dongia, mavachsach from ctpn where mapn = ? and masach = ?";
             loginDB = new dangNhapDatabase();
             connect = loginDB.openConnection();
             preStatement = connect.prepareStatement(qry);
@@ -218,8 +232,14 @@ public class CTPN_DAO{
             while (rs.next()) {
                 ctpn.setMaPN(rs.getInt("mapn"));
                 ctpn.setMaSach(rs.getInt("masach"));
+                String maVach = rs.getString("mavachsach");
+                if (maVach != null && !maVach.isEmpty()) {
+                    ctpn.setMaVach(new ArrayList<>(Arrays.asList(maVach.split(","))));
+                } else {
+                    ctpn.setMaVach(new ArrayList<>()); // Nếu không có mã vạch, trả về danh sách rỗng
+                }
                 ctpn.setSoLuong(rs.getInt("soluong"));
-                ctpn.setDonGia(rs.getFloat("dongia"));
+                ctpn.setDonGia(rs.getInt("dongia"));
             }
         } catch (SQLException e) {
             System.err.println("SQL Error: " + e.getMessage());

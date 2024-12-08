@@ -31,17 +31,17 @@ import java.util.ArrayList;
  *
  * @author ADMIN
  */
-
 @WebServlet(name = "PhieuPhat_Servlet", urlPatterns = {"/phieuphat"})
 public class PhieuPhat_Servlet extends HttpServlet {
 
     private PhieuPhat_BUS pp_BUS = new PhieuPhat_BUS();
     private Loi_BUS loi_BUS = new Loi_BUS();
     private CTPP_BUS ctpp_BUS = new CTPP_BUS();
-    private PhieuTra_BUS pt_BUS=new PhieuTra_BUS();
-    private CTPT_BUS ctpt_BUS=new CTPT_BUS();
-    private Sach_BUS sach_BUS=new Sach_BUS();
-    private CTSach_BUS cts_BUS=new CTSach_BUS();
+    private PhieuTra_BUS pt_BUS = new PhieuTra_BUS();
+    private CTPT_BUS ctpt_BUS = new CTPT_BUS();
+    private Sach_BUS sach_BUS = new Sach_BUS();
+    private CTSach_BUS cts_BUS = new CTSach_BUS();
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -69,53 +69,54 @@ public class PhieuPhat_Servlet extends HttpServlet {
 //        }
 //        return listSach;
 //    }
-    private boolean checkCoLoi(int maPT)
-    {
-        for(CTPT_DTO i:ctpt_BUS.searchByMaPT(maPT))
-        {
-            if(i.getMaVachLoi()!=null)
+
+    private boolean checkCoLoi(int maPT) {
+        for (CTPT_DTO i : ctpt_BUS.searchByMaPT(maPT)) {
+            if (i.getMaVachLoi() != null) {
                 return true;
+            }
         }
         return false;
     }
-    private boolean checkMaPT_CuaPP(int maPT)
-    {
-        for(PhieuPhat_DTO i:pp_BUS.getList())
-            if(i.getMaPT()==maPT)
+
+    private boolean checkMaPT_CuaPP(int maPT) {
+        for (PhieuPhat_DTO i : pp_BUS.getList()) {
+            if (i.getMaPT() == maPT) {
                 return true;
+            }
+        }
         return false;
     }
-    private ArrayList<PhieuTra_DTO> listPT_BiPhat()
-    {
-        ArrayList<PhieuTra_DTO> listPT=new ArrayList<PhieuTra_DTO>();
-        for(PhieuTra_DTO i:pt_BUS.getListPhieuTra())
-        {
-            if(checkCoLoi(i.getMaPT()) && !checkMaPT_CuaPP(i.getMaPT()) )
-            {
+
+    private ArrayList<PhieuTra_DTO> listPT_BiPhat() {
+        ArrayList<PhieuTra_DTO> listPT = new ArrayList<PhieuTra_DTO>();
+        for (PhieuTra_DTO i : pt_BUS.getListPhieuTra()) {
+            if (checkCoLoi(i.getMaPT()) && !checkMaPT_CuaPP(i.getMaPT())) {
                 listPT.add(i);
             }
         }
         return listPT;
     }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         ArrayList<PhieuPhat_DTO> listPP = pp_BUS.getList();
         ArrayList<CTPP_DTO> listCTPP = ctpp_BUS.getList();
-        ArrayList<Loi_DTO> listLoi = loi_BUS.getList();
-        ArrayList<PhieuTra_DTO> listPT=listPT_BiPhat();
-        ArrayList<Sach_DTO> listSach=sach_BUS.getListSach();
-        ArrayList<CTSach_DTO> listCTS=cts_BUS.getList();
+        ArrayList<Loi_DTO> listLoi = loi_BUS.getListTonTai();
+        ArrayList<PhieuTra_DTO> listPT = listPT_BiPhat();
+        ArrayList<Sach_DTO> listSach = sach_BUS.getListSach();
+        ArrayList<CTSach_DTO> listCTS = cts_BUS.getList();
         request.setAttribute("listLoi", listLoi);
         request.setAttribute("listCTPP", listCTPP);
         request.setAttribute("listPP", listPP);
         request.setAttribute("listPT", listPT);
         request.setAttribute("listSach", listSach);
         request.setAttribute("listCTS", listCTS);
-        
+
         request.getRequestDispatcher("/WEB-INF/gui/phieuphat.jsp").forward(request, response);
     }
-    
+
     private boolean checkInfor(HttpServletRequest request, HttpServletResponse response,
             String maPP, String maPT)
             throws IOException {
@@ -133,9 +134,10 @@ public class PhieuPhat_Servlet extends HttpServlet {
             response.getWriter().write("{\"thongbao\": \"Vui lòng chọn mã phiếu trả\", \"hopLe\": false}");
             return false;
         }
-        
+
         return true;
     }
+
     private boolean checkDelete(HttpServletRequest request, HttpServletResponse response,
             String maPP)
             throws IOException {
@@ -155,6 +157,28 @@ public class PhieuPhat_Servlet extends HttpServlet {
         }
         return true;
     }
+
+    private boolean Update_When_Delete(int mapp) {
+        if (!ctpp_BUS.searchByMaPP(mapp).isEmpty()) {
+            for (CTPP_DTO i : ctpp_BUS.searchByMaPP(mapp)) {
+                CTSach_DTO cts = cts_BUS.searchCTSachByMaVach(i.getMaVach()).get(0);
+                String tts = cts.getTinhTrangSach();
+                for (String j : i.getLiDo()) {
+                    tts = tts.replace(j, "").replaceAll(",\\s*,", ",").trim();
+                }
+                tts = tts.substring(0, tts.length());
+                cts.setTinhTrangSach(tts);
+                if (!cts_BUS.updateCTSach(cts)) {
+                    return false;
+                }
+            }
+            if (!ctpp_BUS.deleteByMaPP(mapp)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -165,8 +189,8 @@ public class PhieuPhat_Servlet extends HttpServlet {
         String tongTien = request.getParameter("tongTien");
         String optionSearch = request.getParameter("optionSearch");
         String valueSearch = request.getParameter("valueSearch");
-        String namePath=request.getParameter("nameFileExcel");
-        System.out.println("path: "+namePath);
+        String namePath = request.getParameter("nameFileExcel");
+        System.out.println("path: " + namePath);
         switch (action) {
             case "addPP":
                 if (!checkInfor(request, response, maPP, maPT)) {
@@ -200,8 +224,8 @@ public class PhieuPhat_Servlet extends HttpServlet {
                 if (!checkDelete(request, response, maPP)) {
                     return;
                 }
-                if (pp_BUS.deletePP(Integer.parseInt(maPP))) {
-                    ctpp_BUS.deleteByMaPP(Integer.parseInt(maPP));
+                if (Update_When_Delete(Integer.parseInt(maPP))
+                        && pp_BUS.deletePP(Integer.parseInt(maPP))) {
                     response.getWriter().write("{\"thongbao\": \"Xóa phiếu phạt thành công\", \"hopLe\": true}");
                 } else {
                     response.getWriter().write("{\"thongbao\": \"Xóa phiếu phạt thất bại\", \"hopLe\": false}");
@@ -225,38 +249,32 @@ public class PhieuPhat_Servlet extends HttpServlet {
                 }
                 break;
             case "export":
-                if(namePath.isEmpty())
-                {
+                if (namePath.isEmpty()) {
                     response.getWriter().write("{\"thongbao\": \"Vui lòng nhập tên file excel để export\", \"hopLe\": false}");
                     return;
                 }
-                if(pp_BUS.exportExcel(namePath))
-                {
+                if (pp_BUS.exportExcel(namePath)) {
                     response.getWriter().write("{\"thongbao\": \"Export excel thành công\", \"hopLe\": true}");
-                }
-                else
-                {
+                } else {
                     response.getWriter().write("{\"thongbao\": \"Export thất bại vui lòng kiểm tra lại\", \"hopLe\": false}");
                 }
                 break;
             case "import":
-            if(namePath.isEmpty())
-            {
-                response.getWriter().write("{\"thongbao\": \"Vui lòng nhập tên file excel để import\", \"hopLe\": false}");
-                return;
-            }
-            if(pp_BUS.importExcel(namePath))
-            {
-                response.getWriter().write("{\"thongbao\": \"Export excel thành công\", \"hopLe\": true}");
-            }
-            else
-            {
-                response.getWriter().write("{\"thongbao\": \"Export thất bại vui lòng kiểm tra lại\", \"hopLe\": false}");
-            }
-            break;
+                if (namePath.isEmpty()) {
+                    response.getWriter().write("{\"thongbao\": \"Vui lòng nhập tên file excel để import\", \"hopLe\": false}");
+                    return;
+                }
+                if (!pp_BUS.importExcel(namePath).equals("")) {
+                    response.getWriter().write("{\"thongbao\": \"Import excel thành công với các mã phiếu phạt: " + pp_BUS.importExcel(namePath) + "\", \"hopLe\": true}");
+                } else {
+                    response.getWriter().write("{\"thongbao\": \"Không có phiếu phạt nào import thành công\", \"hopLe\": false}");
+                }
+                if (pp_BUS.importExcel(namePath).equals("fasle")) {
+                    response.getWriter().write("{\"thongbao\": \"Mở file import thất bại\", \"hopLe\": false}");
+                }
+                break;
             case "print":
-                if(maPP==null || maPP.isEmpty())
-                {
+                if (maPP == null || maPP.isEmpty()) {
                     response.getWriter().write("{\"thongbao\": \"Vui lòng chọn 1 phiếu phạt trên table hoặc nhập mã phiếu trên thanh input mã phiếu để in\", \"hopLe\": false}");
                     return;
                 }
@@ -298,6 +316,7 @@ public class PhieuPhat_Servlet extends HttpServlet {
         pp.setTongTien(Double.parseDouble(tongTien));
         return pp;
     }
+
     @Override
     public String getServletInfo() {
         return "Short description";

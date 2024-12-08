@@ -21,7 +21,14 @@ public class PhanQuyen_BUS {
         listPQ = pq_DAO.getListPQ();
         return listPQ;
     }
-
+    public ArrayList<PhanQuyen_DTO> getListTonTai()
+    {
+        ArrayList<PhanQuyen_DTO> list=new ArrayList<PhanQuyen_DTO>();
+        for(PhanQuyen_DTO i: pq_DAO.getListPQ())
+            if(i.getMaNV()>0)
+                list.add(i);
+        return list;
+    }
     public boolean addPQ(PhanQuyen_DTO pq) {
         return pq_DAO.addPQ(pq);
     }

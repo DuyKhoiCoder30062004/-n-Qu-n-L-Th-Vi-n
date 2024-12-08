@@ -7,19 +7,17 @@ public class PhieuTra_DTO {
     private int maPM;
     private int maNV;
     private int tongSL;
-    private LocalDate ngayTra; // Added to include a date field if needed for "ngayTra"
 
     // Default constructor
     public PhieuTra_DTO() {
     }
 
     // Constructor with all fields
-    public PhieuTra_DTO(int maPT, int maPM, int maNV, int tongSL, LocalDate ngayTra) {
+    public PhieuTra_DTO(int maPT, int maPM, int maNV, int tongSL) {
         this.maPT = maPT;
         this.maPM = maPM;
         this.maNV = maNV;
         this.tongSL = tongSL;
-        this.ngayTra = ngayTra;
     }
 
     // Getter and setter for maPT
@@ -58,14 +56,6 @@ public class PhieuTra_DTO {
         this.tongSL = tongSL;
     }
 
-    // Getter and setter for ngayTra
-    public LocalDate getNgayTra() {
-        return ngayTra;
-    }
-
-    public void setNgayTra(LocalDate ngayTra) {
-        this.ngayTra = ngayTra;
-    }
 
     // Method to check if required fields are valid
     public boolean isValid() {
@@ -79,7 +69,6 @@ public class PhieuTra_DTO {
                ", maPM=" + maPM +
                ", maNV=" + maNV +
                ", tongSL=" + tongSL +
-               ", ngayTra=" + ngayTra +
                '}';
     }
 }

@@ -26,13 +26,13 @@ public class PhieuNhap_DAO {
             rs = preStatement.executeQuery();
             while(rs.next()){
                 PhieuNhap_DTO pn = new PhieuNhap_DTO();
-
-                pn.setMaNV(rs.getInt("mapn"));
+                
+                pn.setMaPN(rs.getInt("mapn"));
                 pn.setMaNCC(rs.getInt("mancc"));
                 pn.setMaNV(rs.getInt("manv"));
                 pn.setNgayLap(rs.getDate("ngaylap").toLocalDate());
                 pn.setTongSL(rs.getInt("tongsl"));
-                pn.setTongTien(rs.getFloat("tongtien"));
+                pn.setTongTien(rs.getDouble("tongtien"));
                 
                 resultList.add(pn);
             }
@@ -64,7 +64,7 @@ public class PhieuNhap_DAO {
             preStatement.setInt(3, pn.getMaNV());
             preStatement.setDate(4, java.sql.Date.valueOf(pn.getNgayLap()));
             preStatement.setInt(5, pn.getTongSL());
-            preStatement.setFloat(6, pn.getTongTien());
+            preStatement.setDouble(6, pn.getTongTien());
 
             int cnt = preStatement.executeUpdate();
             result = cnt > 0; //Kiểm tra số dòng thay đổi
@@ -143,7 +143,7 @@ public class PhieuNhap_DAO {
     }
 
     public PhieuNhap_DTO searchByMaPN(int maPN) {
-        PhieuNhap_DTO list = new PhieuNhap_DTO();
+        PhieuNhap_DTO list = null;
         try {
             String qry = "Select mapn, mancc, manv,ngaylap ,tongsl, tongtien from phieunhap where mapn = ?";
             loginDB = new dangNhapDatabase();
@@ -154,6 +154,7 @@ public class PhieuNhap_DAO {
             
             rs = preStatement.executeQuery();
             while (rs.next()) {
+                list = new PhieuNhap_DTO();
                 list.setMaPN(rs.getInt("mapn"));
                 list.setMaNCC(rs.getInt("mancc"));
                 list.setMaNV(rs.getInt("manv"));

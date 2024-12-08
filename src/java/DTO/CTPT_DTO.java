@@ -8,7 +8,7 @@ import java.time.LocalDate;
 public class CTPT_DTO {
     private int maPT;
     private int maSach;
-    private String maVachLoi; // Changed from int to String to support multiple barcodes
+    private String maVachLoi; 
     private LocalDate ngayTra;
     private int soLuong;
 

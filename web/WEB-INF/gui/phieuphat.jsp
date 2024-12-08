@@ -40,12 +40,12 @@
         }
 
         #title {
-        width: 100%;
-        height: 3%;
-        background-color:white;
-        font-size: 16px;
-        font-weight: bolder;
-        position: fixed;
+            width: 100%;
+            height: 3%;
+            background-color:white;
+            font-size: 16px;
+            font-weight: bolder;
+            position: fixed;
 
         }
 
@@ -275,40 +275,40 @@
                     ${nv.getHo()}  ${nv.getTen()}<br>
                     ${nv.getChucVu()} 
                 </div>
-                <button id="btnSach" class="conponentMenu" value="sách" onclick="reDirect(this,'/cnpm/sach')">
+                <button id="btnSach" class="conponentMenu" value="sách" onclick="reDirect(this, '/cnpm/sach')">
                     <img src="img/sach.jpg" alt="icon"> Sách
                 </button>
-                <button id="btnNhanVien" class="conponentMenu" value="nhân viên" onclick="reDirect(this,'/cnpm/nhanvien')">
+                <button id="btnNhanVien" class="conponentMenu" value="nhân viên" onclick="reDirect(this, '/cnpm/nhanvien')">
                     <img src="img/stafff.svg" alt="icon"> Nhân viên
                 </button>
-                <button id="btnDocGia" class="conponentMenu" value="độc giả" onclick="reDirect(this,'/cnpm/docgia')">
+                <button id="btnDocGia" class="conponentMenu" value="độc giả" onclick="reDirect(this, '/cnpm/docgia')">
                     <img src="img/customerr.svg" alt="icon"> Độc giả
                 </button>
-                <button id="btnNhaXuatBan" class="conponentMenu" value="nhà xuất bản" onclick="reDirect(this,'/cnpm/nhaxuatban')">
+                <button id="btnNhaXuatBan" class="conponentMenu" value="nhà xuất bản" onclick="reDirect(this, '/cnpm/nxb')">
                     <img src="img/nhaxuatban.jpg" alt="icon"> Nhà xuất bản
                 </button>
-                <button id="btnNhaCungCap" class="conponentMenu" value="nhà cung cấp" onclick="reDirect(this,'/cnpm/nhacungcap')">
+                <button id="btnNhaCungCap" class="conponentMenu" value="nhà cung cấp" onclick="reDirect(this, '/cnpm/ncc')">
                     <img src="img/nhacc.jpg" alt="icon"> Nhà cung cấp
                 </button>
-                <button id="btnKhuVuc" class="conponentMenu" value="khu vực" onclick="reDirect(this,'/cnpm/khuvuc')">
+                <button id="btnKhuVuc" class="conponentMenu" value="khu vực" onclick="reDirect(this, '/cnpm/kv')">
                     <img src="img/khuvuc.jpg" alt="icon"> Khu vực
                 </button>
-                <button id="btnPhieuMuon" class="conponentMenu" value="phiếu mượn" onclick="reDirect(this,'/cnpm/phieumuon')">
+                <button id="btnPhieuMuon" class="conponentMenu" value="phiếu mượn" onclick="reDirect(this, '/cnpm/phieumuon')">
                     <img src="img/export.svg" alt="icon"> Phiếu mượn
                 </button>
-                <button id="btnPhieuTra" class="conponentMenu" value="phiếu trả" onclick="reDirect(this,'/cnpm/phieutra')">
+                <button id="btnPhieuTra" class="conponentMenu" value="phiếu trả" onclick="reDirect(this, '/cnpm/phieutra')">
                     <img src="img/phieutra.jpg" alt="icon"> Phiếu trả
                 </button>
-                <button id="btnPhieuPhat" class="conponentMenu" value="phiếu phạt" onclick="reDirect(this,'/cnpm/phieuphat')">
+                <button id="btnPhieuPhat" class="conponentMenu" value="phiếu phạt" onclick="reDirect(this, '/cnpm/phieuphat')">
                     <img src="img/phieuphat.jpg" alt="icon"> Phiếu phạt
                 </button>
-                <button id="btnPhieuNhap" class="conponentMenu" value="phiếu nhập" onclick="reDirect(this,'/cnpm/phieunhap')">
+                <button id="btnPhieuNhap" class="conponentMenu" value="phiếu nhập" onclick="reDirect(this, '/cnpm/phieunhap')">
                     <img src="img/phieunhap.jpg" alt="icon"> Phiếu nhập
                 </button>
-                <button id="btnPhanQuyen" class="conponentMenu" value="phân quyền" onclick="reDirect(this,'/cnpm/phanquyen')">
+                <button id="btnPhanQuyen" class="conponentMenu" value="phân quyền" onclick="reDirect(this, '/cnpm/phanquyen')">
                     <img src="img/permission.svg" alt="icon"> Phân quyền
                 </button>
-                <button id="btnThongKe" class="conponentMenu" value="thống kê" onclick="reDirect(this,'/cnpm/thongke')">
+                <button id="btnThongKe" class="conponentMenu" value="thống kê" onclick="reDirect(this, '/cnpm/thongke')">
                     <img src="img/tinhhieuqua_128px.svg" alt="icon"> Thống kê
                 </button>
                 <button id="btnDangXuat" class="conponentMenu">
@@ -440,7 +440,7 @@
                                 </select>
                                 <input type="text" id="txtSearchCTPP" placeholder="Nhập thông tin">
                                 <img class="iconChucNang" id="iconSearchCTPP"  src="img/search1.png"
-                                title="Tìm kiếm CTPP" onclick="sendDataCTPP('searchCTPP')">
+                                     title="Tìm kiếm CTPP" onclick="sendDataCTPP('searchCTPP')">
                                 <img class="iconChucNang" id="iconFinishCTPP" style=" margin-left: 60%;"
                                      src="img/refresh.svg" onclick="sendDataCTPP('finishCTPP')" title="Tại lại table">
                             </div>
@@ -599,7 +599,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                           <c:forEach var="pm" items="${requestScope.listSach}">
+                            <c:forEach var="pm" items="${requestScope.listSach}">
                                 <tr>
                                     <td>${pm.maSach}</td>
                                     <td>${pm.tenSach}</td>
@@ -633,7 +633,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                             <c:forEach var="pm" items="${requestScope.listCTS}">
+                            <c:forEach var="pm" items="${requestScope.listCTS}">
                                 <tr>
                                     <td>${pm.maVach}</td>
                                     <td>${pm.maSach}</td>
@@ -718,6 +718,7 @@
                     function clickPP(row) {
                         const cells = row.getElementsByTagName('td');
                         document.getElementById('txtMaPhieuPP').value = cells[0].innerText;
+                        document.getElementById('txtMaPhieuCTPP').value = cells[0].innerText;
                         document.getElementById('txtMaPhieuPP').readOnly = true;
                         document.getElementById('txtMaPTPP').value = cells[1].innerText;
                         document.getElementById('txtTongTienPP').value = cells[3].innerText;
@@ -728,16 +729,6 @@
                     rowsPP.forEach(row => {
                         row.addEventListener('click', () => clickPP(row));
                     });
-//                    function formatDate(date) {
-//                        const year = date.getFullYear();
-//                        const month = String(date.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
-//                        const day = String(date.getDate()).padStart(2, '0');
-//                        return `${year}-${month}-${day}`;
-//                    }
-//
-//                    // Lấy ngày hiện tại và gán vào input
-//                    document.getElementById('txtNgayLapCTPP').value = formatDate(new Date());
-
                     /*clear dữ liệu*/
                     function clearInputLoi() {
                         document.getElementById('txtLoi').value = "";
@@ -763,8 +754,8 @@
                         document.getElementById('txtTongTienPP').value = "0";
                     }
                     // Lắng nghe sự kiện khi bàn phím để tìm kiếm lỗi
-                    document.getElementById('txtSearchLoi').addEventListener('keyup', function(event) {
-                            sendDataLoi('searchLoi');
+                    document.getElementById('txtSearchLoi').addEventListener('keyup', function (event) {
+                        sendDataLoi('searchLoi');
                     });
                     function sendDataLoi(action) {
                         const formData = new URLSearchParams({
@@ -832,11 +823,11 @@
                         fileInput.click();
                     }
                     // Lắng nghe sự kiện khi bàn phím để tìm kiếm phiếu phạt
-                    document.getElementById('txtSearchPP').addEventListener('keyup', function(event) {
-                            sendDataPP('searchPP');
+                    document.getElementById('txtSearchPP').addEventListener('keyup', function (event) {
+                        sendDataPP('searchPP');
                     });
                     function sendDataPP(action) {
-                        
+
                         const formData = new URLSearchParams({
                             action: action,
                             maPP: document.getElementById('txtMaPhieuPP').value,
@@ -916,8 +907,8 @@
                         });
                     }
                     // Lắng nghe sự kiện khi bàn phím để tìm kiếm phiếu mượn
-                    document.getElementById('txtSearchCTPP').addEventListener('keyup', function(event) {
-                            sendDataCTPP('searchCTPP');
+                    document.getElementById('txtSearchCTPP').addEventListener('keyup', function (event) {
+                        sendDataCTPP('searchCTPP');
                     });
                     function sendDataCTPP(action) {
                         const formData = new URLSearchParams({
@@ -991,7 +982,7 @@
                         });
                     }
                     //hiện thị xác nhận xóa lỗi
-                    document.getElementById('iconXoaLoi').addEventListener('click', function(event) {
+                    document.getElementById('iconXoaLoi').addEventListener('click', function (event) {
                         // Hiển thị hộp thoại xác nhận
                         const confirmDelete = confirm("Bạn có chắc muốn xóa lỗi này  không?");
                         if (!confirmDelete) {
@@ -1001,7 +992,7 @@
                         }
                     });
                     //hiện thị xác nhận xóa chi tiết phiếu phạt
-                    document.getElementById('iconXoaCTPP').addEventListener('click', function(event) {
+                    document.getElementById('iconXoaCTPP').addEventListener('click', function (event) {
                         // Hiển thị hộp thoại xác nhận
                         const confirmDelete = confirm("Bạn có chắc muốn xóa chi tiết phiếu phạt này không?");
                         if (!confirmDelete) {
@@ -1011,7 +1002,7 @@
                         }
                     });
                     //hiện thị xác nhận xóa phiếu phạt
-                    document.getElementById('iconXoaPP').addEventListener('click', function(event) {
+                    document.getElementById('iconXoaPP').addEventListener('click', function (event) {
                         // Hiển thị hộp thoại xác nhận
                         const confirmDelete = confirm("Bạn có chắc muốn xóa phiếu phạt này không?");
                         if (!confirmDelete) {
@@ -1224,28 +1215,27 @@
                     });
 
                     //Sự kiện enter của phiếu phạt
-                    document.getElementById('txtMaPhieuPP').addEventListener('keydown', function(event) {
+                    document.getElementById('txtMaPhieuPP').addEventListener('keydown', function (event) {
                         if (event.key === "Enter") {
                             event.preventDefault();
                             hienThiPT();
                         }
                     });
-                    
-                    document.getElementById('btnDangXuat').addEventListener('click', function(event) {
-                        event.preventDefault();  
-                        window.location.href = '/cnpm/login';  
+
+                    document.getElementById('btnDangXuat').addEventListener('click', function (event) {
+                        event.preventDefault();
+                        window.location.href = '/cnpm/login';
                     });
-                    function reDirect(button,url)
+                    function reDirect(button, url)
                     {
-                        event.preventDefault(); 
+                        event.preventDefault();
                         var tasks = "<%= tasks %>";
-                        if(tasks.includes(button.value))
+                        if (tasks.includes(button.value))
                         {
-                            window.location.href =url;
-                        }
-                        else
+                            window.location.href = url;
+                        } else
                         {
-                            alert("Bạn không có quyền quản lí tác vụ "+ button.value);
+                            alert("Bạn không có quyền quản lí tác vụ " + button.value);
                         }
                     }
                     // Chặn việc sử dụng tổ hợp phím tắt để phóng to/thu nhỏ
@@ -1261,7 +1251,7 @@
                         }
                     }, {passive: false});
 
-        </script>
-        </body>
+                </script>
+                </body>
 
-        </html>
+                </html>

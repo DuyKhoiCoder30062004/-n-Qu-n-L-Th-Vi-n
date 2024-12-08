@@ -71,9 +71,15 @@ public class ncc_Servlet extends HttpServlet {
             return false;
         }
 
-        // kiểm tra sđt
+        /// kiểm tra sđt
         if (sdtNCC == null || sdtNCC.trim().isEmpty()) {
-            response.getWriter().write("{\"thongbao\": \"Sđt nhà cung cấp không được để trống\", \"hopLe\": false}");
+            response.getWriter().write("{\"thongbao\": \"Sđt ncc không được để trống\", \"hopLe\": false}");
+            return false;
+        }
+        
+        // Kiểm tra số điện thoại có phải là số nguyên và đủ 10 ký tự
+        if (!sdtNCC.matches("\\d{10}")) {
+            response.getWriter().write("{\"thongbao\": \"Số điện thoại phải là số nguyên gồm đúng 10 ký tự\", \"hopLe\": false}");
             return false;
         }
 
@@ -113,6 +119,10 @@ public class ncc_Servlet extends HttpServlet {
                 if (!checkImformation(request, response, maNCC, tenNCC, dcNCC, sdtNCC, trangthai)) {
                     return;
                 }
+                if (ncc_BUS.searchByMaNCC(Integer.parseInt(maNCC)) != null|| ncc_BUS.searchByMaNCC(-1*Integer.parseInt(maNCC))!=null) {
+                    response.getWriter().write("{\"thongbao\": \"Mã ncc đã tồn tại vui lòng nhập lại mã ncc\", \"hopLe\": false}");
+                    return;
+                }
                 // Tiếp tục xử lý sau khi kiểm tra thành công
                 NCC_DTO ncc = new NCC_DTO();
                 ncc.setMaNCC(Integer.parseInt(maNCC));
@@ -134,6 +144,10 @@ public class ncc_Servlet extends HttpServlet {
                 if (!checkImformation(request, response, maNCC, tenNCC, dcNCC, sdtNCC, trangthai)) {
                     return;
                 }
+                if (ncc_BUS.searchByMaNCC(Integer.parseInt(maNCC)) == null|| ncc_BUS.searchByMaNCC(-1*Integer.parseInt(maNCC))==null) {
+                    response.getWriter().write("{\"thongbao\": \"Mã ncc đã tồn tại vui lòng nhập lại mã ncc\", \"hopLe\": false}");
+                    return;
+                }
                 NCC_DTO nccs = new NCC_DTO();
                 nccs.setMaNCC(Integer.parseInt(maNCC));
                 nccs.setTenNCC(tenNCC);
@@ -149,6 +163,10 @@ public class ncc_Servlet extends HttpServlet {
             case "delete":
                 if (maNCC == null || maNCC.trim().isEmpty()) {
                     response.getWriter().write("{\"thongbao\": \"Vui lòng chọn 1 hàng để xóa trên table\", \"hopLe\": false}");
+                    return;
+                }
+                if (ncc_BUS.searchByMaNCC(Integer.parseInt(maNCC)) == null|| ncc_BUS.searchByMaNCC(-1*Integer.parseInt(maNCC))==null) {
+                    response.getWriter().write("{\"thongbao\": \"Mã ncc đã tồn tại vui lòng nhập lại mã ncc\", \"hopLe\": false}");
                     return;
                 }
                 if (ncc_BUS.deleteNCC(Integer.parseInt(maNCC))) {

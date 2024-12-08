@@ -92,15 +92,34 @@ public class CTPT_DAO {
     }
 
     // Method to delete a CTPT record by maPT and maSach
-    public boolean deleteCTPT(int maPT, int maSach) {
+    public boolean deleteCTPT(int maPT, int maSach,LocalDate ngayTra) {
         boolean success = false;
         try {
-            String query = "DELETE FROM ctpt WHERE mapt = ? AND masach = ?";
+            String query = "DELETE FROM ctpt WHERE mapt = ? AND masach = ? AND ngaytra = ?";
             dnDB = new dangNhapDatabase();
             conn = dnDB.openConnection();
             ps = conn.prepareStatement(query);
             ps.setInt(1, maPT);
             ps.setInt(2, maSach);
+            ps.setDate(3,java.sql.Date.valueOf(ngayTra));
+            ps.executeUpdate();
+            success = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return success;
+    }
+     // Method to delete a CTPT record by maPT and maSach
+    public boolean deleteCTPT_ByMaPT(int maPT) {
+        boolean success = false;
+        try {
+            String query = "DELETE FROM ctpt WHERE mapt = ?";
+            dnDB = new dangNhapDatabase();
+            conn = dnDB.openConnection();
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, maPT);
             ps.executeUpdate();
             success = true;
         } catch (SQLException e) {
@@ -139,15 +158,16 @@ public class CTPT_DAO {
     }
 
     // Method to search CTPT records by maPT and maSach
-    public CTPT_DTO searchByMaPT_MaSach(int maPT, int maSach) {
+    public CTPT_DTO searchByMaPT_MaSach(int maPT, int maSach,LocalDate ngayTra) {
         CTPT_DTO ctpt = null;
         try {
-            String query = "SELECT * FROM ctpt WHERE mapt = ? AND masach = ?";
+            String query = "SELECT * FROM ctpt WHERE mapt = ? AND masach = ? AND ngaytra= ?";
             dnDB = new dangNhapDatabase();
             conn = dnDB.openConnection();
             ps = conn.prepareStatement(query);
             ps.setInt(1, maPT);
             ps.setInt(2, maSach);
+            ps.setDate(3,java.sql.Date.valueOf(ngayTra));
             rs = ps.executeQuery();
             if (rs.next()) {
                 ctpt = new CTPT_DTO();
@@ -163,33 +183,6 @@ public class CTPT_DAO {
             closeResources();
         }
         return ctpt;
-    }
-
-    // Method to search CTPT records by various options (for servlet search functionality)
-    public StringBuilder searchCTPT(String optionSearch, String valueSearch) {
-        StringBuilder result = new StringBuilder();
-        try {
-            String query = "SELECT * FROM ctpt WHERE " + optionSearch + " LIKE ?";
-            dnDB = new dangNhapDatabase();
-            conn = dnDB.openConnection();
-            ps = conn.prepareStatement(query);
-            ps.setString(1, "%" + valueSearch + "%");
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                CTPT_DTO ctpt = new CTPT_DTO();
-                ctpt.setMaPT(rs.getInt("mapt"));
-                ctpt.setMaSach(rs.getInt("masach"));
-                ctpt.setMaVachLoi(rs.getString("mavachloi"));
-                ctpt.setNgayTra(rs.getDate("ngaytra").toLocalDate());
-                ctpt.setSoLuong(rs.getInt("soluong"));
-                result.append(ctpt.toString()).append("\n");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            closeResources();
-        }
-        return result;
     }
 
     // Method to close database resources

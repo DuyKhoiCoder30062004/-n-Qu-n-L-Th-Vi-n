@@ -51,6 +51,10 @@ public class loginServlet extends HttpServlet {
             response.getWriter().write("{\"thongbao\": \"Mã nhân viên phải là số mời bạn nhập lại\", \"hopLe\": false}");
             return false;
         }
+        if (Integer.parseInt(username)<0) {
+            response.getWriter().write("{\"thongbao\": \"Không có nhân viên có mã nhân viên âm vui lòng nhập lại\", \"hopLe\": false}");
+            return false;
+        }
         if (pass.isEmpty() || pass == null) {
             response.getWriter().write("{\"thongbao\": \"Mời bạn nhập mật khẩu để đăng nhập\", \"hopLe\": false}");
             return false;
@@ -73,33 +77,36 @@ public class loginServlet extends HttpServlet {
         // Trả về JSON bao gồm thông báo và URL để điều hướng
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        String actor= request.getParameter("actor");
+        String actor = request.getParameter("actor");
         String username = request.getParameter("username");
         String pass = request.getParameter("pass");
-        System.out.print("actor "+ actor);
-        if (!check(request, response, username, pass)) {
-            return;
-        }
+        System.out.print("actor " + actor);
         //mặc định người thông tin tài khoản là độc giả
-        Nhanvien_DTO nv=new Nhanvien_DTO();
+        Nhanvien_DTO nv = new Nhanvien_DTO();
+        nv.setHo("");
+        nv.setTen("");
         nv.setChucVu("Độc giả");
-        String redirectUrl="/cnpm/sach";
-        if(actor.equals("nv"))
-        {
-            nv=nv_BUS.timKiemNhanVien(username).get(0);
+        String redirectUrl = "/cnpm/sach";
+        String tasks="sách";
+        if (actor.equals("nv")) {
+            if (!check(request, response, username, pass)) {
+                return;
+            }
+            nv = nv_BUS.timKiemNhanVien(username).get(0);
             if (nv_BUS.timKiemNhanVien(username).get(0).getChucVu().equals("admin")) {
                 redirectUrl = "/cnpm/phanquyen";
-            } else {
-                redirectUrl = "/cnpm/phieumuon";
-            }   
+            } 
+//            else {
+//                redirectUrl = "/cnpm/phieunhap";
+//            }
+            tasks = String.join(",", pq_BUS.searchByMaNV(Integer.parseInt(username)).getTacVu());
         }
-        //System.out.print("nv" + nv_BUS.timKiemNhanVien(username).get(0).getMaNV());
+        System.out.println("task bên login :"+tasks);
         HttpSession session = request.getSession();
-        session.setAttribute("nv",nv);  
-        String tasks=String.join(",",pq_BUS.searchByMaNV(Integer.parseInt(username)).getTacVu());
-        session.setAttribute("tasks",tasks); 
+        session.setAttribute("nv", nv);
+        session.setAttribute("tasks", tasks);
         response.getWriter().write("{\"thongbao\": \"Đăng nhập thành công\", \"hopLe\": true, \"redirectUrl\": \"" + redirectUrl + "\"}");
-       
+
     }
 
     @Override

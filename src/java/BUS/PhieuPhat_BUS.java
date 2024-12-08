@@ -10,7 +10,7 @@ import DTO.CTPM_DTO;
 import DTO.CTPP_DTO;
 import DTO.CTPT_DTO;
 import DTO.CTSach_DTO;
-import DTO.DocGiaDTO;
+import DTO.DocGia_DTO;
 import DTO.Loi_DTO;
 import DTO.Nhanvien_DTO;
 import DTO.PhieuMuon_DTO;
@@ -54,7 +54,6 @@ public class PhieuPhat_BUS {
     private Loi_BUS loi_BUS = new Loi_BUS();
     private PhieuMuon_BUS pm_BUS = new PhieuMuon_BUS();
     private DocGiaBUS dg_BUS = new DocGiaBUS();
-    private PhieuPhat_BUS pp_BUS = new PhieuPhat_BUS();
 
     public ArrayList<PhieuPhat_DTO> getList() {
         return pp_DAO.getList();
@@ -141,7 +140,7 @@ public class PhieuPhat_BUS {
         PhieuTra_DTO pt = pt_BUS.searchByMaPT(phieu.getMaPT());
         PhieuMuon_DTO pm = pm_BUS.searchByMaPM(pt.getMaPM());
         Nhanvien_DTO nv = nv_BUS.timKiemNhanVien(String.valueOf(phieu.getMaNV())).get(0);
-        DocGiaDTO dg = dg_BUS.findDocGiaByMaKhach(pm.getMaKhach());
+        DocGia_DTO dg = dg_BUS.searchByMaDG(pm.getMaKhach());
 
         // Thêm thông tin vào chuỗi
         pp += "<table style='width:100%; border-spacing:10px 5px;'>"
@@ -262,7 +261,7 @@ public class PhieuPhat_BUS {
         Sach_DTO sach = sach_BUS.timSachTheoMaSach(maSach).get(0);
         for (String i : listLiDo) {
             System.out.println("%tiền" + loi_BUS.searchByTenLoi(i).getPhamTramTien());
-            tien += sach.getGia() * loi_BUS.searchByTenLoi(i).getPhamTramTien();
+            tien += sach.getGiaTien() * loi_BUS.searchByTenLoi(i).getPhamTramTien();
         }
         return tien;
     }
@@ -380,9 +379,15 @@ public class PhieuPhat_BUS {
         return true;
     }
 
-    public boolean importExcel(String fileName) {
+    public String importExcel(String fileName) {
+        String maDuocImport="";
         String filePath = "C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/" + fileName;
-        try (FileInputStream file = new FileInputStream(filePath); XSSFWorkbook workbook = new XSSFWorkbook(file)) {
+        File file = new File(filePath);
+        File parentDir = file.getParentFile();
+        if (!parentDir.exists()) {
+            parentDir.mkdirs();  // Tạo thư mục nếu chưa tồn tại
+        }
+        try (FileInputStream fis = new FileInputStream(filePath); XSSFWorkbook workbook = new XSSFWorkbook(fis)) {
             XSSFSheet sheet = workbook.getSheetAt(0);
             Iterator<Row> rowIterator = sheet.iterator();
 
@@ -399,6 +404,7 @@ public class PhieuPhat_BUS {
                         getCellValue(row.getCell(0)), getCellValue(row.getCell(1)), getCellValue(row.getCell(2)),
                         getCellValue(row.getCell(3)), getCellValue(row.getCell(4)), getCellValue(row.getCell(5)),
                         getCellValue(row.getCell(6)), getCellValue(row.getCell(7)))) {
+                    System.out.println("Dữ liệu không hợp lệ. Bỏ qua dòng.");
                     continue;
                 }
 
@@ -416,6 +422,7 @@ public class PhieuPhat_BUS {
                 ArrayList<String> listT = new ArrayList<>(Arrays.asList(getCellValue(row.getCell(7)).split("\n")));
                 pp.setTongTien(0);
                 pp_DAO.addPP(pp);
+                maDuocImport+=pp.getMaPP()+",";
                 double tt = 0;
 
                 // Duyệt qua từng phần tử và thêm Chi Tiết Phiếu Phạt
@@ -423,7 +430,7 @@ public class PhieuPhat_BUS {
                     CTPP_DTO ct = new CTPP_DTO();
                     ct.setMaPP(Integer.parseInt(getCellValue(row.getCell(0))));
                     ct.setMaSach(Integer.parseInt(listMS.get(i)));
-                    ct.setMaSach(Integer.parseInt(listMV.get(i))); // Lỗi ở đây, không nên set 2 lần MaSach
+                    ct.setMaVach(listMV.get(i));
                     ct.setNgayLap(LocalDate.parse(listNL.get(i)));
                     ct.setLiDo(new ArrayList<>(Arrays.asList(listLiDo.get(i).split(","))));
                     ct.setTien(Float.parseFloat(listT.get(i)));
@@ -434,9 +441,9 @@ public class PhieuPhat_BUS {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
+            return "fasle";
         }
-        return true;
+        return maDuocImport;
     }
 
 // Hàm chuyển đổi giá trị ô trong Excel thành chuỗi
@@ -510,7 +517,7 @@ public class PhieuPhat_BUS {
                 listMV += ctpp.getMaVach() + "\n";
                 listNL += ctpp.getNgayLap() + "\n";
                 String tam = String.join(", ", ctpp.getLiDo());
-                listLiDo += tam;
+                listLiDo += tam +"\n";
                 listT += ctpp.getTien() + "\n";
             }
 

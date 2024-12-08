@@ -7,7 +7,7 @@ package BUS;
 import DAO.CTPM_DAO;
 import DAO.PhieuMuon_DAO;
 import DTO.CTPM_DTO;
-import DTO.DocGiaDTO;
+import DTO.DocGia_DTO;
 import DTO.Nhanvien_DTO;
 import DTO.PhieuMuon_DTO;
 import DTO.Sach_DTO;
@@ -146,7 +146,7 @@ public class PhieuMuon_BUS {
             return "<p>Không tìm thấy phiếu mượn.</p>";
         }
         Nhanvien_DTO nv = searchNV(phieu.getMaNV());
-        DocGiaDTO dg = dg_BUS.findDocGiaByMaKhach(phieu.getMaKhach());
+        DocGia_DTO dg = dg_BUS.searchByMaDG(phieu.getMaKhach());
 
         // Kiểm tra null cho nhân viên và độc giả
         if (nv == null || dg == null) {
@@ -233,7 +233,7 @@ public class PhieuMuon_BUS {
             int maPhieuInt = Integer.parseInt(maPhieu.trim());
             int maKhachInt = Integer.parseInt(maKhach.trim());
             // Kiểm tra mã phiếu mượn
-            if (pm_DAO.searchByMaPM(maPhieuInt) != null || dg_BUS.findDocGiaByMaKhach(maKhachInt) == null || nv_BUS.timKiemNhanVien(maNV.trim()) == null) {
+            if (pm_DAO.searchByMaPM(maPhieuInt) != null || dg_BUS.searchByMaDG(maKhachInt) == null || nv_BUS.timKiemNhanVien(maNV.trim()) == null) {
                 System.out.println("Tìm tồn tại có lỗi");
                 return false;
             }
@@ -270,9 +270,15 @@ public class PhieuMuon_BUS {
         return true;
     }
 
-    public boolean importExcel(String fileName) {
+    public String importExcel(String fileName) {
+        String MaDuocImport="";
         String filePath = "C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/" + fileName;
-        try (FileInputStream file = new FileInputStream(filePath); XSSFWorkbook workbook = new XSSFWorkbook(file)) {
+        File file = new File(filePath);
+        File parentDir = file.getParentFile();
+        if (!parentDir.exists()) {
+            parentDir.mkdirs();  // Tạo thư mục nếu chưa tồn tại
+        }
+        try (FileInputStream fis = new FileInputStream(filePath); XSSFWorkbook workbook = new XSSFWorkbook(fis)) {
             System.out.println("Đã mở file Excel thành công.");
             XSSFSheet sheet = workbook.getSheetAt(0);
             Iterator<Row> rowIterator = sheet.iterator();
@@ -306,6 +312,7 @@ public class PhieuMuon_BUS {
                 String[] listTT = getCellValue(row.getCell(7)).split(",");
                 pm.setTongSL(0);
                 pm_DAO.addPM(pm);
+                MaDuocImport+=pm.getMaPM()+",";
                 int tongsl = 0;
                 
                 for (int i = 0; i < listMS.length; i++) {
@@ -321,9 +328,9 @@ public class PhieuMuon_BUS {
             }
         } catch (IOException e) {
             System.out.println("Lỗi đọc file Excel: " + e.getMessage());
-            return false;
+            return "false";
         }
-        return true;
+        return MaDuocImport;
     }
 
     private String getCellValue(Cell cell) {
@@ -349,12 +356,8 @@ public class PhieuMuon_BUS {
         if (!parentDir.exists()) {
             parentDir.mkdirs();  // Tạo thư mục nếu chưa tồn tại
         }
-
-        System.out.println("Bắt đầu khối try");
         XSSFWorkbook excelWorkbook = new XSSFWorkbook();
-        System.out.println("tạo 0");
         XSSFSheet excelSheet = (XSSFSheet) excelWorkbook.createSheet("Danh sách phiếu mượn của thư viện");
-        System.out.println("tạo 1");
         XSSFRow row = null;
         Cell cell = null;
         // Merge các cột thành một và căn giữa tiêu đề

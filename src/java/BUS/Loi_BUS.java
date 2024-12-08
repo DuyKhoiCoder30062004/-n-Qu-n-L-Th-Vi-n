@@ -5,6 +5,7 @@
 package BUS;
 
 import DAO.Loi_DAO;
+import DTO.CTPP_DTO;
 import DTO.Loi_DTO;
 import java.util.ArrayList;
 
@@ -15,10 +16,19 @@ import java.util.ArrayList;
 public class Loi_BUS {
     private ArrayList<Loi_DTO> listLoi;
     private Loi_DAO loi_DAO=new Loi_DAO();
+    private CTPP_BUS ctpp_BUS=new CTPP_BUS();
     public ArrayList<Loi_DTO> getList()
     {
         listLoi=loi_DAO.getListLoi();
         return listLoi;
+    }
+    public ArrayList<Loi_DTO> getListTonTai()
+    {
+        ArrayList<Loi_DTO> list=new ArrayList<Loi_DTO>();
+        for(Loi_DTO i:loi_DAO.getListLoi())
+            if(!i.getTenLoi().contains("#"))
+                list.add(i);
+        return list;
     }
     public boolean addLoi(Loi_DTO loi)
     {
@@ -31,6 +41,7 @@ public class Loi_BUS {
     public boolean deleteLoi(String tenloi)
     {
         return loi_DAO.deleteLoi(tenloi);
+        
     }
     public Loi_DTO searchByTenLoi(String tenLoi)
     {

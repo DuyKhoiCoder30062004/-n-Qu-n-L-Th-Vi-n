@@ -101,6 +101,10 @@ public class nxb_Servlet extends HttpServlet {
                 if (!checkImformation(request, response, maNXB, tenNXB, dcNXB)) {
                     return;
                 }
+                if (nxb_BUS.searchByMaNXB(Integer.parseInt(maNXB)) != null|| nxb_BUS.searchByMaNXB(-1*Integer.parseInt(maNXB))!=null) {
+                    response.getWriter().write("{\"thongbao\": \"Mã nxb đã tồn tại vui lòng nhập lại mã nxb\", \"hopLe\": false}");
+                    return;
+                }
                 // Tiếp tục xử lý sau khi kiểm tra thành công
                 NXB_DTO nxb = new NXB_DTO();
                 nxb.setMaNXB(Integer.parseInt(maNXB));
@@ -118,6 +122,10 @@ public class nxb_Servlet extends HttpServlet {
                     return;
                 }
                 if (!checkImformation(request, response, maNXB, tenNXB, dcNXB)) {
+                    return;
+                }
+                if (nxb_BUS.searchByMaNXB(Integer.parseInt(maNXB)) == null|| nxb_BUS.searchByMaNXB(-1*Integer.parseInt(maNXB))==null) {
+                    response.getWriter().write("{\"thongbao\": \"Mã nxb đã tồn tại vui lòng nhập lại mã nxb\", \"hopLe\": false}");
                     return;
                 }
                 NXB_DTO nxbs = new NXB_DTO();

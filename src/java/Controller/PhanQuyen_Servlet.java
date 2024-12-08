@@ -27,32 +27,71 @@ import java.util.Arrays;
 public class PhanQuyen_Servlet extends HttpServlet {
 
     private PhanQuyen_BUS pq_BUS = new PhanQuyen_BUS();
-    private Nhanvien_BUS nv_BUS=new Nhanvien_BUS();
+    private Nhanvien_BUS nv_BUS = new Nhanvien_BUS();
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
     }
 
+    //Giúp nhận mọi nguồn.
+    private void setCORSHeaders(HttpServletResponse response) {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        ArrayList<PhanQuyen_DTO> listPQ = pq_BUS.getList();
-        ArrayList<Nhanvien_DTO> listNV=nv_BUS.getList();
+        setCORSHeaders(response);
+        ArrayList<PhanQuyen_DTO> listPQ = pq_BUS.getListTonTai();
+        ArrayList<Nhanvien_DTO> listNV = nv_BUS.getList();
         request.setAttribute("listPQ", listPQ);
         request.setAttribute("listNV", listNV);
         request.getRequestDispatcher("/WEB-INF/gui/phanquyen.jsp").forward(request, response);
     }
-
+    private Nhanvien_DTO searchNV(int maNV)
+    {
+        for(Nhanvien_DTO i:nv_BUS.getList())
+            if(i.getMaNV()==maNV)
+                return i;
+        return null;
+    }
+    private boolean checkTask_CuaAdmin(String task)
+    {
+        for(String i:task.split(","))
+            if(!i.equals("phân quyền"))
+                return false;
+        return true;
+    }
+    private boolean checkTask(String task,String value)
+    {
+        for(String i:task.split(","))
+        {
+            if(i.equals(value))
+                return true;
+        }
+        return false;
+    }
     private boolean checkInfor(HttpServletRequest request, HttpServletResponse response,
-            String maNV, String matKhau, String[] tasks)
+            String maNV, String matKhau, String tasks)
             throws IOException {
         // Kiểm tra mã nhân viên
         if (maNV == null || maNV.trim().isEmpty()) {
             response.getWriter().write("{\"thongbao\": \"Mã nhân viên không được để trống\", \"hopLe\": false}");
             return false; // Dừng hàm nếu lỗi
         }
-
+        try {
+            Integer.parseInt(maNV);
+        } catch (NumberFormatException e) {
+            response.getWriter().write("{\"thongbao\": \"Mã nhân viên phải là số nguyên\", \"hopLe\": false}");
+            return false;
+        }
+        if(searchNV(Integer.parseInt(maNV))==null)
+        {
+            response.getWriter().write("{\"thongbao\": \"Mã nhân viên không tồn tại\", \"hopLe\": false}");
+            return false;
+        }
         // Kiểm tra mật khẩu
         if (matKhau == null || matKhau.trim().isEmpty()) {
             response.getWriter().write("{\"thongbao\": \"Mật khẩu không được để trống\", \"hopLe\": false}");
@@ -60,31 +99,58 @@ public class PhanQuyen_Servlet extends HttpServlet {
         }
 
         // Kiểm tra danh sách công việc (tasks)
-        if (tasks[0] == null || tasks[0].isEmpty()) {
-            response.getWriter().write("{\"thongbao\": \"Danh sách công việc không được để trống\", \"hopLe\": false}");
+        if (tasks == null || tasks.trim().isEmpty()) {
+            response.getWriter().write("{\"thongbao\": \"Danh sách tác vụ quản lí không được để trống\", \"hopLe\": false}");
             return false;
         }
-        return true; 
+        if(searchNV(Integer.parseInt(maNV)).getChucVu().equals("admin") &&!checkTask_CuaAdmin(tasks))
+        {
+            response.getWriter().write("{\"thongbao\": \"Mã nhân viên bạn nhập là admin nên chỉ có một tác vụ phân quyền vui lòng nhập lại\", \"hopLe\": false}");
+            return false;
+        }
+        if(searchNV(Integer.parseInt(maNV)).getChucVu().equals("quản lí") && !checkTask(tasks,"thống kê"))
+        {
+            response.getWriter().write("{\"thongbao\": \"Mã nhân viên bạn nhập là quản lí nhưng bạn chưa có tác vụ quản lí thống kê vui lòng nhập thêm\", \"hopLe\": false}");
+            return false;
+        }
+        if(searchNV(Integer.parseInt(maNV)).getChucVu().equals("quản lí") && checkTask(tasks,"phân quyền"))
+        {
+            response.getWriter().write("{\"thongbao\": \"Mã nhân viên bạn nhập là quản lí bạn không có quyền quản lí tác vụ phân quyền vui lòng nhập lại\", \"hopLe\": false}");
+            return false;
+        }
+        if(searchNV(Integer.parseInt(maNV)).getChucVu().equals("nhân viên") &&  Arrays.asList(tasks).contains("thống kê"))
+        {
+            response.getWriter().write("{\"thongbao\": \"Mã nhân viên bạn nhập là nhân viên nhưng bạn nhập có tác vụ quản lí thống kê  vui lòng nhập lại\", \"hopLe\": false}");
+            return false;
+        }
+        if(searchNV(Integer.parseInt(maNV)).getChucVu().equals("nhân viên") &&   Arrays.asList(tasks).contains("phân quyền"))
+        {
+            response.getWriter().write("{\"thongbao\": \"Mã nhân viên bạn nhập là nhân viên nhưng bạn nhập có tác vụ quản lí phân quyền  vui lòng nhập lại\", \"hopLe\": false}");
+            return false;
+        }
+        return true;
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        setCORSHeaders(response);
+        response.setContentType("application/json");
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
         String maNV = request.getParameter("maNV");
         String matKhau = request.getParameter("matKhau");
-        String[] tasks = request.getParameterValues("tasks");
+        String tasks = request.getParameter("tasks");
         String optionSearch = request.getParameter("optionSearch");
         String valueSearch = request.getParameter("valueSearch");
-
+        System.out.println("action: " + action);
+        System.out.println("maNV: " + maNV);
+        System.out.println("matKhau: " + matKhau);
         switch (action) {
             case "add":
                 if (!checkInfor(request, response, maNV, matKhau, tasks)) {
                     return;
                 }
-                if(pq_BUS.searchByMaNV(Integer.parseInt(maNV))!=null)
-                {
+                if (pq_BUS.searchByMaNV(Integer.parseInt(maNV)) != null || pq_BUS.searchByMaNV(-1*Integer.parseInt(maNV))!=null) {
                     response.getWriter().write("{\"thongbao\": \"Mã nhân viên này đã có tài khoản\", \"hopLe\": false}");
                     return;
                 }

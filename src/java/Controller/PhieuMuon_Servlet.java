@@ -7,13 +7,17 @@ package Controller;
 import BUS.CTPM_BUS;
 import BUS.CTPP_BUS;
 import BUS.CTPT_BUS;
+import BUS.CTSach_BUS;
 import BUS.DocGiaBUS;
 import BUS.PhieuMuon_BUS;
 import BUS.PhieuPhat_BUS;
 import BUS.PhieuTra_BUS;
 import BUS.Sach_BUS;
 import DTO.CTPM_DTO;
-import DTO.DocGiaDTO;
+import DTO.CTPP_DTO;
+import DTO.CTPT_DTO;
+import DTO.CTSach_DTO;
+import DTO.DocGia_DTO;
 import DTO.PhieuMuon_DTO;
 import DTO.PhieuPhat_DTO;
 import DTO.PhieuTra_DTO;
@@ -46,6 +50,7 @@ public class PhieuMuon_Servlet extends HttpServlet {
     private Sach_BUS sach_BUS = new Sach_BUS();
     private PhieuTra_BUS pt_BUS = new PhieuTra_BUS();
     private PhieuPhat_BUS pp_BUS = new PhieuPhat_BUS();
+    private CTSach_BUS cts_BUS=new CTSach_BUS();
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -58,7 +63,7 @@ public class PhieuMuon_Servlet extends HttpServlet {
             throws ServletException, IOException {
         ArrayList<PhieuMuon_DTO> listPM = pm_BUS.getList();
         ArrayList<CTPM_DTO> listCTPM = ctpm_BUS.getList();
-        ArrayList<DocGiaDTO> listDG = dg_BUS.getList();
+        ArrayList<DocGia_DTO> listDG = dg_BUS.getListDG();
         ArrayList<Sach_DTO> listSach = sach_BUS.getListSach();
         request.setAttribute("listCTPM", listCTPM);
         request.setAttribute("listPM", listPM);
@@ -143,18 +148,54 @@ public class PhieuMuon_Servlet extends HttpServlet {
         return true;
     }
 
-    private void DeleteCacPhieu(String maPhieu) {
+    private boolean Delete_UpdateCacPhieu(String maPhieu) {
         CTPT_BUS ctpt_BUS = new CTPT_BUS();
         CTPP_BUS ctpp_BUS = new CTPP_BUS();
-        ctpm_BUS.deleteByMaPM(Integer.parseInt(maPhieu));
         if (searchPM_In_PT(Integer.parseInt(maPhieu)) != null) {
-            pt_BUS.deletePhieuTra(searchPM_In_PT(Integer.parseInt(maPhieu)).getMaPT());
-            ctpt_BUS.deleteCTPT(searchPM_In_PT(Integer.parseInt(maPhieu)).getMaPT());
-            if (searchPT_In_PP(searchPM_In_PT(Integer.parseInt(maPhieu)).getMaPT()) != null) {
-                pp_BUS.deletePP(searchPT_In_PP(searchPM_In_PT(Integer.parseInt(maPhieu)).getMaPT()).getMaPP());
-                ctpp_BUS.deleteByMaPP(searchPT_In_PP(searchPM_In_PT(Integer.parseInt(maPhieu)).getMaPT()).getMaPP());
+            PhieuPhat_DTO pp=searchPT_In_PP(searchPM_In_PT(Integer.parseInt(maPhieu)).getMaPT());
+            if (pp != null) 
+            {
+                ArrayList<CTPP_DTO> listctpp=ctpp_BUS.searchByMaPP(pp.getMaPP());
+                if(!listctpp.isEmpty())
+                {
+                    for(CTPP_DTO i:listctpp)
+                    {
+                        CTSach_DTO sachBiLoi=cts_BUS.searchCTSachByMaVach(i.getMaVach()).get(0);
+                        String tts=sachBiLoi.getTinhTrangSach();
+                        for(String j:i.getLiDo())
+                            tts = tts.replace(j, "").replaceAll(",\\s*,", ",").trim();
+                        tts = tts.substring(0, tts.length());
+                        sachBiLoi.setTinhTrangSach(tts);
+                        if(!cts_BUS.updateCTSach(sachBiLoi))
+                            return false;
+                    }
+                    if(!ctpp_BUS.deleteByMaPP(pp.getMaPP())
+                    ||!pp_BUS.deletePP(pp.getMaPP()))
+                    return false;
+                }
+            }   
+            List<CTPT_DTO> listctpt=ctpt_BUS.searchByMaPT(searchPM_In_PT(Integer.parseInt(maPhieu)).getMaPT());
+            if(!listctpt.isEmpty())
+            {
+                if(!ctpt_BUS.deleteCTPT_ByMaPT(searchPM_In_PT(Integer.parseInt(maPhieu)).getMaPT()))
+                    return false;
             }
+            if(!pt_BUS.deletePhieuTra(searchPM_In_PT(Integer.parseInt(maPhieu)).getMaPT()))
+                return false;
         }
+        if(!ctpm_BUS.searchByMaPM(Integer.parseInt(maPhieu)).isEmpty())
+        {
+            for (CTPM_DTO i:ctpm_BUS.searchByMaPM(Integer.parseInt(maPhieu)))
+        {
+            Sach_DTO sach=sach_BUS.timSachTheoMaSach(String.valueOf(i.getMaSach())).get(0);
+            sach.setSoLuong(sach.getSoLuong()+i.getSoLuong());
+            if(!sach_BUS.suaSach(sach))
+                return false;
+        }
+            if(!ctpm_BUS.deleteByMaPM(Integer.parseInt(maPhieu)))
+                return false;
+            }
+        return true;
     }
 
     @Override
@@ -206,8 +247,8 @@ public class PhieuMuon_Servlet extends HttpServlet {
                 if (!checkDelete(request, response, maPhieu)) {
                     return;
                 }
-                if (pm_BUS.deletePM(Integer.parseInt(maPhieu))) {
-                    DeleteCacPhieu(maPhieu);
+                if (Delete_UpdateCacPhieu(maPhieu)
+                    && pm_BUS.deletePM(Integer.parseInt(maPhieu))) {
                     response.getWriter().write("{\"thongbao\": \"Xóa thành công\", \"hopLe\": true}");
                 } else {
                     response.getWriter().write("{\"thongbao\": \"Xóa thất bại\", \"hopLe\": false}");
@@ -263,14 +304,17 @@ public class PhieuMuon_Servlet extends HttpServlet {
                     response.getWriter().write("{\"thongbao\": \"Vui lòng nhập tên file excel để import\", \"hopLe\": false}");
                     return;
                 }
-             
-                if(pm_BUS.importExcel(namePath))
+                if(!pm_BUS.importExcel(namePath).equals(""))
                 {
-                    response.getWriter().write("{\"thongbao\": \"Import excel thành công\", \"hopLe\": true}");
+                    response.getWriter().write("{\"thongbao\": \"Import excel thành công với các mã phiếu mượn: " + pm_BUS.importExcel(namePath) + "\", \"hopLe\": true}");
                 }
                 else
                 {
-                    response.getWriter().write("{\"thongbao\": \"Import thất bại vui lòng kiểm tra lại\", \"hopLe\": false}");
+                    response.getWriter().write("{\"thongbao\": \"Không có phiếu mượn nào import thành công\", \"hopLe\": false}");
+                }
+                if(pm_BUS.importExcel(namePath).equals("fasle"))
+                {
+                    response.getWriter().write("{\"thongbao\": \"Mở file import thất bại\", \"hopLe\": false}");
                 }
                 break;
             case "export":

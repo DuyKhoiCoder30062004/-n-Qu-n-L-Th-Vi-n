@@ -251,13 +251,13 @@
                 <button id="btnDocGia" class="conponentMenu" value="độc giả" onclick="reDirect(this,'/cnpm/docgia')">
                     <img src="img/customerr.svg" alt="icon"> Độc giả
                 </button>
-                <button id="btnNhaXuatBan" class="conponentMenu" value="nhà xuất bản" onclick="reDirect(this,'/cnpm/nhaxuatban')">
+                <button id="btnNhaXuatBan" class="conponentMenu" value="nhà xuất bản" onclick="reDirect(this,'/cnpm/nxb')">
                     <img src="img/nhaxuatban.jpg" alt="icon"> Nhà xuất bản
                 </button>
-                <button id="btnNhaCungCap" class="conponentMenu" value="nhà cung cấp" onclick="reDirect(this,'/cnpm/nhacungcap')">
+                <button id="btnNhaCungCap" class="conponentMenu" value="nhà cung cấp" onclick="reDirect(this,'/cnpm/ncc')">
                     <img src="img/nhacc.jpg" alt="icon"> Nhà cung cấp
                 </button>
-                <button id="btnKhuVuc" class="conponentMenu" value="khu vực" onclick="reDirect(this,'/cnpm/khuvuc')">
+                <button id="btnKhuVuc" class="conponentMenu" value="khu vực" onclick="reDirect(this,'/cnpm/kv')">
                     <img src="img/khuvuc.jpg" alt="icon"> Khu vực
                 </button>
                 <button id="btnPhieuMuon" class="conponentMenu" value="phiếu mượn" onclick="reDirect(this,'/cnpm/phieumuon')">
@@ -302,7 +302,7 @@
                             <label class="nameFeature">Tác vụ/Quản lí</label><br>
                             <label class="checkbox"><input type="checkbox" name="task" value="sách">Sách</label><br>
                             <label class="checkbox"><input type="checkbox" name="task" value="nhân viên">Nhân viên</label><br>
-                            <label class="checkbox"><input type="checkbox" name="task" value="đọc giả">Độc giả</label><br>
+                            <label class="checkbox"><input type="checkbox" name="task" value="độc giả">Độc giả</label><br>
                             <label class="checkbox"><input type="checkbox" name="task" value="nhà xuất bản">Nhà xuất bản</label><br>
                             <label class="checkbox"><input type="checkbox" name="task" value="nhà cung cấp">Nhà cung cấp</label><br>
                             <label class="checkbox"><input type="checkbox" name="task" value="khu vực">Khu vực</label><br>
@@ -427,6 +427,7 @@
             function sendData(action) {
                 const selectedTasks = Array.from(document.querySelectorAll('.checkbox input[type="checkbox"]:checked')
                         ).map(checkbox => checkbox.value);
+//                alert(selectedTasks);
                 const formData = new URLSearchParams({
                     action: action,
                     maNV: document.getElementById('txtMaNV').value,

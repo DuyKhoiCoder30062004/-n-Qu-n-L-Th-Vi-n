@@ -84,7 +84,7 @@ public class CTPP_Servlet extends HttpServlet {
             throws ServletException, IOException {
         ArrayList<PhieuPhat_DTO> listPP = pp_BUS.getList();
         ArrayList<CTPP_DTO> listCTPP = ctpp_BUS.getList();
-        ArrayList<Loi_DTO> listLoi = loi_BUS.getList();
+        ArrayList<Loi_DTO> listLoi = loi_BUS.getListTonTai();
         ArrayList<PhieuTra_DTO> listPT = listPT_BiPhat();
         ArrayList<Sach_DTO> listSach = sach_BUS.getListSach();
         ArrayList<CTSach_DTO> listCTS = cts_BUS.getList();
@@ -159,7 +159,7 @@ public class CTPP_Servlet extends HttpServlet {
         Sach_DTO sach = sach_BUS.timSachTheoMaSach(maSach).get(0);
         for (String i : listLiDo) {
             System.out.println("%tiền" + loi_BUS.searchByTenLoi(i).getPhamTramTien());
-            tien += sach.getGia() * loi_BUS.searchByTenLoi(i).getPhamTramTien();
+            tien += sach.getGiaTien() * loi_BUS.searchByTenLoi(i).getPhamTramTien();
         }
         return tien;
     }
@@ -307,12 +307,10 @@ public class CTPP_Servlet extends HttpServlet {
                 if (!checkInfor(request, response, maPP, maSach, maVach, ngayLap, liDo)) {
                     return;
                 }
-                System.out.println(" RA NGOAI VONG KIEM TRA ");
                 if (!checkLiDo(searchCTS(maVach).getTinhTrangSach(), liDo).equals("")) {
                     response.getWriter().write("{\"thongbao\": \"" + checkLiDo(searchCTS(maVach).getTinhTrangSach(), liDo) + "\", \"hopLe\": false}");
                     return;
                 }
-                System.out.println("Đã qua check LiDO ");
                 if (ctpp_BUS.searchByMaPP_MaVach(Integer.parseInt(maPP), maVach) != null) {
                     response.getWriter().write("{\"thongbao\": \"ctpp này đã tồn tại vui lòng nhập lại mã phiếu phạt và mã vạch\", \"hopLe\": false}");
                     return;

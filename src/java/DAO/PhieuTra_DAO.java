@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.*;
+import java.time.LocalDate;
 import java.util.List;
 
 public class PhieuTra_DAO {
@@ -33,7 +34,6 @@ public class PhieuTra_DAO {
                 pt.setMaPM(rs.getInt("mapm"));
                 pt.setMaNV(rs.getInt("manv"));
                 pt.setTongSL(rs.getInt("tongsl"));
-                pt.setNgayTra(rs.getDate("ngaytra").toLocalDate()); // Assuming the field 'ngaytra' exists in the DB
                 listPT.add(pt);
             }
         } catch (Exception e) {
@@ -50,13 +50,12 @@ public class PhieuTra_DAO {
         try {
             dnDB = new dangNhapDatabase();
             conn = dnDB.openConnection();
-            String qry = "INSERT INTO phieutra (mapt, mapm, manv, tongsl, ngaytra) VALUES (?, ?, ?, ?, ?)";
+            String qry = "INSERT INTO phieutra (mapt, mapm, manv, tongsl) VALUES (?, ?, ?, ?)";
             ps = conn.prepareStatement(qry);
             ps.setInt(1, pt.getMaPT());
             ps.setInt(2, pt.getMaPM());
             ps.setInt(3, pt.getMaNV());
             ps.setInt(4, pt.getTongSL());
-            ps.setDate(5, java.sql.Date.valueOf(pt.getNgayTra())); // Assuming pt.getNgayTra() returns a LocalDate
             ps.executeUpdate();
         } catch (Exception e) {
             System.err.println("Lỗi khi thêm phiếu trả: " + e.getMessage());
@@ -72,12 +71,11 @@ public class PhieuTra_DAO {
         try {
             dnDB = new dangNhapDatabase();
             conn = dnDB.openConnection();
-            String qry = "UPDATE phieutra SET mapm = ?, manv = ?, tongsl = ?, ngaytra = ? WHERE mapt = ?";
+            String qry = "UPDATE phieutra SET mapm = ?, manv = ?, tongsl = ? WHERE mapt = ?";
             ps = conn.prepareStatement(qry);
             ps.setInt(1, pt.getMaPM());
             ps.setInt(2, pt.getMaNV());
             ps.setInt(3, pt.getTongSL());
-            ps.setDate(4, java.sql.Date.valueOf(pt.getNgayTra())); // Assuming pt.getNgayTra() returns a LocalDate
             ps.setInt(5, pt.getMaPT());
             ps.executeUpdate();
         } catch (Exception e) {
@@ -122,7 +120,6 @@ public class PhieuTra_DAO {
                 pt.setMaPM(rs.getInt("mapm"));
                 pt.setMaNV(rs.getInt("manv"));
                 pt.setTongSL(rs.getInt("tongsl"));
-                pt.setNgayTra(rs.getDate("ngaytra").toLocalDate()); // Assuming the field 'ngaytra' exists in the DB
             }
         } catch (Exception e) {
             System.err.println("Lỗi khi tìm phiếu trả: " + e.getMessage());
@@ -149,7 +146,6 @@ public class PhieuTra_DAO {
         html += "<p>Mã phiếu mượn: " + pt.getMaPM() + "</p>";
         html += "<p>Mã nhân viên: " + pt.getMaNV() + "</p>";
         html += "<p>Tổng số lượng: " + pt.getTongSL() + "</p>";
-        html += "<p>Ngày trả: " + pt.getNgayTra() + "</p>"; // Added the new field
         html += "<div style='text-align:center;'>XIN CẢM ƠN!</div>";
         return html;
     }
@@ -175,7 +171,6 @@ public class PhieuTra_DAO {
                 row.createCell(1).setCellValue(pt.getMaPM());
                 row.createCell(2).setCellValue(pt.getMaNV());
                 row.createCell(3).setCellValue(pt.getTongSL());
-                row.createCell(4).setCellValue(pt.getNgayTra().toString()); // Assuming pt.getNgayTra() returns LocalDate
             }
 
             // Write to file
@@ -204,9 +199,8 @@ public class PhieuTra_DAO {
                     int maNV = (int) row.getCell(2).getNumericCellValue();
                     int tongSL = (int) row.getCell(3).getNumericCellValue();
                     String ngayTraStr = row.getCell(4).getStringCellValue();
-                    LocalDate ngayTra = LocalDate.parse(ngayTraStr);
 
-                    PhieuTra_DTO phieuTra = new PhieuTra_DTO(maPT, maPM, maNV, tongSL, ngayTra);
+                    PhieuTra_DTO phieuTra = new PhieuTra_DTO(maPT, maPM, maNV, tongSL);
                     phieuTraList.add(phieuTra);
                 }
             }

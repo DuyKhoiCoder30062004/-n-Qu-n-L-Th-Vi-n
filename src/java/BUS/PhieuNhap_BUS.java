@@ -7,37 +7,53 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class PhieuNhap_BUS {
+
     private ArrayList<PhieuNhap_DTO> listPN;
     private PhieuNhap_DAO pn_DAO = new PhieuNhap_DAO();
     private CTPN_BUS ctpn_BUS = new CTPN_BUS();
 
-    public ArrayList<PhieuNhap_DTO> getList(){
+    public ArrayList<PhieuNhap_DTO> getList() {
         listPN = pn_DAO.getList();
         return listPN;
     }
 
-    public boolean addPN(PhieuNhap_DTO pn){
+    public boolean addPN(PhieuNhap_DTO pn) {
         return pn_DAO.addPN(pn);
     }
 
-    public boolean updatePN(PhieuNhap_DTO pn){
+    public boolean updatePN(PhieuNhap_DTO pn) {
         return pn_DAO.updatePN(pn);
     }
 
-    public boolean deletePN(int maPN){
+    public boolean deletePN(int maPN) {
         return pn_DAO.deleteByMaPN(maPN);
     }
 
-    public PhieuNhap_DTO searchByMaPN(int maPN){
+    public PhieuNhap_DTO searchByMaPN(int maPN) {
         return pn_DAO.searchByMaPN(maPN);
     }
 
-    public StringBuilder[] searchPN(String option, String value){
+    public StringBuilder[] searchPN(String option, String value) {
         StringBuilder[] arrayrs = new StringBuilder[2];
         StringBuilder jsonResult = new StringBuilder("["); // Sử dụng StringBuilder để dễ dàng quản lý chuỗi
         StringBuilder jsonRsCTPN = new StringBuilder("[");
@@ -54,38 +70,39 @@ public class PhieuNhap_BUS {
                     jsonResult.append(","); // Thêm dấu phẩy trước mỗi phần tử sau phần tử đầu tiên
                 }
                 jsonResult.append("{"
-                        + "\"maPhieu\": \"" + pn.getMaPN() + "\","
-                        + "\"maKhach\": \"" + pn.getMaNCC() + "\","
+                        + "\"maPN\": \"" + pn.getMaPN() + "\","
+                        + "\"maNCC\": \"" + pn.getMaNCC() + "\","
                         + "\"maNV\": \"" + pn.getMaNV() + "\","
                         + "\"ngayLap\": \"" + pn.getNgayLap() + "\","
-                        + "\"tongSL\": \"" + pn.getTongSL() + "\""
-                        + "\"tongTien\": \"" + pn.getTongTien() + "\","
+                        + "\"tongSL\": \"" + pn.getTongSL() + "\","
+                        + "\"tongTien\": \"" + pn.getTongTien() + "\""
                         + "}");
                 firstItem = false; // Đánh dấu rằng phần tử đầu tiên đã được thêm
-                ArrayList<CTPN_DTO> listCTPN= ctpn_BUS.searchByMaPN(pn.getMaPN());
-                for (CTPN_DTO ctpn: listCTPN)
-                {
-                    if(!fItemCTPN){
+                ArrayList<CTPN_DTO> listCTPN = ctpn_BUS.searchByMaPN(pn.getMaPN());
+                System.out.println("CTPN" + listCTPN);
+                for (CTPN_DTO ctpn : listCTPN) {
+                    if (!fItemCTPN) {
                         jsonRsCTPN.append(",");
                     }
                     jsonRsCTPN.append("{"
-                        + "\"mapn\": \"" + ctpn.getMaPN() + "\","
-                        + "\"maSach\": \"" + ctpn.getMaSach() + "\","
-                        + "\"soLuong\": \"" + ctpn.getSoLuong() + "\","
-                        + "\"donGia\": \"" + ctpn.getDonGia() + "\""
-                        + "}");
-                    fItemCTPN = false; 
+                            + "\"maPN\": \"" + ctpn.getMaPN() + "\","
+                            + "\"maSach\": \"" + ctpn.getMaSach() + "\","
+                            + "\"listMaVach\": \"" + ctpn.getMaVach() + "\","
+                            + "\"soLuong\": \"" + ctpn.getSoLuong() + "\","
+                            + "\"donGia\": \"" + ctpn.getDonGia() + "\""
+                            + "}");
+                    fItemCTPN = false;
                 }
             }
         }
-        jsonResult.append("]"); 
+        jsonResult.append("]");
         jsonRsCTPN.append("]");
-        arrayrs[0]=jsonResult;
-        arrayrs[1]=jsonRsCTPN;
-        return arrayrs; 
+        arrayrs[0] = jsonResult;
+        arrayrs[1] = jsonRsCTPN;
+        return arrayrs;
     }
 
-    public String printPN(int maPN) { 
+    public String printPN(int maPN) {
         String pn = "<h1 style='text-align:center;'>PHIẾU NHẬP HÀNG </h1>";
 
         PhieuNhap_DTO phieu = pn_DAO.searchByMaPN(maPN);
@@ -121,15 +138,14 @@ public class PhieuNhap_BUS {
 
         pn += "</table><br/>";
 
-        pn += "Ngày lập: " +phieu.getNgayLap() + "<br/>" +"Tổng Số Lượng: " + phieu.getTongSL() + "<br/>"
+        pn += "Ngày lập: " + phieu.getNgayLap() + "<br/>" + "Tổng Số Lượng: " + phieu.getTongSL() + "<br/>"
                 + "Tổng Tiền: " + phieu.getTongTien() + "<br/>";
         return pn;
     }
 
     public boolean importExcel(String fileName) {
         String filePath = "C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/cnpm/" + fileName;
-        try (FileInputStream file = new FileInputStream(filePath);
-             XSSFWorkbook workbook = new XSSFWorkbook(file)) {
+        try (FileInputStream file = new FileInputStream(filePath); XSSFWorkbook workbook = new XSSFWorkbook(file)) {
 
             XSSFSheet sheet = workbook.getSheetAt(0);
             for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
@@ -140,13 +156,12 @@ public class PhieuNhap_BUS {
                 pn.setMaNCC(Integer.parseInt(row.getCell(1).getStringCellValue()));
                 pn.setMaNV(Integer.parseInt(row.getCell(2).getStringCellValue()));
                 pn.setTongSL(Integer.parseInt(row.getCell(3).getStringCellValue()));
-                pn.setTongTien(Float.parseFloat(row.getCell(4).getStringCellValue()));
+                pn.setTongTien(Double.parseDouble(row.getCell(4).getStringCellValue()));
 
                 String[] listMaSach = row.getCell(5).getStringCellValue().split(",");
                 String[] listSL = row.getCell(6).getStringCellValue().split(",");
                 String[] listDG = row.getCell(7).getStringCellValue().split(",");
-                for (int j=0; j < listMaSach.length; j++)
-                {
+                for (int j = 0; j < listMaSach.length; j++) {
                     CTPN_DTO ct = new CTPN_DTO();
                     ct.setMaPN(Integer.parseInt(row.getCell(1).getStringCellValue()));
                     ct.setMaSach(Integer.parseInt(listMaSach[j]));
@@ -154,7 +169,7 @@ public class PhieuNhap_BUS {
                     ct.setDonGia(Integer.parseInt(listDG[j]));
                     ctpn_BUS.addCTPN(ct);
                 }
-                
+
                 pn_DAO.addPN(pn);
             }
 
@@ -172,69 +187,79 @@ public class PhieuNhap_BUS {
         if (!parentDir.exists()) {
             parentDir.mkdirs();
         }
-    
+
         try (XSSFWorkbook excelWorkbook = new XSSFWorkbook()) {
-        XSSFSheet excelSheet = excelWorkbook.createSheet("Danh sách phiếu nhập");
+            XSSFSheet excelSheet = excelWorkbook.createSheet("Danh sách phiếu nhập");
+            XSSFRow row = excelSheet.createRow(0);
+            Cell cell = row.createCell(0, CellType.STRING);
+            cell.setCellValue("DANH SÁCH PHIẾU NHẬP");
+            excelSheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 9));
 
-        // Tạo tiêu đề cho Excel
-        XSSFRow row = excelSheet.createRow(0);
-        Cell cell = row.createCell(0, CellType.STRING);
-        cell.setCellValue("DANH SÁCH PHIẾU NHẬP");
-        excelSheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 6)); // Gộp các ô từ cột 0 đến 6
-        
-        // Style canh giữa cho tiêu đề
-        CellStyle titleStyle = excelWorkbook.createCellStyle();
-        titleStyle.setAlignment(HorizontalAlignment.CENTER);
-        cell.setCellStyle(titleStyle);
+            CellStyle titleStyle = excelWorkbook.createCellStyle();
+            titleStyle.setAlignment(HorizontalAlignment.CENTER);
+            cell.setCellStyle(titleStyle);
 
-        // Tạo tiêu đề cột
-        String[] headers = {"Mã PN", "Mã NCC", "Mã NV", "Ngày lập", "Tổng SL", "Tổng tiền", "Chi tiết phiếu nhập"};
-        row = excelSheet.createRow(1);
-        for (int i = 0; i < headers.length; i++) {
-            cell = row.createCell(i, CellType.STRING);
-            cell.setCellValue(headers[i]);
-            excelSheet.autoSizeColumn(i); // Tự động điều chỉnh kích thước cột
-        }
-
-        // Style cho các ô dữ liệu
-        CellStyle wrapTextStyle = excelWorkbook.createCellStyle();
-        wrapTextStyle.setWrapText(true); // Tự động xuống dòng trong ô
-
-        // Duyệt qua danh sách phiếu nhập và ghi vào file Excel
-        List<PhieuNhap_DTO> listPN = pn_DAO.getList(); // Lấy danh sách phiếu nhập từ cơ sở dữ liệu
-        int rowIndex = 2; // Dòng bắt đầu ghi dữ liệu
-        for (PhieuNhap_DTO pn : listPN) {
-            row = excelSheet.createRow(rowIndex++);
-
-            // Ghi thông tin phiếu nhập
-            row.createCell(0).setCellValue(pn.getMaPN());
-            row.createCell(1).setCellValue(pn.getMaNCC());
-            row.createCell(2).setCellValue(pn.getMaNV());
-            row.createCell(3).setCellValue(pn.getNgayLap().toString()); // Giả sử ngày lập là kiểu Date
-            row.createCell(4).setCellValue(pn.getTongSL());
-            row.createCell(5).setCellValue(pn.getTongTien());
-
-            // Lấy danh sách chi tiết phiếu nhập theo mã phiếu nhập
-            List<CTPN_DTO> listCTPN = ctpn_BUS.searchByMaPN(pn.getMaPN());
-            StringBuilder ctpnDetails = new StringBuilder();
-
-            // Duyệt qua các chi tiết phiếu nhập
-            for (CTPN_DTO ctpn : listCTPN) {
-                ctpnDetails.append("Mã sách: ").append(ctpn.getMaSach())
-                           .append(", Số lượng: ").append(ctpn.getSoLuong())
-                           .append(", Đơn giá: ").append(ctpn.getDonGia()).append("\n");
+            String[] headers = {"Mã PN", "Mã NCC", "Mã NV", "Ngày lập",
+                "DS Mã sách", "Danh sách mã vạch", "DS Đơn giá", "DS Số lượng", "Tổng SL", "Tổng tiền"};
+            row = excelSheet.createRow(1);
+            for (int i = 0; i < headers.length; i++) {
+                cell = row.createCell(i, CellType.STRING);
+                cell.setCellValue(headers[i]);
+                excelSheet.autoSizeColumn(i);
             }
 
-            Cell ctpnCell = row.createCell(6);
-            ctpnCell.setCellValue(ctpnDetails.toString());
-            ctpnCell.setCellStyle(wrapTextStyle); // Áp dụng style tự động xuống dòng
-        }
+            CellStyle wrapTextStyle = excelWorkbook.createCellStyle();
+            wrapTextStyle.setWrapText(true);
 
-        try (FileOutputStream out = new FileOutputStream(filePath)) {
-            excelWorkbook.write(out);
-        }
+            List<PhieuNhap_DTO> listPN = pn_DAO.getList();
+            int rowIndex = 2;
+            for (PhieuNhap_DTO pn : listPN) {
+                row = excelSheet.createRow(rowIndex++);
+
+                row.createCell(0).setCellValue(pn.getMaPN());
+                row.createCell(1).setCellValue(pn.getMaNCC());
+                row.createCell(2).setCellValue(pn.getMaNV());
+                row.createCell(3).setCellValue(pn.getNgayLap().toString());
+
+                List<CTPN_DTO> listCTPN = ctpn_BUS.searchByMaPN(pn.getMaPN());
+                StringBuilder listMS = new StringBuilder();
+                StringBuilder listMV = new StringBuilder();
+                StringBuilder listDG = new StringBuilder();
+                StringBuilder listSL = new StringBuilder();
+
+                for (CTPN_DTO ctpn : listCTPN) {
+                    listMS.append(ctpn.getMaSach()).append("\n");
+                    listMV.append(String.join(",", ctpn.getMaVach())).append("\n");
+                    listDG.append(ctpn.getDonGia()).append("\n");
+                    listSL.append(ctpn.getSoLuong()).append("\n");
+                }
+
+                // Áp dụng xuống dòng tự động
+                Cell msCell = row.createCell(4);
+                msCell.setCellValue(listMS.toString().trim());
+                msCell.setCellStyle(wrapTextStyle);
+
+                Cell mvCell = row.createCell(5);
+                mvCell.setCellValue(listMV.toString().trim());
+                mvCell.setCellStyle(wrapTextStyle);
+
+                Cell dgCell = row.createCell(6);
+                dgCell.setCellValue(listDG.toString().trim());
+                dgCell.setCellStyle(wrapTextStyle);
+
+                Cell slCell = row.createCell(7);
+                slCell.setCellValue(listSL.toString().trim());
+                slCell.setCellStyle(wrapTextStyle);
+
+                row.createCell(8).setCellValue(pn.getTongSL());
+                row.createCell(9).setCellValue(pn.getTongTien());
+            }
+
+            try (FileOutputStream out = new FileOutputStream(filePath)) {
+                excelWorkbook.write(out);
+            }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Lỗi ghi file Excel: " + e.getMessage());
             return false;
         }
         return true;

@@ -30,7 +30,10 @@ public class NXB_BUS {
     public boolean updateNXB(NXB_DTO nxb) {
         return NXBDAO.updateNXB(nxb);
     }
-    
+    public NXB_DTO searchByMaNXB(int manxb)
+    {
+        return NXBDAO.searchByMaNXB(manxb);
+    }
     public StringBuilder searchNXB(String option, String value) {
         StringBuilder jsonResult = new StringBuilder("["); // Sử dụng StringBuilder để dễ dàng quản lý chuỗi
         boolean firstItem = true; // Biến đánh dấu phần tử đầu tiên

@@ -108,9 +108,15 @@ public class PhanQuyen_DAO {
             result = false;
         } finally {
             try {
-                if (rs != null) rs.close();
-                if (ps != null) ps.close();
-                if (conn != null) dnDB.closeConnection(conn);
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    dnDB.closeConnection(conn);
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -123,16 +129,28 @@ public class PhanQuyen_DAO {
         try {
             dnDB = new dangNhapDatabase();
             conn = dnDB.openConnection();
-            st = conn.createStatement();
-            String qry = "Delete from phanquyen where matk=" + manv;
-            st.executeUpdate(qry);
+
+            // Thực hiện cập nhật trạng thái quyền
+            String qry = "UPDATE phanquyen SET matk = ? WHERE matk = ?";
+            ps = conn.prepareStatement(qry);
+
+            
+            ps.setInt(1, -1 * manv); 
+            ps.setInt(2, manv);  
+
+            ps.executeUpdate();
+
         } catch (Exception e) {
             result = false;
+            e.printStackTrace();
         } finally {
             try {
-                if (rs != null) rs.close();
-                if (ps != null) ps.close();
-                if (conn != null) dnDB.closeConnection(conn);
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    dnDB.closeConnection(conn);
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -150,7 +168,7 @@ public class PhanQuyen_DAO {
             ps.setInt(1, manv);
             rs = ps.executeQuery();
             if (rs.next()) {
-                 pq = new PhanQuyen_DTO();
+                pq = new PhanQuyen_DTO();
                 pq.setMaNV(manv);
                 pq.setMatKhau(rs.getString(2));
                 String tam = rs.getString(3);
@@ -161,9 +179,15 @@ public class PhanQuyen_DAO {
         } catch (Exception e) {
         } finally {
             try {
-                if (rs != null) rs.close();
-                if (ps != null) ps.close();
-                if (conn != null) dnDB.closeConnection(conn);
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    dnDB.closeConnection(conn);
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }

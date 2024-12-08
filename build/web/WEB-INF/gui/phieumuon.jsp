@@ -309,13 +309,13 @@
                 <button id="btnDocGia" class="conponentMenu" value="độc giả" onclick="reDirect(this,'/cnpm/docgia')">
                     <img src="img/customerr.svg" alt="icon"> Độc giả
                 </button>
-                <button id="btnNhaXuatBan" class="conponentMenu" value="nhà xuất bản" onclick="reDirect(this,'/cnpm/nhaxuatban')">
+                <button id="btnNhaXuatBan" class="conponentMenu" value="nhà xuất bản" onclick="reDirect(this,'/cnpm/nxb')">
                     <img src="img/nhaxuatban.jpg" alt="icon"> Nhà xuất bản
                 </button>
-                <button id="btnNhaCungCap" class="conponentMenu" value="nhà cung cấp" onclick="reDirect(this,'/cnpm/nhacungcap')">
+                <button id="btnNhaCungCap" class="conponentMenu" value="nhà cung cấp" onclick="reDirect(this,'/cnpm/ncc')">
                     <img src="img/nhacc.jpg" alt="icon"> Nhà cung cấp
                 </button>
-                <button id="btnKhuVuc" class="conponentMenu" value="khu vực" onclick="reDirect(this,'/cnpm/khuvuc')">
+                <button id="btnKhuVuc" class="conponentMenu" value="khu vực" onclick="reDirect(this,'/cnpm/kv')">
                     <img src="img/khuvuc.jpg" alt="icon"> Khu vực
                 </button>
                 <button id="btnPhieuMuon" class="conponentMenu" value="phiếu mượn" onclick="reDirect(this,'/cnpm/phieumuon')">
@@ -352,7 +352,7 @@
                     </div>
                     <div class="input-group">
                         <label class="nameFeature">Mã độc giả </label>
-                        <input type="text" id="txtMaKhach" placeholder="Nhập mã khách" readonly>
+                        <input type="text" id="txtMaKhach" placeholder="Chọn mã khách" readonly>
                         <img src="img/add.svg"  onclick="hienThiKhach()" style="cursor: pointer;width: 15px;height:auto;" />
                     </div>
 
@@ -449,7 +449,7 @@
                             </div>
                             <div class="input-groupCTPM">
                                 <label class="nameFeatureCTPM" style="margin-right: 18px;">Mã sách</label>
-                                <input type="text" id="txtSachCTPM" placeholder="Nhập mã sách" style="margin-right: 2px" readonly>
+                                <input type="text" id="txtSachCTPM" placeholder="Chọn mã sách" style="margin-right: 2px" readonly>
                                 <img src="img/add.svg" onclick="hienThiSach()"
                                      style="cursor: pointer;width: 12px;height:auto;" />
                             </div>
@@ -615,6 +615,7 @@
             function clickPM(row) {
                 const cells = row.getElementsByTagName('td');
                 document.getElementById('txtMaPhieu').value = cells[0].innerText;
+                 document.getElementById('txtMaPhieuCTPM').value = cells[0].innerText;
                 document.getElementById('txtMaPhieu').readOnly = true;
                 document.getElementById('txtMaKhach').value = cells[1].innerText;
                 const dateValueNN = cells[3].innerText;
