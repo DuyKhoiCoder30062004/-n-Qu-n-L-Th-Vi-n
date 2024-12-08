@@ -198,7 +198,6 @@ public class CTPN_DAO{
                 ctpn.setDonGia(rs.getInt("dongia"));
                 String maVach = rs.getString("mavachsach");
                 ctpn.setMaVach(new ArrayList<>(Arrays.asList(maVach.split(",")))); // Tách danh sách mã vạch nếu có
-                
                 listCTPN.add(ctpn);
             }
         } catch (SQLException e) {
