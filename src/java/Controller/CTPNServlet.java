@@ -41,15 +41,6 @@ public class CTPNServlet extends HttpServlet {
         request.setAttribute("listCTPN", listCTPN);
         request.setAttribute("listPN", listPN);
         request.getRequestDispatcher("/WEB-INF/gui/phieunhap.jsp").forward(request, response);
-<<<<<<< HEAD
-=======
-  }
-
-  public boolean checkInfor(HttpServletRequest request, HttpServletResponse response, String maPN, String maSach, String soLuong) throws IOException{
-    if( maPN == null ){
-      response.getWriter().write("{\"thongbao\": \"Mã phiếu mượn không được để trống vui lòng nhập\", \"hopLe\": false}");
-      return false;
->>>>>>> 8e48d04dffebc201fcf502cc00087805f5dbdb8d
     }
 
     private String checkMaVach_Exit(String listMaVach, int maSach) {
@@ -106,7 +97,6 @@ public class CTPNServlet extends HttpServlet {
         return true;
     }
 
-<<<<<<< HEAD
     private boolean checkDelete(HttpServletRequest request, HttpServletResponse response,
             String maPN, String maSach) throws IOException {
         if (maPN.isEmpty() || maPN == null) {
@@ -142,22 +132,6 @@ public class CTPNServlet extends HttpServlet {
                 if (!cts_BUS.addCTSach_when_deleteSach(cts)) {
                     return false;
                 }
-=======
-  private boolean addCTPN(String maPN, String maSach, String soLuong, String donGia){
-    CTPN_DTO ctpn = new CTPN_DTO();
-    ctpn.setMaPN(Integer.parseInt(maPN));
-    ctpn.setMaSach(Integer.parseInt(maSach));
-    ctpn.setSoLuong(Integer.parseInt(soLuong));
-    ctpn.setDonGia(Integer.parseInt(donGia));
-    return ctpn_BUS.addCTPN(ctpn);
-  }
-
-  private boolean updateCTPN(String maPN, String maSach, String soLuong, String donGia){
-    //CTPN_DTO ctpn = new CTPN_DTO(Integer.parseInt(maPN),Integer.parseInt(maSach), Integer.parseInt(soLuong), Integer.parseInt(donGia));
-    //return ctpn_BUS.updateCTPN(ctpn);
-    return true;
-  }
->>>>>>> 8e48d04dffebc201fcf502cc00087805f5dbdb8d
 
             }
             Sach_DTO sach=sach_BUS.timSachTheoMaSach(ctpn.getMaSach());
@@ -201,7 +175,6 @@ public class CTPNServlet extends HttpServlet {
             if (!pn_BUS.updatePN(pn) || !sach_BUS.suaSach(sach)) {
                 return false;
             }
-<<<<<<< HEAD
         }
 
         return flag;
@@ -315,23 +288,6 @@ public class CTPNServlet extends HttpServlet {
                 }
                 StringBuilder result = ctpn_BUS.searchCTPN(optionSearch, valueSearch);
                 System.out.print(result);
-=======
-            break;
-        case "deleteCTPN":
-            if(!checkDelete(request, response, maPN, maSach)) return;
-            //if(ctpn_BUS.deleteCTPN(Integer.parseInt(maPN), Integer.parseInt(maSach))){
-              //response.getWriter().write("{\"thongbao\": \"Xóa thành công\", \"hopLe\": true}");
-            //}else {
-              //response.getWriter().write("{\"thongbao\": \"Xóa thất bại\", \"hopLe\": false}");
-            //}
-            break;
-        case "searchCTPN":
-          if (valueSearch == null || valueSearch.trim().isEmpty()) {
-              response.getWriter().write("{\"thongbao\": \"Vui lòng nhập thông tin bạn muốn tìm kiếm\", \"hopLe\": false}");
-              return;
-          }
-          StringBuilder result = ctpn_BUS.searchCTPN(optionSearch, valueSearch);
->>>>>>> 8e48d04dffebc201fcf502cc00087805f5dbdb8d
                 if (result.length() > 2) {
                     // Có dữ liệu
                     response.getWriter().write("{\"thongbao\": \"tìm kiếm thành công\", \"hopLe\": false, \"results\": " + result.toString() + "}");

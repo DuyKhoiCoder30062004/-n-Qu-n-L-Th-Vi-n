@@ -53,9 +53,7 @@ yearToSumMap1.put(year, yearToSumMap1.getOrDefault(year, 0) + tien);
         chartData1.setLength(chartData1.length() - 2);
     }
 %>
-=======
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
->>>>>>> 8e48d04dffebc201fcf502cc00087805f5dbdb8d
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -149,19 +147,12 @@ yearToSumMap1.put(year, yearToSumMap1.getOrDefault(year, 0) + tien);
 
         .thongke {
             font-size: 25px;
-<<<<<<< HEAD
             margin-left: -50px;
-=======
->>>>>>> 8e48d04dffebc201fcf502cc00087805f5dbdb8d
-            text-align: center;
             color: #064BFB;
             font-weight: bolder;
             text-shadow: 2px 2px 5px rgba(9, 9, 9, 0.5);
-<<<<<<< HEAD
 /*            background-color: purple;
             z-index: -1;*/
-=======
->>>>>>> 8e48d04dffebc201fcf502cc00087805f5dbdb8d
         }
 
         .parent-container {
@@ -216,16 +207,12 @@ yearToSumMap1.put(year, yearToSumMap1.getOrDefault(year, 0) + tien);
             display: flex;
             justify-content: space-between;
             gap: 20px;
-<<<<<<< HEAD
             margin-top: 2px;
             margin-left: 10px;
             margin-right: 5px;
             background-color: #999999;
             
             z-index: 1100;
-=======
-            margin-top: 40px;
->>>>>>> 8e48d04dffebc201fcf502cc00087805f5dbdb8d
         }
 
         #chart_div_1, #chart_div_2 {
@@ -262,7 +249,6 @@ yearToSumMap1.put(year, yearToSumMap1.getOrDefault(year, 0) + tien);
         function drawChart1() {
             var data = new google.visualization.DataTable();
             data.addColumn('number', 'Year');
-<<<<<<< HEAD
             data.addColumn('number', 'Số sách mượn');
             
             data.addRows([
@@ -291,39 +277,11 @@ yearToSumMap1.put(year, yearToSumMap1.getOrDefault(year, 0) + tien);
             packages: ['corechart', 'line']
         });
 
-=======
-            data.addColumn('number', 'Sales');
-
-            data.addRows([
-                [2001, 37.8],
-                [2002, 30.9],
-                [2003, 25.4],
-                [2004, 11.7],
-                [2005, 10.5],
-                [2006, 5.7],
-                [2007, 1.4],
-                [2008, 3.1],
-                [2009, 3.8],
-                [2010, 7.2]
-            ]);
-
-            var options = {
-                title: 'Sales Over Time',
-                curveType: 'function',
-                legend: { position: 'bottom' }
-            };
-
-            var chart = new google.visualization.LineChart(document.getElementById('chart_div_1'));
-            chart.draw(data, options);
-        }
-
->>>>>>> 8e48d04dffebc201fcf502cc00087805f5dbdb8d
         // Draw the second chart
         google.charts.setOnLoadCallback(drawChart2);
         function drawChart2() {
             var data = new google.visualization.DataTable();
             data.addColumn('number', 'Year');
-<<<<<<< HEAD
             data.addColumn('number', 'Số tiền phạt');
             
             data.addRows([
@@ -345,31 +303,6 @@ yearToSumMap1.put(year, yearToSumMap1.getOrDefault(year, 0) + tien);
 
             var chart1 = new google.visualization.BarChart(document.getElementById('chart_div_2'));
             chart1.draw(data, options);
-=======
-            data.addColumn('number', 'Revenue');
-
-            data.addRows([
-                [2001, 20.3],
-                [2002, 26.2],
-                [2003, 25.7],
-                [2004, 16.2],
-                [2005, 12.5],
-                [2006, 5.3],
-                [2007, 3.2],
-                [2008, 2.1],
-                [2009, 4.0],
-                [2010, 8.4]
-            ]);
-
-            var options = {
-                title: 'Revenue Over Time',
-                curveType: 'function',
-                legend: { position: 'bottom' }
-            };
-
-            var chart = new google.visualization.LineChart(document.getElementById('chart_div_2'));
-            chart.draw(data, options);
->>>>>>> 8e48d04dffebc201fcf502cc00087805f5dbdb8d
         }
 
         // Redirect function
@@ -411,7 +344,6 @@ yearToSumMap1.put(year, yearToSumMap1.getOrDefault(year, 0) + tien);
         <button class="conponentMenu" value="phiếu mượn" onclick="reDirect(this, '/cnpm/phieumuon')">
             <img src="img/phieumuon.jpg" alt="icon"> Phiếu mượn
         </button>
-<<<<<<< HEAD
         <button class="conponentMenu" value="phiếu trả" onclick="reDirect(this, '/cnpm/phieutra')">
             <img src="img/phieutra.jpg" alt="icon"> Phiếu trả
         </button>
@@ -428,24 +360,6 @@ yearToSumMap1.put(year, yearToSumMap1.getOrDefault(year, 0) + tien);
             <img src="img/thongke.jpg" alt="icon"> Thống kê
         </button>
         <button class="conponentMenu" value="đăng xuất" onclick="reDirect(this, '/cnpm/dangxuat)">
-=======
-        <button class="conponentMenu" value="thống kê" onclick="reDirect(this, '/cnpm/thongke')">
-            <img src="img/phieutra.jpg" alt="icon"> Phiếu trả
-        </button>
-        <button class="conponentMenu" value="phiếu phạt" onclick="reDirect(this, '/cnpm/thongke')">
-            <img src="img/phieuphat.jpg" alt="icon"> Phiếu phạt
-        </button>
-        <button class="conponentMenu" value="phiếu nhập" onclick="reDirect(this, '/cnpm/thongke')">
-            <img src="img/phieunhap.jpg" alt="icon"> Phiếu nhập
-        </button>
-        <button class="conponentMenu" value="phân quyền" onclick="reDirect(this, '/cnpm/thongke')">
-            <img src="img/phanquyen.jpg" alt="icon"> Phân quyền
-        </button>
-        <button id="btnThongKe" class="conponentMenu" value="thống kê" onclick="reDirect(this, '/cnpm/thongke.jsp')">
-            <img src="img/thongke.jpg" alt="icon"> Thống kê
-        </button>
-        <button class="conponentMenu" value="đăng xuất" onclick="reDirect(this, '/cnpm/thongke')">
->>>>>>> 8e48d04dffebc201fcf502cc00087805f5dbdb8d
             <img src="img/dangxuat.jpg" alt="icon"> Đăng xuất
         </button>
     </div>
@@ -455,7 +369,7 @@ yearToSumMap1.put(year, yearToSumMap1.getOrDefault(year, 0) + tien);
             <h2 class="thongke">Statistics Panel</h2>
         </div>
         <div class="parent-container">
-<<<<<<< HEAD
+
     <div class="child-div">
         <div class="icon">📊</div>
         <div class="text-container">
@@ -468,20 +382,6 @@ yearToSumMap1.put(year, yearToSumMap1.getOrDefault(year, 0) + tien);
                 <div class="text-container">
                     <div class="title">Số sách mượn</div>
                     <div class="price">${sachMuonTotal}</div>
-=======
-            <div class="child-div">
-                <div class="icon">📊</div>
-                <div class="text-container">
-                    <div class="title">Tổng số sách</div>
-                    <div class="price">100</div>
-                </div>
-            </div>
-            <div class="child-div">
-                <div class="icon">📚</div>
-                <div class="text-container">
-                    <div class="title">Số sách mượn</div>
-                    <div class="price">456</div>
->>>>>>> 8e48d04dffebc201fcf502cc00087805f5dbdb8d
                 </div>
             </div>
             
@@ -494,30 +394,13 @@ yearToSumMap1.put(year, yearToSumMap1.getOrDefault(year, 0) + tien);
     <div class="text-container">
         <div class="title">Tổng số tiền phạt</div>
         <%-- <c:forEach items="${soSachMuon}" var="o" ><!-- Title --> --%>
-<<<<<<< HEAD
         <div class="price">${tongTienPhat} VNĐ</div> <!-- Example price -->
-=======
-        <div class="price">500000 VNĐ</div> <!-- Example price -->
->>>>>>> 8e48d04dffebc201fcf502cc00087805f5dbdb8d
        <%-- </c:forEach> --%>
         </div>
     
 </div>
         </div>
-<<<<<<< HEAD
         
-=======
-        <form>
-        <div>
-        <br/>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-        <input type="datetime-local" style="width: 300px; height: 40px;"/>&nbsp;&nbsp;&nbsp;<input type="button" value="Thống kê" onclick="alert('Button clicked!')" style="width: 200px; height: 40px;"/>
-
-        
-        </div>
-        </form>
->>>>>>> 8e48d04dffebc201fcf502cc00087805f5dbdb8d
         <br/>
         
         <div class="chart-container">
@@ -528,12 +411,3 @@ yearToSumMap1.put(year, yearToSumMap1.getOrDefault(year, 0) + tien);
 
 </body>
 </html>
-<<<<<<< HEAD
-
-
-
-
-
-
-=======
->>>>>>> 8e48d04dffebc201fcf502cc00087805f5dbdb8d

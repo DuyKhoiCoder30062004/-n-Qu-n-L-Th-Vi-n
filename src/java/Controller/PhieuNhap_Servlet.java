@@ -2,10 +2,7 @@ package Controller;
 
 import BUS.CTPN_BUS;
 import BUS.CTSach_BUS;
-<<<<<<< HEAD
 import BUS.NCC_BUS;
-=======
->>>>>>> 8e48d04dffebc201fcf502cc00087805f5dbdb8d
 import BUS.PhieuNhap_BUS;
 import DTO.CTPN_DTO;
 import DTO.PhieuNhap_DTO;
@@ -25,14 +22,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-<<<<<<< HEAD
 @WebServlet(name = "PhieuNhap_Servlet", urlPatterns = {"/phieunhap"})
 public class PhieuNhap_Servlet extends HttpServlet {
-=======
-
-  @WebServlet(name = "PhieuNhap_Servlet", urlPatterns = {"/phieunhap"})
-  public class PhieuNhap_Servlet extends HttpServlet{
->>>>>>> 8e48d04dffebc201fcf502cc00087805f5dbdb8d
 
     private PhieuNhap_BUS pn_BUS = new PhieuNhap_BUS();
     private CTPN_BUS ctpn_BUS = new CTPN_BUS();
@@ -54,8 +45,8 @@ public class PhieuNhap_Servlet extends HttpServlet {
         request.setAttribute("listPN", listPN);
         request.getRequestDispatcher("/WEB-INF/gui/phieunhap.jsp").forward(request, response);
 
-    private boolean checkInfor(HttpServletRequest request, HttpServletResponse response, String maPhieu, String ngayNhap,
-            String maNCC)
+    private boolean checkInfor(HttpServletRequest request, HttpServletResponse response, 
+            String maPhieu, String ngayNhap,String maNCC)
             throws IOException {
         // Kiểm tra mã phiếu nhập
         if (maPhieu == null || maPhieu.trim().isEmpty()) {
@@ -154,68 +145,11 @@ public class PhieuNhap_Servlet extends HttpServlet {
                     return;
                 }
                 if (deletePN(Integer.parseInt(maPN))) {
-  @Override
-  protected void doPost (HttpServletRequest request, HttpServletResponse response) throws IOException{
-      response.setCharacterEncoding("UTF-8");
-      
-      String action = request.getParameter("action");
-      String maPN = request.getParameter("maPN");
-      String maNCC = request.getParameter("maNCC");
-      String maNV = request.getParameter("maNV");
-      String ngayLap = request.getParameter("ngayLap");
-      String tongSL = request.getParameter("tongSL");
-      String tongTien = request.getParameter("tongTien");
-      String optionSearch = request.getParameter("optionSearch");
-      String valueSearch = request.getParameter("valueSearch");
-      String namePath = request.getParameter("nameFileExcel");
-      
-      
-      switch(action){
-          case "add" :
-              if(!checkInfor(request, response, maPN, ngayLap)){
-                  return;
-      }
-              if(pn_BUS.searchByMaPN(Integer.parseInt(maPN)) != null){
-                  response.getWriter().write("{\"thongbao\": \"Mã phiếu nhập đã tồn tại vui lòng nhập lại mã phiếu nhập\", \"hopLe\": false}");
-                    return;
-              }
-              if(addPN(maPN, maNCC, maNV, ngayLap, tongSL, tongTien)){
-                  response.getWriter().write("{\"thongbao\": \"Thêm thành công\", \"hopLe\": true}");
-              }else {
-                    response.getWriter().write("{\"thongbao\": \"Thêm thất bại\", \"hopLe\": false}");
-              }
-              break;
-          case "edit":
-              if(!checkInfor(request, response, maPN, ngayLap)){
-                  return;
-      }
-              if(pn_BUS.searchByMaPN(Integer.parseInt(maPN)) == null){
-                  response.getWriter().write("{\"thongbao\": \"Mã phiếu nhập không để trống vui lòng nhập lại mã phiếu nhập\", \"hopLe\": false}");
-                   return;
-              }
-              if(updatePN(maPN, maNCC, maNV, ngayLap, tongSL, tongTien)){
-              response.getWriter().write("{\"thongbao\": \"Sửa thành công\", \"hopLe\": true}");
-                } else {
-                    response.getWriter().write("{\"thongbao\": \"Sửa thất bại\", \"hopLe\": false}");
-                }
-             break;
-          case "delete":
-              if(!checkInfor(request, response, maPN, ngayLap)){
-                  return;
-      }
-              if (pn_BUS.deletePN(Integer.parseInt(maPN))) {
                     response.getWriter().write("{\"thongbao\": \"Xóa thành công\", \"hopLe\": true}");
                 } else {
                     response.getWriter().write("{\"thongbao\": \"Xóa thất bại\", \"hopLe\": false}");
                 }
                 break;
-            case "search":
-                if (valueSearch == null || valueSearch.trim().isEmpty()) {
-                    response.getWriter().write("{\"thongbao\": \"Vui lòng nhập thông tin bạn muốn tìm kiếm\", \"hopLe\": false}");
-                    return;
-                }
-                StringBuilder[] result = pn_BUS.searchPN(optionSearch, valueSearch);
-              break;
           case "search":
               if (valueSearch == null || valueSearch.trim().isEmpty()) {
                     response.getWriter().write("{\"thongbao\": \"Vui lòng nhập thông tin bạn muốn tìm kiếm\", \"hopLe\": false}");
@@ -324,8 +258,6 @@ public class PhieuNhap_Servlet extends HttpServlet {
         return pn_BUS.deletePN(maPN);
     }
 
-    private String printPDF(int maPN) {
-        String selectedPath = "";
 
   private String printPDF(int maPN){
       String selectedPath = "";
@@ -348,11 +280,7 @@ public class PhieuNhap_Servlet extends HttpServlet {
                 }
                 // Gọi hàm tạo PDF từ nội dung HTML
                 try (OutputStream os = new FileOutputStream(selectedPath)) {
-<<<<<<< HEAD
                     String htmlContent = pn_BUS.printPN(maPN);
-=======
-                    String htmlContent = pn_BUS.printPN(maPN); 
->>>>>>> 8e48d04dffebc201fcf502cc00087805f5dbdb8d
                     System.out.println("PDF đã được tạo thành công tại: " + selectedPath);
                 }
             }
@@ -361,7 +289,6 @@ public class PhieuNhap_Servlet extends HttpServlet {
             e.printStackTrace();
         }
         return selectedPath;
-<<<<<<< HEAD
     }
 
     @Override
@@ -369,12 +296,3 @@ public class PhieuNhap_Servlet extends HttpServlet {
         return "Short description";
     }
 }
-=======
-  }
-  
-  @Override
-    public String getServletInfo() {
-        return "Short description";
-    }
-  }
->>>>>>> 8e48d04dffebc201fcf502cc00087805f5dbdb8d
