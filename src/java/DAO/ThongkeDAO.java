@@ -12,7 +12,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -87,25 +86,24 @@ public class ThongkeDAO {
 
     public List<PhieuMuon_DTO> getSoLuongAndYear() {
         List<PhieuMuon_DTO> pmList = new ArrayList<>();
-        String sql = "SELECT tongsl, YEAR(ngaylap) AS ngayMuonYear, MONTH(ngaylap) AS ngayMuonMonth FROM pheumuon";
+        String sql = "SELECT tongsl,ngaylap FROM pheumuon";
         try {
             dnDB = new dangNhapDatabase();
             conn = dnDB.openConnection();
             ps = conn.prepareStatement(sql);  
             rs = ps.executeQuery();  
 
-            // Process the result set
+            // Process the result setS
             while (rs.next()) {
                 int soLuong = rs.getInt("tongsl");
-                int ngayMuonYear = rs.getInt("ngayMuonYear");
-                int ngayMuonMonth = rs.getInt("ngayMuonMonth");
+//                int ngayMuonYear = rs.getInt("ngayMuonYear");
+//                int ngayMuonMonth = rs.getInt("ngayMuonMonth");
                 // Create a new CTPM object and set the values
                 PhieuMuon_DTO pm=new PhieuMuon_DTO();
                 pm.setTongSL(soLuong);
 
                 // Set 'ngayMuon' to the first day of the retrieved year using Calendar
-                LocalDate ngayLap = LocalDate.of(ngayMuonYear, ngayMuonMonth, 1);
-                pm.setNgayLap(ngayLap);
+                pm.setNgayLap(rs.getDate("ngaylap").toLocalDate());
 
                 // Add the CTPM object to the list
                 pmList.add(pm);
@@ -120,7 +118,7 @@ public class ThongkeDAO {
 
     public List<CTPP_DTO> getTien_AndYear() {
         List<CTPP_DTO> ctppList = new ArrayList<>();
-        String sql = "SELECT tien, YEAR(ngaylap) AS ngayLapYear, MONTH(ngaylap) AS ngayLapMonth FROM ctpp";
+        String sql = "SELECT tien,ngaylap FROM ctpp";
         try {
             dnDB = new dangNhapDatabase();
             conn = dnDB.openConnection();
@@ -130,14 +128,15 @@ public class ThongkeDAO {
             // Process the result set
             while (rs.next()) {
                 int soTienPhat = rs.getInt("tien");
-                int ngayLapYear = rs.getInt("ngayLapYear");
-                int ngayLapMonth = rs.getInt("ngayLapMonth");
+//                int ngayLapYear = rs.getInt("ngayLapYear");
+//                int ngayLapMonth = rs.getInt("ngayLapMonth");
                 // Create a new CTPM object and set the values
                 CTPP_DTO ctpp = new CTPP_DTO();
                 ctpp.setTien(soTienPhat);
 
                 // Set 'ngayMuon' to the first day of the retrieved year using Calendar
-                LocalDate ngayLap = LocalDate.of(ngayLapYear, ngayLapMonth, 1);
+//                LocalDate ngayLap = LocalDate.of(ngayLapYear, ngayLapMonth, 1);
+                ctpp.setNgayLap(rs.getDate("ngaylap").toLocalDate());
 
                 // Add the CTPM object to the list
                 ctppList.add(ctpp);

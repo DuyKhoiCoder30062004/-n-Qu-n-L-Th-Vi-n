@@ -1,28 +1,20 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="java.util.List, Model.CTPM, Model.CTPP" %>
+<%@ page import="java.util.List" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.HashMap" %>
-<%@ page import="java.util.Map.Entry" %>
-<%@ page import="DTO.Nhanvien_DTO" %>
 <%@ page import="DTO.PhieuMuon_DTO" %>
 <%@ page import="DTO.CTPP_DTO" %>
+<%@ page import="java.text.SimpleDateFormat" %>
 <%
-    // Retrieve the 'soLuongAndYear' attribute from the request
-    List<PhiMuon_DTO> soLuongAndYear = (List<PhieuMuon_DTO>) request.getAttribute("soLuongAndYear");
-
-    // Use a map to aggregate the sum of 'soLuong' by year
+    List<PhieuMuon_DTO> soLuongAndYear = (List<PhieuMuon_DTO>) request.getAttribute("soLuongAndYear");
     Map<Integer, Integer> yearToSumMap = new HashMap<>();
-    
     for (PhieuMuon_DTO pm : soLuongAndYear) {
-        int year = Integer.parseInt(new java.text.SimpleDateFormat("yyyy").format(pm.getNgayLap()));
-        int soLuong = ctpm.getTongSL();
-        
-        // Accumulate the 'soLuong' for the same year
+        String formattedDate = pm.getNgayLap().toString(); 
+        int year =  pm.getNgayLap().getYear();
+        int soLuong = pm.getTongSL();
         yearToSumMap.put(year, yearToSumMap.getOrDefault(year, 0) + soLuong);
     }
-
-    // Prepare the JavaScript code to build the Google Chart data
     StringBuilder chartData = new StringBuilder();
     for (Map.Entry<Integer, Integer> entry : yearToSumMap.entrySet()) {
         int year = entry.getKey();
@@ -30,20 +22,20 @@
         chartData.append("[").append(year).append(", ").append(totalBooks).append("], ");
     }
     if (chartData.length() > 0) {
-        // Remove the trailing comma and space
         chartData.setLength(chartData.length() - 2);
     }
     
-    
-    
-List<CTPP_DTO> soTien_NamPhat = (List<CTPP_DTO>) request.getAttribute("soTien_NamPhat");
-Map<Integer, Integer> yearToSumMap1 = new HashMap<>();
-for(CTPP_DTO ctpp : soTien_NamPhat){
-int year = Integer.parseInt(new java.text.SimpleDateFormat("yyyy").format(ctpp.getNgayLap()));
-int tien = ctpp.getTien();
+    List<CTPP_DTO> soTien_NamPhat = (List<CTPP_DTO>) request.getAttribute("soTien_NamPhat");
+    Map<Integer, Integer> yearToSumMap1 = new HashMap<>();
 
-yearToSumMap1.put(year, yearToSumMap1.getOrDefault(year, 0) + tien);
+    for (CTPP_DTO ctpp : soTien_NamPhat) {
+        String formattedDate = ctpp.getNgayLap().toString(); 
+        int year = ctpp.getNgayLap().getYear();  
+        int tien = (int) ctpp.getTien();
+
+        yearToSumMap1.put(year, yearToSumMap1.getOrDefault(year, 0) + tien);
     }
+
     StringBuilder chartData1 = new StringBuilder();
     for (Map.Entry<Integer, Integer> entry : yearToSumMap1.entrySet()) {
         int year = entry.getKey();
@@ -51,9 +43,10 @@ yearToSumMap1.put(year, yearToSumMap1.getOrDefault(year, 0) + tien);
         chartData1.append("[").append(year).append(", ").append(totalFine).append("], ");
     }
     if (chartData1.length() > 0) {
-        // Remove the trailing comma and space
         chartData1.setLength(chartData1.length() - 2);
     }
+    System.out.print("data của tiền phạt"+chartData1);
+
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -239,7 +232,92 @@ yearToSumMap1.put(year, yearToSumMap1.getOrDefault(year, 0) + tien);
                 }
             }
         </style>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript">
+            // Load Google Charts
+            google.charts.load('current', {
+                packages: ['corechart', 'line']
+            });
 
+            // Draw the first chart
+            google.charts.setOnLoadCallback(drawChart1);
+            function drawChart1() {
+                var data = new google.visualization.DataTable();
+                data.addColumn('number', 'Year');
+                data.addColumn('number', 'Số sách mượn');
+                data.addRows([
+                    [2021, 0],
+                    [2022, 0],
+                    [2023, 0]
+                ]);
+                data.addRows([
+            <%= chartData.toString() %>
+                ]);
+                
+                var options = {
+                    title: 'Số sách mượn qua các năm',
+                    vAxis: {title: 'Năm'},
+
+                    curveType: 'function',
+                    legend: {position: 'bottom'},
+                    tooltip: {
+                        isHtml: true, // Set this to true if you want to use HTML formatting in tooltips
+                        trigger: 'both'  // Show tooltip both when hovering over the data points and the axes
+                    }
+
+                };
+
+                var chart = new google.visualization.BarChart(document.getElementById('chart_div_1'));
+                chart.draw(data, options);
+            }
+
+            // Load Google Charts
+            google.charts.load('current', {
+                packages: ['corechart', 'line']
+            });
+
+            // Draw the second chart
+            google.charts.setOnLoadCallback(drawChart2);
+            function drawChart2() {
+                var data = new google.visualization.DataTable();
+                data.addColumn('number', 'Year');
+                data.addColumn('number', 'Số tiền phạt');
+                data.addRows([
+                    [2021, 0],
+                    [2022, 0],
+                    [2023, 0]
+                ]);
+                data.addRows([
+            <%= chartData1.toString() %>
+                ]);
+                
+                var options = {
+                    title: 'Số tiền phạt qua các năm',
+                    vAxis: {title: 'Năm'},
+
+                    curveType: 'function',
+                    legend: {position: 'bottom'},
+                    tooltip: {
+                        isHtml: true, // Set this to true if you want to use HTML formatting in tooltips
+                        trigger: 'both'  // Show tooltip both when hovering over the data points and the axes
+                    }
+
+                };
+                var chart1 = new google.visualization.BarChart(document.getElementById('chart_div_2'));
+                chart1.draw(data, options);
+            }
+
+            // Redirect function
+            function reDirect(button, url) {
+                event.preventDefault();
+                var tasks = ["sách", "nhân viên", "độc giả", "nhà xuất bản", "nhà cung cấp", "khu vực", "phiếu mượn", "phiếu trả", "phiếu phạt", "phiếu nhập", "phân quyền", "thống kê"];
+                if (tasks.includes(button.value)) {
+                    window.location.href = url;
+                } else {
+                    alert("Bạn không có quyền quản lí tác vụ " + button.value);
+                }
+            }
+        </script>
     </head>
     <body>
 
@@ -296,8 +374,8 @@ yearToSumMap1.put(year, yearToSumMap1.getOrDefault(year, 0) + tien);
                 <div class="child-div">
                     <div class="icon">📊</div>
                     <div class="text-container">
-                        <div class="title">Total Quantity</div> <!-- Title for the section -->
-                        <div class="price">${soLuongTotal}</div> <!-- Display the totalSoLuong value -->
+                        <div class="title">Tổng số sách còn lại của thư viện</div> 
+                        <div class="price">${soLuongTotal}</div> 
                     </div>
                 </div>  
                 <div class="child-div">
@@ -331,84 +409,6 @@ yearToSumMap1.put(year, yearToSumMap1.getOrDefault(year, 0) + tien);
                 <div id="chart_div_2"></div>
             </div>
         </div>
-        <script>
-            // Load Google Charts
-            google.charts.load('current', {
-                packages: ['corechart', 'line']
-            });
-
-            // Draw the first chart
-            google.charts.setOnLoadCallback(drawChart1);
-            function drawChart1() {
-                var data = new google.visualization.DataTable();
-                data.addColumn('number', 'Year');
-                data.addColumn('number', 'Số sách mượn');
-
-                data.addRows([
-            <%= chartData.toString() %>
-                ]);
-
-                var options = {
-                    title: 'Số sách mượn qua các năm',
-                    vAxis: {title: 'Năm'},
-
-                    curveType: 'function',
-                    legend: {position: 'bottom'},
-                    tooltip: {
-                        isHtml: true, // Set this to true if you want to use HTML formatting in tooltips
-                        trigger: 'both'  // Show tooltip both when hovering over the data points and the axes
-                    }
-
-                };
-
-                var chart = new google.visualization.BarChart(document.getElementById('chart_div_1'));
-                chart.draw(data, options);
-            }
-
-            // Load Google Charts
-            google.charts.load('current', {
-                packages: ['corechart', 'line']
-            });
-
-            // Draw the second chart
-            google.charts.setOnLoadCallback(drawChart2);
-            function drawChart2() {
-                var data = new google.visualization.DataTable();
-                data.addColumn('number', 'Year');
-                data.addColumn('number', 'Số tiền phạt');
-
-                data.addRows([
-            <%= chartData1.toString() %>
-                ]);
-
-                var options = {
-                    title: 'Số tiền phạt qua các năm',
-                    vAxis: {title: 'Năm'},
-
-                    curveType: 'function',
-                    legend: {position: 'bottom'},
-                    tooltip: {
-                        isHtml: true, // Set this to true if you want to use HTML formatting in tooltips
-                        trigger: 'both'  // Show tooltip both when hovering over the data points and the axes
-                    }
-
-                };
-
-                var chart1 = new google.visualization.BarChart(document.getElementById('chart_div_2'));
-                chart1.draw(data, options);
-            }
-
-            // Redirect function
-            function reDirect(button, url) {
-                event.preventDefault();
-                var tasks = ["sách", "nhân viên", "độc giả", "nhà xuất bản", "nhà cung cấp", "khu vực", "phiếu mượn", "phiếu trả", "phiếu phạt", "phiếu nhập", "phân quyền", "thống kê"];
-                if (tasks.includes(button.value)) {
-                    window.location.href = url;
-                } else {
-                    alert("Bạn không có quyền quản lí tác vụ " + button.value);
-                }
-            }
-        </script>
     </body>
 </html>
 

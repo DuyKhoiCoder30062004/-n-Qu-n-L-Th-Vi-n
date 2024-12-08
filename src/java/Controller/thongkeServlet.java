@@ -1,6 +1,4 @@
-
-package controller;
-
+package Controller;
 
 import DAO.ThongkeDAO;
 import DTO.CTPM_DTO;
@@ -17,34 +15,38 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 
-@WebServlet(name="thongkeServlet", urlPatterns={"/thongke"})
+@WebServlet(name = "thongkeServlet", urlPatterns = {"/thongke"})
 public class thongkeServlet extends HttpServlet {
-   private ThongkeDAO tk_DAO=new ThongkeDAO();
+
+    private ThongkeDAO tk_DAO = new ThongkeDAO();
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-    } 
-     @Override
+    }
+
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 //        List<Sach> l = dao.getAllSach_Information();
         int totalSoLuong = tk_DAO.getTotalSoLuong();
-        request.setAttribute("soLuongTotal",totalSoLuong);
+        request.setAttribute("soLuongTotal", totalSoLuong);
         int total_SachMuon = tk_DAO.getTotal_SachMuon();
-        request.setAttribute("sachMuonTotal",total_SachMuon);
+        request.setAttribute("sachMuonTotal", total_SachMuon);
         int total_Fines = tk_DAO.getTotal_tienPhat();
-        request.setAttribute("tongTienPhat",total_Fines);
-         List<PhieuMuon_DTO> l = tk_DAO.getSoLuongAndYear();
-         request.setAttribute("soLuongAndYear",l);
+        request.setAttribute("tongTienPhat", total_Fines);
+        List<PhieuMuon_DTO> l = tk_DAO.getSoLuongAndYear();
+        request.setAttribute("soLuongAndYear", l);
         List<CTPP_DTO> ls = tk_DAO.getTien_AndYear();
-        request.setAttribute("soTien_NamPhat",ls);
+        System.out.println("LIST CTPP:" + ls.get(0).getTien());
+        request.setAttribute("soTien_NamPhat", ls);
 //        request.getRequestDispatcher("list.jsp").forward(request, response);
         request.getRequestDispatcher("/WEB-INF/gui/thongke.jsp").forward(request, response);
-    } 
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         processRequest(request, response);
     }
 
