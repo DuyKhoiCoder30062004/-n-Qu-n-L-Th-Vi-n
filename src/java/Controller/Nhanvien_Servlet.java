@@ -60,6 +60,12 @@ public class Nhanvien_Servlet extends HttpServlet {
             response.getWriter().write("{\"thongbao\": \"Vui lòng nhập số điện thoại\", \"hopLe\": false}");
             return false;
         }
+        // Kiểm tra định dạng số điện thoại Việt Nam
+    String phoneRegex = "^(0|\\+84)[0-9]{9}$"; // Số bắt đầu bằng 0 hoặc +84 và có 10 chữ số
+    if (!Pattern.matches(phoneRegex, sdt)) {
+        response.getWriter().write("{\"thongbao\": \"Số điện thoại không hợp lệ, vui lòng nhập số Việt Nam hợp lệ\", \"hopLe\": false}");
+        return false;
+    }
 
         // Kiểm tra lương
         try {
