@@ -498,6 +498,15 @@
 
     <script>
         function submitForm(action) {
+
+   if (action === "deleteNhanVien") {
+        // Hiển thị hộp thoại xác nhận
+        const isConfirmed = confirm("Bạn có chắc chắn muốn xóa nhân viên này?");
+        if (!isConfirmed) {
+            return; // Nếu người dùng chọn "Không", thoát khỏi hàm
+        }
+    }
+
             if (action === "searchNhanVien") {
                 const valueSearch = document.getElementById("valueSearch").value;
                 if (!valueSearch.trim()) {
