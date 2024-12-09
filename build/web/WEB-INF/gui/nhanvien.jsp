@@ -423,7 +423,7 @@
                         <div class="search">
                             <!-- Nút Tìm kiếm -->
                             <div style="display: flex; align-items: center;">
-                                <input type="text" id="valueSearch" placeholder="Nhập thông tin tìm kiếm..." 
+                                <input type="text" id="valueSearch" placeholder="Nhập thông tin tìm kiếm theo mã hoặc tên..." 
                                        style="width: 300px; height: 36px; border: 1px solid #ccc; border-radius: 4px; padding: 0 10px;">
                                 <button type="button" onclick="submitForm('searchNhanVien')" title="Tìm kiếm nhân viên" 
                                         style="margin-left: -1px; height: 36px; border: none; background-color: #5A4E9B; border-radius: 0 4px 4px 0; padding: 0 10px; display: flex; align-items: center; justify-content: center;">
