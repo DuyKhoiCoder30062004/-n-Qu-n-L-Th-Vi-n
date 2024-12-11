@@ -574,21 +574,22 @@
 
                 // Thêm sự kiện click vào từng hàng trong bảng
                 table.querySelector("tbody").addEventListener("click", (event) => {
-                    const row = event.target.closest("tr");
-                    if (!row)
-                        return; // Nếu không phải là hàng, thoát
+    const row = event.target.closest("tr");
+    if (!row) return; // Nếu không phải là hàng, thoát
 
-                    const cells = row.children;
+    const cells = row.children;
 
-                    // Đổ dữ liệu từ hàng vào các trường nhập liệu
-                    formFields.manv.value = cells[0].textContent;
-                    formFields.ho.value = cells[1].textContent;
-                    formFields.ten.value = cells[2].textContent;
-                    formFields.sdt.value = cells[3].textContent;
-                    formFields.luong.value = cells[4].textContent;
-                    formFields.ngaysinh.value = cells[5].textContent;
-                    formFields.chucVu.value = cells[6].textContent.trim(); // Lấy giá trị chức vụ từ bảng và gán vào select
-                });
+    // Đổ dữ liệu từ hàng vào các trường nhập liệu
+    formFields.manv.value = cells[0].textContent;
+    formFields.manv.disabled = true; // Khóa trường mã nhân viên
+
+    formFields.ho.value = cells[1].textContent;
+    formFields.ten.value = cells[2].textContent;
+    formFields.sdt.value = cells[3].textContent;
+    formFields.luong.value = cells[4].textContent;
+    formFields.ngaysinh.value = cells[5].textContent;
+    formFields.chucVu.value = cells[6].textContent.trim(); // Lấy giá trị chức vụ từ bảng và gán vào select
+});
             }
         }
 
@@ -614,22 +615,23 @@
             };
 
             // Thêm sự kiện click vào từng hàng trong bảng
-            table.querySelector("tbody").addEventListener("click", (event) => {
-                const row = event.target.closest("tr");
-                if (!row)
-                    return; // Nếu không phải là hàng, thoát
+           table.querySelector("tbody").addEventListener("click", (event) => {
+    const row = event.target.closest("tr");
+    if (!row) return; // Nếu không phải là hàng, thoát
 
-                const cells = row.children;
+    const cells = row.children;
 
-                // Đổ dữ liệu từ hàng vào các trường nhập liệu
-                formFields.manv.value = cells[0].textContent;
-                formFields.ho.value = cells[1].textContent;
-                formFields.ten.value = cells[2].textContent;
-                formFields.sdt.value = cells[3].textContent;
-                formFields.luong.value = cells[4].textContent;
-                formFields.ngaysinh.value = cells[5].textContent;
-                formFields.chucVu.value = cells[6].textContent.trim(); // Lấy giá trị chức vụ từ bảng và gán vào select
-            });
+    // Đổ dữ liệu từ hàng vào các trường nhập liệu
+    formFields.manv.value = cells[0].textContent;
+    formFields.manv.disabled = true; // Khóa trường mã nhân viên
+
+    formFields.ho.value = cells[1].textContent;
+    formFields.ten.value = cells[2].textContent;
+    formFields.sdt.value = cells[3].textContent;
+    formFields.luong.value = cells[4].textContent;
+    formFields.ngaysinh.value = cells[5].textContent;
+    formFields.chucVu.value = cells[6].textContent.trim(); // Lấy giá trị chức vụ từ bảng và gán vào select
+});
         });
         function resetTable() {
             // Làm mới lại toàn bộ trang
