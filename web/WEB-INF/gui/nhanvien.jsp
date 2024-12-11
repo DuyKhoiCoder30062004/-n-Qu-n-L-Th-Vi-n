@@ -497,7 +497,40 @@
     </div>  
 
     <script>
+
+function checkManvExists(manv) {
+    const table = document.getElementById("nhanvienTable");
+    const rows = table.querySelectorAll("tbody tr");
+
+    for (const row of rows) {
+        const cellManv = row.children[0].textContent.trim();
+        if (cellManv === manv) {
+            return true; // Mã nhân viên tồn tại
+        }
+    }
+    return false; // Mã nhân viên không tồn tại
+}
+
+
         function submitForm(action) {
+
+
+    if (action === "deleteNhanVien") {
+        // Hiển thị hộp thoại xác nhận
+        const isConfirmed = confirm("Bạn có chắc chắn muốn xóa nhân viên này?");
+        if (!isConfirmed) {
+            return; // Nếu người dùng chọn "Không", thoát khỏi hàm
+        }
+    }
+    if (action === "updateNhanVien") {
+        const manv = document.getElementById("manv").value.trim();
+        if (!checkManvExists(manv)) {
+            alert("Mã nhân viên không tồn tại! Vui lòng kiểm tra lại.");
+            return; // Ngừng xử lý nếu mã nhân viên không tồn tại
+        }
+    }
+
+
             if (action === "searchNhanVien") {
                 const valueSearch = document.getElementById("valueSearch").value;
                 if (!valueSearch.trim()) {
